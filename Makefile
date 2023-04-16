@@ -1,20 +1,22 @@
-clean:
-	@rm -rf build 2>/dev/null || true
-	@rm -rf dist 2>/dev/null || true
-	@rm -rf __pycache__ 2>/dev/null || true
-	@rm -rf *.egg-info 2>/dev/null || true
-	@rm -rf **/*.egg-info 2>/dev/null || true
-	@rm -rf *.pyc 2>/dev/null || true
-	@rm -rf **/*.pyc 2>/dev/null || true
-	@rm -rf reports 2>/dev/null || true
+ifeq ($(OS),Windows_NT)
+    os := win
+    SCRIPT_EXT := .bat
+    SHELL_CMD := cmd /C
+else
+    os := nix
+    SCRIPT_EXT := .sh
+    SHELL_CMD := bash
+endif
 
-qa:
-	@flake8 .
-	@python run_pylint.py
+helpers = @$(SHELL_CMD) helpers$(SCRIPT_EXT) $1
 
-style:
-	@isort .
-	@black --exclude='.*\/*(dist|venv|.venv|test-results)\/*.*' .
+clean: helpers$(SCRIPT_EXT)
+	$(call helpers,clean)
 
+qa: helpers$(SCRIPT_EXT)
+	$(call helpers,qa)
+
+style: helpers$(SCRIPT_EXT)
+	$(call helpers,style)
 
 .PHONY: clean qa style
