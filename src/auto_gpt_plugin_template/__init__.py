@@ -67,7 +67,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
     def on_planning(
         self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
-        """This method is called before the planning chat completeion is done.
+        """This method is called before the planning chat completion is done.
 
         Args:
             prompt (PromptGenerator): The prompt generator.
@@ -86,7 +86,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
 
     @abc.abstractmethod
     def post_planning(self, response: str) -> str:
-        """This method is called after the planning chat completeion is done.
+        """This method is called after the planning chat completion is done.
 
         Args:
             response (str): The response.
