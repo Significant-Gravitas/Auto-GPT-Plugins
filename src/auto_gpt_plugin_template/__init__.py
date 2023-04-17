@@ -1,10 +1,15 @@
 """This is a template for Auto-GPT plugins."""
 import abc
-from typing import Any, Dict, List, Optional, Tuple, TypeVar
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 
 from abstract_singleton import AbstractSingleton, Singleton
 
 PromptGenerator = TypeVar("PromptGenerator")
+
+
+class Message(TypedDict):
+    role: str
+    content: str
 
 
 class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
@@ -65,7 +70,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
 
     @abc.abstractmethod
     def on_planning(
-        self, prompt: PromptGenerator, messages: List[str]
+        self, prompt: PromptGenerator, messages: List[Message]
     ) -> Optional[str]:
         """This method is called before the planning chat completion is done.
 
@@ -106,14 +111,14 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         return False
 
     @abc.abstractmethod
-    def pre_instruction(self, messages: List[str]) -> List[str]:
+    def pre_instruction(self, messages: List[Message]) -> List[Message]:
         """This method is called before the instruction chat is done.
 
         Args:
-            messages (List[str]): The list of context messages.
+            messages (List[Message]): The list of context messages.
 
         Returns:
-            List[str]: The resulting list of messages.
+            List[Message]: The resulting list of messages.
         """
         pass
 
@@ -127,11 +132,11 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         return False
 
     @abc.abstractmethod
-    def on_instruction(self, messages: List[str]) -> Optional[str]:
+    def on_instruction(self, messages: List[Message]) -> Optional[str]:
         """This method is called when the instruction chat is done.
 
         Args:
-            messages (List[str]): The list of context messages.
+            messages (List[Message]): The list of context messages.
 
         Returns:
             Optional[str]: The resulting message.
@@ -213,7 +218,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
           handle the chat_completion method.
 
         Args:
-            messages (Dict[Any, Any]): The messages.
+            messages (List[Message]): The messages.
             model (str): The model name.
             temperature (float): The temperature.
             max_tokens (int): The max tokens.
@@ -224,12 +229,12 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
 
     @abc.abstractmethod
     def handle_chat_completion(
-        self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
+        self, messages: List[Message], model: str, temperature: float, max_tokens: int
     ) -> str:
         """This method is called when the chat completion is done.
 
         Args:
-            messages (Dict[Any, Any]): The messages.
+            messages (List[Message]): The messages.
             model (str): The model name.
             temperature (float): The temperature.
             max_tokens (int): The max tokens.
