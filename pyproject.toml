@@ -3,12 +3,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "auto_gpt_plugin_template"
+name = "auto_gpt_email_plugin_"
 version = "0.0.1"
 authors = [
-  { name="Bill Schumacher", email="34168009+BillSchumacher@users.noreply.github.com" },
+  { name="Riensen", email="3340218+riensen@users.noreply.github.com" },
 ]
-description = "The template plugin for Auto-GPT."
+description = "The Auto-GPT Email Plugin"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -19,8 +19,8 @@ classifiers = [
 dependencies = ["abstract-singleton"]
 
 [project.urls]
-"Homepage" = "https://github.com/Torantulino/Auto-GPT-Plugin-Template"
-"Bug Tracker" = "https://github.com/Torantulino/Auto-GPT-Plugin-Template/issues"
+"Homepage" = "https://github.com/riensen/Auto-GPT-Email-Plugin"
+"Bug Tracker" = "https://github.com/riensen/Auto-GPT-Email-Plugin/issues"
 
 [tool.black]
 line-length = 88
