@@ -338,9 +338,3 @@ def get_email_body(msg: email.message.Message) -> str:
                 return part.get_payload(decode=True).decode()
     else:
         return msg.get_payload(decode=True).decode()
-
-
-class AutoGPTPluginTemplate:
-
-    def __init__(self):
-        self._name = "Auto-GPT-Plugin"
