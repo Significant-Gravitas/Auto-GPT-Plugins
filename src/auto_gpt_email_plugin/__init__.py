@@ -27,7 +27,7 @@ class AutoGPTPluginEmail(AutoGPTPluginTemplate):
         super().__init__()
         self._name = "Auto-GPT-Email-Plugin"
         self._version = "0.1.0"
-        self._description = "This is the Auto-GPT email plugin."
+        self._description = "Auto-GPT Email Plugin: Supercharge email management."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         prompt.add_command(
