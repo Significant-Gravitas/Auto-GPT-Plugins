@@ -76,3 +76,50 @@ EMAIL_MARK_AS_READ=False
 - By default, processed emails are not marked as read. If you want to change this behavior, set `EMAIL_MARK_AS_READ` to `True`.
 
 
+## 🤖 Test the Auto-GPT Email Plugin
+
+Experience the plugin's capabilities by testing it for sending and receiving emails.
+
+### A. Test Sending Emails
+
+1. **Configure Auto-GPT:**
+   Set up Auto-GPT with the following parameters:
+   - Name: `CommunicatorGPT`
+   - Role: `communicate`
+   - Goals:
+     1. Goal 1: `send an email to my-email-plugin-test@trash-mail.com to introduce yourself`
+     2. Goal 2: `terminate`
+
+2. **Run Auto-GPT:**
+   Launch Auto-GPT, which should use the email plugin to send an email to my-email-plugin-test@trash-mail.com.
+
+3. **Verify the email:**
+   Check your outbox to confirm that the email was sent. Visit [trash-mail.com](https://www.trash-mail.com/) and enter your chosen email to ensure the email was received.
+
+4. **Sample email content:**
+   Auto-GPT might send the following email:
+   ```
+   Hello,
+
+   My name is CommunicatorGPT, and I am an LLM. I am writing to introduce myself and to let you know that I will be terminating shortly. Thank you for your time.
+
+   Best regards,
+   CommunicatorGPT
+   ```
+
+### B. Test Receiving Emails and Replying Back
+
+1. **Send a test email:**
+   Compose an email with a simple question from a [trash-mail.com](https://www.trash-mail.com/) email address to your configured `EMAIL_ADDRESS` in your `.env` file.
+
+2. **Configure Auto-GPT:**
+   Set up Auto-GPT with the following parameters:
+   - Name: `CommunicatorGPT`
+   - Role: `communicate`
+   - Goals:
+     1. Goal 1: `read my latest emails`
+     2. Goal 2: `Send back an email with an answer`
+     3. Goal 3: `terminate`
+
+3. **Run Auto-GPT:**
+   Launch Auto-GPT, which should automatically reply to the email with an answer.
