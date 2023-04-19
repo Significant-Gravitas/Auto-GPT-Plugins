@@ -85,10 +85,10 @@ Experience the plugin's capabilities by testing it for sending and receiving ema
 1. **Configure Auto-GPT:**
    Set up Auto-GPT with the following parameters:
    - Name: `CommunicatorGPT`
-   - Role: `communicate`
+   - Role: `Communicate`
    - Goals:
-     1. Goal 1: `send an email to my-email-plugin-test@trash-mail.com to introduce yourself`
-     2. Goal 2: `terminate`
+     1. Goal 1: `Send an email to my-email-plugin-test@trash-mail.com to introduce yourself`
+     2. Goal 2: `Terminate`
 
 2. **Run Auto-GPT:**
    Launch Auto-GPT, which should use the email plugin to send an email to my-email-plugin-test@trash-mail.com.
@@ -115,11 +115,11 @@ Experience the plugin's capabilities by testing it for sending and receiving ema
 2. **Configure Auto-GPT:**
    Set up Auto-GPT with the following parameters:
    - Name: `CommunicatorGPT`
-   - Role: `communicate`
+   - Role: `Communicate`
    - Goals:
-     1. Goal 1: `read my latest emails`
+     1. Goal 1: `Read my latest emails`
      2. Goal 2: `Send back an email with an answer`
-     3. Goal 3: `terminate`
+     3. Goal 3: `Terminate`
 
 3. **Run Auto-GPT:**
    Launch Auto-GPT, which should automatically reply to the email with an answer.
