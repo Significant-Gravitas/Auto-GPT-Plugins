@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "auto_gpt_email_plugin_"
+name = "auto_gpt_email_plugin"
 version = "0.0.1"
 authors = [
   { name="Riensen", email="3340218+riensen@users.noreply.github.com" },
