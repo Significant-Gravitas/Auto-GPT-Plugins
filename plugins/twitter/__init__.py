@@ -12,14 +12,14 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
+class Twitter(AbstractSingleton, metaclass=Singleton):
     """
     This is a template for Auto-GPT plugins.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Plugin-Template"
+        self._name = "Twitter"
         self._version = "0.1.0"
         self._description = "This is a template for Auto-GPT plugins."
 
