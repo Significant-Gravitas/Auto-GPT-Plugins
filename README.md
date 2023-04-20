@@ -1,5 +1,11 @@
-# Auto-GPT Email Plugin: Revolutionize Your Email Management with Auto-GPT
+# Auto-GPT Email Plugin: Revolutionize Your Email Management with Auto-GPT 📧 
 The Auto-GPT Email Plugin is an innovative and powerful plugin for the groundbreaking base software, Auto-GPT. Harnessing the capabilities of the latest Auto-GPT architecture, Auto-GPT aims to autonomously achieve any goal you set, pushing the boundaries of what is possible with artificial intelligence. This email plugin takes Auto-GPT to the next level by enabling it to send and read emails, opening up a world of exciting use cases.
+
+
+<img width="1063" alt="auto-gpt-email-plugin" src="https://user-images.githubusercontent.com/3340218/233331404-fd663c98-5065-4aa5-8cfb-12ce3ed261d0.png">
+
+<img width="1011" alt="gmail-view-auto-gpt-email-plugin" src="https://user-images.githubusercontent.com/3340218/233331422-c5afe433-d4ad-48e0-a0e4-2783cc5f842b.png">
+
 
 ## Key Features:
 - **Email Management**: Bid farewell to cluttered inboxes and missed emails. The Auto-GPT Email Plugin empowers Auto-GPT to categorize, prioritize, and manage your emails with unparalleled efficiency. No more manually sifting through hundreds of emails; let AI handle it with ease.
