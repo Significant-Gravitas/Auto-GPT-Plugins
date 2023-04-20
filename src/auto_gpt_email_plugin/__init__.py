@@ -18,7 +18,7 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTPluginEmail(AutoGPTPluginTemplate):
+class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
     """
     This is the Auto-GPT email plugin.
     """

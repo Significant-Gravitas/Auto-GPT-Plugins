@@ -75,6 +75,17 @@ EMAIL_MARK_AS_READ=False
 - If you're not using Gmail, adjust the `EMAIL_SMTP_HOST`, `EMAIL_IMAP_SERVER`, and `EMAIL_SMTP_PORT` values according to your email provider's settings.
 - By default, processed emails are not marked as read. If you want to change this behavior, set `EMAIL_MARK_AS_READ` to `True`.
 
+### 10. Allowlist Plugin
+In your `.env` search for `ALLOWLISTED_PLUGINS` and add this Plugin:
+
+```ini
+################################################################################
+### ALLOWLISTED PLUGINS
+################################################################################
+
+#ALLOWLISTED_PLUGINS - Sets the listed plugins that are allowed (Example: plugin1,plugin2,plugin3)
+ALLOWLISTED_PLUGINS=AutoGPTEmailPlugin
+```
 
 ## 🤖 Test the Auto-GPT Email Plugin
 
