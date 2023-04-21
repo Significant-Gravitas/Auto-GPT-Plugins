@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 # email imports
+import json
 import smtplib
 import email
 import imaplib
@@ -290,7 +291,8 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
     """
     imap_server = os.getenv("EMAIL_IMAP_SERVER")
     mark_as_read = os.getenv("EMAIL_MARK_AS_READ")
-
+    mark_as_read = json.loads(mark_as_read.lower())
+    
     mail = imaplib.IMAP4_SSL(imap_server)
     mail.login(email_sender, email_password)
     mail.select(imap_folder)
@@ -299,9 +301,9 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
     messages = []
     for num in search_data[0].split():
         if mark_as_read:
-            _, msg_data = mail.fetch(num, "(BODY.PEEK[])")
-        else:
             _, msg_data = mail.fetch(num, "(RFC822)")
+        else:
+            _, msg_data = mail.fetch(num, "(BODY.PEEK[])")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
