@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "autogpt_plugins"
+name = "agpt_plugins"
 version = "0.0.2"
 authors = [
   { name="Torantulino", email="support@agpt.co" },
@@ -19,8 +19,8 @@ classifiers = [
 dependencies = ["abstract-singleton"]
 
 [project.urls]
-"Homepage" = "https://github.com/Torantulino/Auto-GPT"
-"Bug Tracker" = "https://github.com/Torantulino/Auto-GPT"
+"Homepage" = "https://github.com/Significant-Gravitas/Auto-GPT-Plugins"
+"Bug Tracker" = "https://github.com/Significant-Gravitas/Auto-GPT-Plugins"
 
 [tool.black]
 line-length = 88
