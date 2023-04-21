@@ -10,21 +10,17 @@ The Auto-GPT Email Plugin is an innovative and powerful plugin for the groundbre
 
 <img width="1011" alt="gmail-view-auto-gpt-email-plugin" src="https://user-images.githubusercontent.com/3340218/233331422-c5afe433-d4ad-48e0-a0e4-2783cc5f842b.png">
 
+## 🌟 Key Features
 
-## 💡 Key Features:
-- 📥 **Email Management**: Bid farewell to cluttered inboxes and missed emails. The Auto-GPT Email Plugin empowers Auto-GPT to categorize, prioritize, and manage your emails with unparalleled efficiency. No more manually sifting through hundreds of emails; let AI handle it with ease.
+- 📬 **Read Emails:** Effortlessly manage your inbox with Auto-GPT's email reading capabilities, ensuring you never miss important information.
+- 📤 **Auto-Compose and Send Emails**: Auto-GPT crafts personalized, context-aware emails using its advanced language model capabilities, saving you time and effort.
+- 📝 **Save Emails to Drafts Folder:** Gain more control by letting Auto-GPT create email drafts that you can review and edit before sending, ensuring your messages are fine-tuned to your preferences.
+- 📎 **Send Emails with Attachments:** Effortlessly send emails with attachments, making your communication richer and more comprehensive.
+- 🛡️ **Custom Email Signature:** Personalize your emails with a custom Auto-GPT signature, adding a touch of automation to every message sent by Auto-GPT.
+- 🎯 **Auto-Reply and Answer Questions:** Streamline your email responses by letting Auto-GPT intelligently read, analyze, and reply to incoming messages with accurate answers.
+- 🔌 **Seamless Integration with Auto-GPT:** Enjoy easy setup and integration with the base Auto-GPT software, opening up a world of powerful automation possibilities.
 
-- 🤖 **Automated Replies**: Whether it's answering inquiries, providing customer support, or acknowledging receipt of important messages, the Auto-GPT Email Plugin allows Auto-GPT to compose and send accurate, context-aware, and human-like email replies that save you time and effort.
-
-- 📆 **Email Scheduling**: Plan your communication like never before. The plugin enables Auto-GPT to schedule emails based on your preferences and recipients' availability, ensuring optimal delivery times and increased engagement.
-
-- 📄 **Smart Email Summarization**: Don't have time to read lengthy emails? The Auto-GPT Email Plugin utilizes Auto-GPT's advanced natural language processing capabilities to generate concise and meaningful summaries, keeping you informed without the need to read entire emails.
-
-- 📰 **Personalized Newsletters**: Leverage Auto-GPT's creativity and language prowess to create tailored newsletters for your audience. Keep your subscribers engaged with captivating content generated autonomously by AI.
-
-- 🌐 **Language Translation**: Break the language barrier with Auto-GPT's ability to translate emails to and from multiple languages. Communicate effortlessly with your global contacts, all thanks to the Auto-GPT Email Plugin.
-
-- 🚫 **Spam Filtering**: Tired of spam cluttering your inbox? Auto-GPT can analyze incoming emails, detect and filter out spam, and ensure you only receive the messages that matter.
+Unlock the full potential of your email management with the Auto-GPT Email Plugin and revolutionize your email experience today! 🚀
 
 ## 🔧 Installation
 
@@ -79,13 +75,21 @@ EMAIL_IMAP_SERVER=imap.gmail.com
 #Optional Settings
 EMAIL_MARK_AS_SEEN=False
 EMAIL_SIGNATURE="This was sent by Auto-GPT"
+EMAIL_DRAFT_MODE_WITH_FOLDER=[Gmail]/Drafts
 ```
 
-- Set `EMAIL_ADDRESS` to your sender email address.
-- Set `EMAIL_PASSWORD` to your SMTP password. For Gmail, use an [App Password](https://myaccount.google.com/apppasswords).
-- If you're not using Gmail, adjust the `EMAIL_SMTP_HOST`, `EMAIL_IMAP_SERVER`, and `EMAIL_SMTP_PORT` values according to your email provider's settings.
-- By default, processed emails are not marked as `SEEN`. If you want to change this behavior, set `EMAIL_MARK_AS_SEEN` to `True`.
-- By default, an email signature is not included. To modify this setting, configure the `EMAIL_SIGNATURE` parameter to ensure that each message sent by Auto-GPT features the desired email signature.
+1. **Email address and password:**
+    - Set `EMAIL_ADDRESS` to your sender email address.
+    - Set `EMAIL_PASSWORD` to your password. For Gmail, use an [App Password](https://myaccount.google.com/apppasswords).
+
+2. **Provider-specific settings:**
+    - If not using Gmail, adjust `EMAIL_SMTP_HOST`, `EMAIL_IMAP_SERVER`, and `EMAIL_SMTP_PORT` according to your email provider's settings.
+
+3. **Optional settings:**
+    - `EMAIL_MARK_AS_SEEN`: By default, processed emails are not marked as `SEEN`. Set to `True` to change this.
+    - `EMAIL_SIGNATURE`: By default, no email signature is included. Configure this parameter to add a custom signature to each message sent by Auto-GPT.
+    - `EMAIL_DRAFT_MODE_WITH_FOLDER`: Prevents emails from being sent and instead stores them as drafts in the specified IMAP folder. `[Gmail]/Drafts` is the default drafts folder for Gmail.
+
 
 ### 10. Allowlist Plugin
 In your `.env` search for `ALLOWLISTED_PLUGINS` and add this Plugin:
