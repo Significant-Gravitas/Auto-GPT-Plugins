@@ -8,5 +8,5 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 
 | Plugin       | Description     |
 |--------------|-----------|
-| Twitter      | It does twitter things|
+| Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform.|
 
