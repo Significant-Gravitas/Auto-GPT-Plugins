@@ -1,0 +1,14 @@
+black
+isort
+flake8
+pylint
+abstract-singleton
+wheel
+setuptools
+build
+twine
+tweepy
+pandas
+auto_gpt_plugin_template
+python-dotenv
+pathlib
