@@ -31,13 +31,13 @@ Some third-party plugins have been created by contributors that are not included
 
 | Plugin       | Description     | Repository |
 |--------------|-----------------|-------------|
-| SystemInformation      | This plugin adds an extra line to the prompt, serving as a hint for the AI to use shell commands likely supported by the current system. By incorporating this plugin, you can ensure that the AI model provides more accurate and system-specific shell commands, improving its overall performance and usefulness. | [hdkiller/Auto-GPT-SystemInfo](https://github.com/hdkiller/Auto-GPT-SystemInfo) |
+| System Information      | This plugin adds an extra line to the prompt, serving as a hint for the AI to use shell commands likely supported by the current system. By incorporating this plugin, you can ensure that the AI model provides more accurate and system-specific shell commands, improving its overall performance and usefulness. | [hdkiller/Auto-GPT-SystemInfo](https://github.com/hdkiller/Auto-GPT-SystemInfo) |
 | Notion      | Notion plugin for Auto-GPT.  | [doutv/Auto-GPT-Notion](https://github.com/doutv/Auto-GPT-Notion) |
-| Email-Plugin | Revolutionize Your Email Management with Auto-GPT | [riensen/Auto-GPT-Email-Plugin](https://github.com/riensen/Auto-GPT-Email-Plugin)
-
+| Email Plugin | Revolutionize Your Email Management with Auto-GPT | [riensen/Auto-GPT-Email-Plugin](https://github.com/riensen/Auto-GPT-Email-Plugin)
+| Telegram | A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [Wladastic/Auto-GPT-Telegram-Plugin](https://github.com/Wladastic/Auto-GPT-Telegram-Plugin)
 ## Configuration
 
-For interactionless use, set ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3 in your .env file. 
+For interactionless use, set ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc in your .env file. 
 
 ## Get Help
 
