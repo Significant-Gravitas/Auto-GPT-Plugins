@@ -8,8 +8,12 @@ import json
 import smtplib
 import email
 import imaplib
-from email.message import EmailMessage
 from email.header import decode_header
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+import autogpt
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -32,6 +36,15 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         prompt.add_command(
+            "Read Emails",
+            "read_emails",
+            {
+                "imap_folder": "<imap_folder>",
+                "imap_search_command":
+                "<imap_search_criteria_command>"
+            },
+            read_emails)
+        prompt.add_command(
             "Send Email",
             "send_email",
             {
@@ -42,14 +55,17 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
             send_email
         )
         prompt.add_command(
-            "Read Emails",
-            "read_emails",
+            "Send Email",
+            "send_email_with_attachment",
             {
-                "imap_folder": "<imap_folder>",
-                "imap_search_command":
-                "<imap_search_criteria_command>"
+                "to": "<to>",
+                "subject": "<subject>",
+                "body": "<body>",
+                "attachment": "<path_to_file>"
             },
-            read_emails)
+            send_email_with_attachment
+        )
+
         return prompt
 
     def can_handle_post_prompt(self) -> bool:
@@ -244,9 +260,12 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
 
 email_sender = os.getenv("EMAIL_ADDRESS")
 email_password = os.getenv("EMAIL_PASSWORD")
-
+signature = os.getenv("EMAIL_SIGNATURE")
 
 def send_email(recipient: str, subject: str, message: str) -> str:
+    return send_email_with_attachment(recipient, subject, message, None)
+
+def send_email_with_attachment(recipient: str, subject: str, message: str, attachment: str) -> str:
     """Send an email
 
     Args:
@@ -265,17 +284,30 @@ def send_email(recipient: str, subject: str, message: str) -> str:
     elif not email_password:
         return "Error: email not sent. EMAIL_PASSWORD not set in environment."
 
-    msg = EmailMessage()
+    msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = email_sender
     msg['To'] = recipient
-    msg.set_content(message)
+
+    if signature:
+        message += f"\n{signature}"
+
+    msg.attach(MIMEText(message))
+
+    if attachment:
+        relative_path = autogpt.workspace.path_in_workspace(attachment)
+        mime_attachment = MIMEApplication(open(relative_path, 'rb').read())
+        mime_attachment.add_header('Content-Disposition', 'attachment', filename= attachment)
+        msg.attach(mime_attachment)
 
     # send email
     with smtplib.SMTP(smtp_host, smtp_port) as smtp:
+        smtp.ehlo()
         smtp.starttls()
         smtp.login(email_sender, email_password)
         smtp.send_message(msg)
+    return "Email was sent!"
+
 
 
 def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
@@ -290,8 +322,9 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
         str: Any error messages
     """
     imap_server = os.getenv("EMAIL_IMAP_SERVER")
-    mark_as_read = os.getenv("EMAIL_MARK_AS_READ")
-    mark_as_read = json.loads(mark_as_read.lower())
+    mark_as_read = os.getenv("EMAIL_MARK_AS_SEEN")
+    if isinstance(mark_as_read, str):
+        mark_as_read = json.loads(mark_as_read.lower())
     
     mail = imaplib.IMAP4_SSL(imap_server)
     mail.login(email_sender, email_password)
@@ -328,6 +361,8 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
                 })
 
     mail.logout()
+    if not messages:
+        return f"There are no Emails in your folder `{imap_folder}` when searching with imap command `{imap_search_command}`"
     return messages
 
 

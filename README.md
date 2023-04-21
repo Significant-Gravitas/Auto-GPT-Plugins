@@ -75,13 +75,17 @@ EMAIL_PASSWORD=
 EMAIL_SMTP_HOST=smtp.gmail.com
 EMAIL_SMTP_PORT=587
 EMAIL_IMAP_SERVER=imap.gmail.com
-EMAIL_MARK_AS_READ=False
+
+#Optional Settings
+EMAIL_MARK_AS_SEEN=False
+EMAIL_SIGNATURE="This was sent by Auto-GPT"
 ```
 
 - Set `EMAIL_ADDRESS` to your sender email address.
 - Set `EMAIL_PASSWORD` to your SMTP password. For Gmail, use an [App Password](https://myaccount.google.com/apppasswords).
 - If you're not using Gmail, adjust the `EMAIL_SMTP_HOST`, `EMAIL_IMAP_SERVER`, and `EMAIL_SMTP_PORT` values according to your email provider's settings.
-- By default, processed emails are not marked as read. If you want to change this behavior, set `EMAIL_MARK_AS_READ` to `True`.
+- By default, processed emails are not marked as `SEEN`. If you want to change this behavior, set `EMAIL_MARK_AS_SEEN` to `True`.
+- By default, an email signature is not included. To modify this setting, configure the `EMAIL_SIGNATURE` parameter to ensure that each message sent by Auto-GPT features the desired email signature.
 
 ### 10. Allowlist Plugin
 In your `.env` search for `ALLOWLISTED_PLUGINS` and add this Plugin:
@@ -99,7 +103,7 @@ ALLOWLISTED_PLUGINS=AutoGPTEmailPlugin
 
 Experience the plugin's capabilities by testing it for sending and receiving emails.
 
-### 🅰️ Test Sending Emails
+### 📤 Test Sending Emails
 
 1. **Configure Auto-GPT:**
    Set up Auto-GPT with the following parameters:
@@ -126,7 +130,7 @@ Experience the plugin's capabilities by testing it for sending and receiving ema
    CommunicatorGPT
    ```
 
-### 🅱️ Test Receiving Emails and Replying Back
+### 📬 Test Receiving Emails and Replying Back
 
 1. **Send a test email:**
    Compose an email with a simple question from a [trash-mail.com](https://www.trash-mail.com/) email address to your configured `EMAIL_ADDRESS` in your `.env` file.
@@ -142,3 +146,23 @@ Experience the plugin's capabilities by testing it for sending and receiving ema
 
 3. **Run Auto-GPT:**
    Launch Auto-GPT, which should automatically reply to the email with an answer.
+
+### 🎁 Test Sending Emails with Attachment
+
+1. **Send a test email:**
+   Compose an email with a simple question from a [trash-mail.com](https://www.trash-mail.com/) email address to your configured `EMAIL_ADDRESS` in your `.env` file.
+
+2. **Place attachment in Auto-GPT workspace folder**
+   Insert the attachment intended for sending into the Auto-GPT workspace folder, typically named auto_gpt_workspace, which is located within the cloned [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) Github repository.
+
+3. **Configure Auto-GPT:**
+   Set up Auto-GPT with the following parameters:
+   - Name: `CommunicatorGPT`
+   - Role: `Communicate`
+   - Goals:
+     1. Goal 1: `Read my latest emails`
+     2. Goal 2: `Send back an email with an answer and always attach happy.png`
+     3. Goal 3: `Terminate`
+
+4. **Run Auto-GPT:**
+   Launch Auto-GPT, which should automatically reply to the email with an answer and the attached file.
