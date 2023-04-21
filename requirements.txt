@@ -11,3 +11,4 @@ tweepy
 pandas
 auto_gpt_plugin_template
 python-dotenv
+gradio_tools>=0.0.5
