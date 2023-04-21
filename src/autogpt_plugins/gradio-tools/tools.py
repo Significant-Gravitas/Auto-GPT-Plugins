@@ -23,19 +23,11 @@ class AutoGPTCaptioner(ImageCaptioningTool):
         description="An image captioner. Use this to create a caption for an image. "
         "Input will be a path to an image file. "
         "The output will be a caption of that image.",
-        src="gradio-client-demos/comparing-captioning-models",
+        src="taesiri/BLIP-2",
         hf_token=None
     ) -> None:
         super().__init__(name, description, src, hf_token)
         self.args = {"img": "<full-path-to-image>"}
-
-    def create_job(self, query: dict) -> Job:
-        for v in query.values():
-            if Path(v).exists():
-                return super().create_job(v)
-            elif Path(WORKSPACE_DIR / v).exists():
-                return super().create_job(v)
-        raise ValueError(f"Cannot create captioning job for query: {query}")
 
 
 class AutoGPTStableDiffusion(StableDiffusionTool):
@@ -59,19 +51,11 @@ class AutoGPTWhisperTool(WhisperAudioTranscriptionTool):
         description="A tool for transcribing audio. Use this tool to transcribe an audio file. "
         "track from an image. Input will be a path to an audio file. "
         "The output will the text transcript of that file.",
-        src="abidlabs/whisper-large-v2",
+        src="abidlabs/whisper",
         hf_token=None,
     ) -> None:
         super().__init__(name, description, src, hf_token)
         self.args = {"audio": "full path of audio file"}
-    
-    def create_job(self, query: dict) -> Job:
-        for v in query.values():
-            if Path(v).exists():
-                return super().create_job(v)
-            elif Path(WORKSPACE_DIR / v).exists():
-                return super().create_job(v)
-        raise ValueError(f"Cannot create transcription job for query: {query}")
 
 
 class AutoGPTTextToVideoTool(TextToVideoTool):
@@ -115,25 +99,9 @@ class AutoGPTClipInterrogatorTool(ClipInterrogatorTool):
     def __init__(self, name="ClipInterrogator", description="A tool for reverse engineering a prompt from a source image. " "Use this tool to create a prompt for StableDiffusion that matches the " "input image. The imput is a path to an image. The output is a text string.", src="pharma/CLIP-Interrogator", hf_token=None) -> None:
         super().__init__(name, description, src, hf_token)
         self.args = {"image": "The full path to the image file"}
-    
-    def create_job(self, query: dict) -> Job:
-        for v in query.values():
-            if Path(v).exists():
-                return super().create_job(v)
-            elif Path(WORKSPACE_DIR / v).exists():
-                return super().create_job(v)
-        raise ValueError(f"Cannot create transcription job for query: {query}")
 
 
 class AutoGPTImageToMusicTool(ImageToMusicTool):
     def __init__(self, name="ImagetoMusic", description="A tool for creating music from images. Use this tool to create a musical " "track from an image. Input will be a path to an image file. " "The output will be an audio file generated from that image.", src="fffiloni/img-to-music", hf_token=None) -> None:
         super().__init__(name, description, src, hf_token)
         self.args = {"image": "The full path to the image file"}
-    
-    def create_job(self, query: dict) -> Job:
-        for v in query.values():
-            if Path(v).exists():
-                return super().create_job(v)
-            elif Path(WORKSPACE_DIR / v).exists():
-                return super().create_job(v)
-        raise ValueError(f"Cannot create img-to-music job for query: {query}")
