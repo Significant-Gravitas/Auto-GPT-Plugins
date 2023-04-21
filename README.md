@@ -33,6 +33,7 @@ Some third-party plugins have been created by contributors that are not included
 |--------------|-----------------|-------------|
 | SystemInformation      | This plugin adds an extra line to the prompt, serving as a hint for the AI to use shell commands likely supported by the current system. By incorporating this plugin, you can ensure that the AI model provides more accurate and system-specific shell commands, improving its overall performance and usefulness. | [hdkiller/Auto-GPT-SystemInfo](https://github.com/hdkiller/Auto-GPT-SystemInfo) |
 | Notion      | Notion plugin for Auto-GPT.  | [doutv/Auto-GPT-Notion](https://github.com/doutv/Auto-GPT-Notion) |
+| Email-Plugin | Revolutionize Your Email Management with Auto-GPT | [riensen/Auto-GPT-Email-Plugin](https://github.com/riensen/Auto-GPT-Email-Plugin)
 
 ## Get Help
 
