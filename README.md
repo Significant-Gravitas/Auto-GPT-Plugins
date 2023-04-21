@@ -8,5 +8,5 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 
 | Plugin       | Description     |
 |--------------|-----------|
-| Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform.|
+| [desojo/autogpt-twitter](https://github.com/desojo/autogpt-twitter)      | Gives Auto-GPT the ability to interact with twitter users via the v1.1 API using Tweepy|
 
