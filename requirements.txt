@@ -11,4 +11,3 @@ tweepy
 pandas
 auto_gpt_plugin_template
 python-dotenv
-pathlib
