@@ -1,4 +1,4 @@
-# autogpt-twitter 🐣
+# desojo/autogpt-twitter 🐣
 
 A plugin adding twitter API integration into Auto GPT
 
@@ -7,7 +7,7 @@ A plugin adding twitter API integration into Auto GPT
 - Post a tweet using the `post_tweet(tweet)` command
 - Post a reply to a specific tweet using the `post_reply(tweet, tweet_id)` command
 - Get recent mentions using the `get_mentions()` command
-- Search a user's recent tweets via username using the `search_twitter_user(targetUser, numOfItems) command
+- Search a user's recent tweets via username using the `search_twitter_user(targetUser, numOfItems)' command
 
 ## Installation
 
