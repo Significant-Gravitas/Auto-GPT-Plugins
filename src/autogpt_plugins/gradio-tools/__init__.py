@@ -11,8 +11,8 @@ from .tools import (AutoGPTClipInterrogatorTool,
                     AutoGPTCaptioner,
                     AutoGPTPromptGeneratorTool,
                     AutoGPTImageToMusicTool,
-                    AutoGPTDocumentAnsweringTool,
-                    GradioTool)
+                    AutoGPTDocumentAnsweringTool)
+from gradio_tools import GradioTool
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -234,6 +234,6 @@ class AutoGPTGradioTools(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
         for tool in self.tools:
-            prompt.add_command(tool.name, tool.description, tool.args, tool.run)
+            prompt.add_command(tool.description, tool.name.lower(), tool.args, tool.run)
 
         return prompt

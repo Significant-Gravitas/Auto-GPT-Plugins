@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from gradio_tools import (
     StableDiffusionTool,
     ImageCaptioningTool,
@@ -8,9 +7,8 @@ from gradio_tools import (
     DocQueryDocumentAnsweringTool,
     ClipInterrogatorTool,
     ImageToMusicTool,
-    GradioTool
 )
-from gradio_tools.tools import Job
+from gradio_tools.tools.gradio_tool import Job
 from pathlib import Path
 import os
 

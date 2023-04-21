@@ -9,7 +9,7 @@ gradio-tools comes with a set of pre-built tools but it is easy to add new tools
 
 All contributions to `gradio-tools` and this plugin are welcome!
 
-## Features(more coming soon!)
+## Features
 
 Each tool specified via the env file will add a command that gives AutoGPT
 the ability to call that gradio app programmatically and get its prediciton. 
@@ -30,5 +30,6 @@ For example, an LLM could use a Gradio tool to transcribe a voice recording it f
 # Consumer Keys are also known as API keys on the dev portal
 
 AUTOGPT_GRADIO_TOOLS=StableDiffusion,ImageCaptioner
+GRADIO_TOOLS_HF_TOKEN=<Optional hs token to clone spaces and avoid rate limits>
 ```
 
