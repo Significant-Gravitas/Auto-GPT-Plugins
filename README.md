@@ -13,7 +13,7 @@ Follow these steps to configure the Auto-GPT Plugins:
 
    If you haven't already, create a folder `Significant-Gravitas` and clone the [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) repository into the folder. Follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT).
 
-2. **Clone the Auto-GPT-Plugins repository**
+1. **Clone the Auto-GPT-Plugins repository**
 
    Clone this repository into the `Significant-Gravitas` folder as well:
    ```
@@ -21,7 +21,7 @@ Follow these steps to configure the Auto-GPT Plugins:
    ```
    You should now have two folders in your `Significant-Gravitas` folder: `Auto-GPT` and `Auto-GPT-Plugins`.
 
-3. **Install required dependencies**
+1. **Install required dependencies**
 
    Navigate to the Auto-GPT-Plugins folder in your terminal and execute the following command to install the necessary dependencies:
 
@@ -35,7 +35,7 @@ Follow these steps to configure the Auto-GPT Plugins:
    pip install -r .\requirements.txt
    ```
 
-4. **Package the plugin as a Zip file**
+1. **Package the plugin as a Zip file**
 
    Execute the following command to compress the Auto-GPT-Plugins folder and place the archive into the `Auto-GPT/plugins` folder:
 
@@ -82,26 +82,26 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 ### First Party How-To
 
 1. Clone the plugins repo
-2. Follow the structure of the other plugins, implementing the plugin interface as required
-3. Write your tests
-4. Make a PR back to this repo!
+1. Follow the structure of the other plugins, implementing the plugin interface as required
+1. Write your tests
+1. Make a PR back to this repo!
 
 ### Third Party How-To
 
 1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
-2. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
+1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
 
 ### Migrating Third Party to First Party
 
 > Thanks for contributing a plugin to the project!
 
 1. Clone this repo.
-2. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple descriptive name such as `notion`, `twitter`, or `web_ui`.
-3. Take the files from your third-party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
-4. Add your readme from your third-party plugin to the folder you created
-5. Add your plugin to the root readme with a description and a link to your plugin-specific readme
-6. Add your plugin's Python package requirements to `requirements.txt`
-7. Add tests to get your plugin to 80% code coverage
+1. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple descriptive name such as `notion`, `twitter`, or `web_ui`.
+1. Take the files from your third-party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
+1. Add your readme from your third-party plugin to the folder you created
+1. Add your plugin to the root readme with a description and a link to your plugin-specific readme
+1. Add your plugin's Python package requirements to `requirements.txt`
+1. Add tests to get your plugin to 80% code coverage
 
 ## Get Help
 
