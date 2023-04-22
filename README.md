@@ -24,44 +24,33 @@ Follow these steps to configure the Auto-GPT Plugins:
 3. **Install required dependencies**
 
    Navigate to the Auto-GPT-Plugins folder in your terminal and execute the following command to install the necessary dependencies:
+
+   - For Command Prompt:
    ```
    pip install -r requirements.txt
+   ```
+   
+   - For PowerShell:
+   ```
+   pip install -r .\requirements.txt
    ```
 
 4. **Package the plugin as a Zip file**
 
    Execute the following command to compress the Auto-GPT-Plugins folder and place the archive into the `Auto-GPT/plugins` folder:
+
+   - For Command Prompt:
    ```
    zip -ru ../Auto-GPT/plugins/Auto-GPT-Plugins.zip
    ```
+   
+   - For PowerShell:
+   ```
+   Compress-Archive -Path .\* -DestinationPath ..\Auto-GPT\plugins\Auto-GPT-Plugins.zip -Force
+   ```
+
    Alternatively, you can manually zip the `Auto-GPT-Plugins` folder, rename it to Auto-GPT-Plugins.zip, and then paste the zip file into the `Auto-GPT/plugins/` directory.
 
-
-1. **Install Auto-GPT**
-
-   If you haven't already, create a folder `Significant-Gravitas` and clone [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) repository into the folder. Follow the installation instructions of [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT).
-
-2. **Clone the Auto-GPT-Plugins repository**
-
-   Clone this repository also into the `Significant-Gravitas` folder:
-   ```
-   git clone https://github.com/Significant-Gravitas/Auto-GPT-Plugins.git
-   ```
-
-2. **Install required dependencies**
-
-   Navigate to the Auto-GPT-Plugins folder in your terminal and execute the following command to install the necessary dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-3. **Package the plugin as a Zip file**
-
-   Execute the following command to compress the Auto-GPT-Plugins folder and to paste the archive into the `Auto-GPT/plugins` folder:
-   ```
-   zip -ru ../Auto-GPT/plugins/Auto-GPT-Plugins.zip
-   ```
-   Alternatively, you can also zip the `Auto-GPT-Plugins` manually and rename it to Auto-GPT-Plugins.zip. Then paste the zip file manually into `Auto-GPT/plugins/`
 
 ## Plugins in the repository
 
