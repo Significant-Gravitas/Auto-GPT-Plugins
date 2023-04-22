@@ -11,9 +11,8 @@ A plugin adding twitter API integration into Auto GPT
 
 ## Installation
 
-1. Download this repository, and save it as `autogpt-twitter.zip`
-2. Place the `.zip` file in the plugins directory of your AutoGPT install
-3. Add your twitter API information to the `.env` file within AutoGPT:
+1. Clone this repo as instructed in the main repository
+2. Add this chunk of code along with your twitter API information to the `.env` file within AutoGPT:
 
 ```
 ################################################################################
@@ -30,7 +29,7 @@ TW_CLIENT_ID=
 TW_CLIENT_ID_SECRET=
 ```
 
-## Twitter API Setup
+## Twitter API Setup for v1.1 access(soon to be deprecated 😭)
 
 1. Go to the [Twitter Dev Portal](https://developer.twitter.com/en/portal/dashboard)
 2. Delete any apps/projects that it creates for you
