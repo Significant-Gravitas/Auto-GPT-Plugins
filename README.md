@@ -6,6 +6,7 @@
 
 ## Installation
 
+<h1 align=center> ⚠️This is a work in progress⚠️ </h1>
 Download this repository as a .zip file, copy it to ./plugins/, and rename it to [Auto-GPT-Plugins.zip](https://github.com/Significant-Gravitas/Auto-GPT/archive/refs/heads/master.zip)
 
 To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
