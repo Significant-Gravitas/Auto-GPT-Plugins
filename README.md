@@ -38,7 +38,7 @@ Some third-party plugins have been created by contributors that are not included
 | Telegram | A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [Wladastic/Auto-GPT-Telegram-Plugin](https://github.com/Wladastic/Auto-GPT-Telegram-Plugin)
 ## Configuration
 
-For interactionless use, set ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc in your .env file. 
+For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file. 
 
 ## Get Help
 
