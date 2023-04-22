@@ -52,11 +52,24 @@ Making a plugin is amazing! There's two routes to follow, first-party or third-p
 ### First Party How-To
 1. Clone the pluigins repo
 1. Follow the structure of the other plugins, implementing the plugin interface as required
+1. Write your tests
 1. Make a PR back to this repo!
 
 ### Third Party How-To
 1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
 1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
+
+### Migrating Third Party to First Party
+
+> Thanks for contributing a plugin to the project!
+
+1. Clone this repo.
+1. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple desriptive name such as `notion`, `twitter` or `web_ui`.
+1. Take the files from your third party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
+1. Add your readme from your third party plugin to the folder you created
+1. Add your plugin to the root readme with a description and a link to your plugin specific readme
+1. Add your plugin's python package requirements to `requirements.txt`
+1. Add tests to get your plugin to 80% code coverage
 
 ## Get Help
 
