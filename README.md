@@ -22,9 +22,10 @@ Clone this repository into the plugins direcory of [Auto-GPT](https://github.dev
 
 For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
 
+
 | Plugin       | Description     | Location |
 |--------------|-----------|--------|
-| Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
+| Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
 
 ## Third party plugins:
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
@@ -42,4 +43,3 @@ For interactionless use, set ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2
 ## Get Help
 
 Visit [discord](https://discord.gg/autogpt) server for more information.
-
