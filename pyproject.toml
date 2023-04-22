@@ -3,14 +3,15 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "auto_gpt_email_plugin"
-version = "0.0.1"
+name = "agpt_plugins"
+version = "0.0.2"
 authors = [
-  { name="Riensen", email="3340218+riensen@users.noreply.github.com" },
+  { name="Torantulino", email="support@agpt.co" }, { name="Riensen", email="3340218+riensen@users.noreply.github.com" }
 ]
-description = "The Auto-GPT Email Plugin"
+description = "The plugins for Auto-GPT."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
+>>>>>>> upstream/master
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -19,12 +20,12 @@ classifiers = [
 dependencies = ["abstract-singleton"]
 
 [project.urls]
-"Homepage" = "https://github.com/riensen/Auto-GPT-Email-Plugin"
-"Bug Tracker" = "https://github.com/riensen/Auto-GPT-Email-Plugin/issues"
+"Homepage" = "https://github.com/Significant-Gravitas/Auto-GPT-Plugins"
+"Bug Tracker" = "https://github.com/Significant-Gravitas/Auto-GPT-Plugins"
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py38']
 include = '\.pyi?$'
 extend-exclude = ""
 
