@@ -1,39 +1,70 @@
 # Auto-GPT-Plugins
 
-
 > ⚠️💀 **WARNING** 💀⚠️:
 > Review the code of any plugin you use thoroughly, as plugins can execute any Python code, potentially leading to malicious activities, such as stealing your API keys.
 
 ## Installation
 
-<h1 align=center> ⚠️This is a work in progress⚠️ </h1>
-Download this repository as a .zip file, copy it to ./plugins/, and rename it to [Auto-GPT-Plugins.zip](https://github.com/Significant-Gravitas/Auto-GPT/archive/refs/heads/master.zip)
+**_⚠️This is a work in progress⚠️_**
 
-To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
+Follow these steps to configure the Auto-GPT Plugins:
 
-```
-curl -o ./plugins/Auto-GPT-Plugins.zip https://github.com/Significant-Gravitas/Auto-GPT/archive/refs/heads/master.zip
-```
+1. **Install Auto-GPT**
 
-In PowerShell:
+   If you haven't already, create a folder `Significant-Gravitas` and clone the [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) repository into the folder. Follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT).
 
-```
-Invoke-WebRequest -Uri "https://github.com/Significant-Gravitas/Auto-GPT/archive/refs/heads/master.zip" -OutFile "./plugins/Auto-GPT-Plugins.zip"
-```
+1. **Clone the Auto-GPT-Plugins repository**
 
-Clone this repository into the plugins direcory of [Auto-GPT](https://github.dev/Significant-Gravitas/Auto-GPT).
+   Clone this repository into the `Significant-Gravitas` folder as well:
+   ```
+   git clone https://github.com/Significant-Gravitas/Auto-GPT-Plugins.git
+   ```
+   You should now have two folders in your `Significant-Gravitas` folder: `Auto-GPT` and `Auto-GPT-Plugins`.
+
+1. **Install required dependencies**
+
+   Navigate to the Auto-GPT-Plugins folder in your terminal and execute the following command to install the necessary dependencies:
+
+   - For Command Prompt:
+   ```
+   pip install -r requirements.txt
+   ```
+   
+   - For PowerShell:
+   ```
+   pip install -r .\requirements.txt
+   ```
+
+1. **Package the plugin as a Zip file**
+
+   Execute the following command to compress the Auto-GPT-Plugins folder and place the archive into the `Auto-GPT/plugins` folder:
+
+   - For Command Prompt:
+   ```
+   zip -ru ../Auto-GPT/plugins/Auto-GPT-Plugins.zip
+   ```
+   
+   - For PowerShell:
+   ```
+   Compress-Archive -Path .\* -DestinationPath ..\Auto-GPT\plugins\Auto-GPT-Plugins.zip -Force
+   ```
+
+   Alternatively, you can manually zip the `Auto-GPT-Plugins` folder, rename it to Auto-GPT-Plugins.zip, and then paste the zip file into the `Auto-GPT/plugins/` directory.
+
 
 ## Plugins in the repository
 
 For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
 
+| Plugin  | Description | Location |
+|---------|-------------|----------|
+| Twitter | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
 
 | Plugin       | Description     | Location |
 |--------------|-----------|--------|
 | Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
 | Email | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)
 
-## Third party plugins:
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
 | Plugin       | Description     | Repository |
@@ -44,19 +75,21 @@ Some third-party plugins have been created by contributors that are not included
 
 ## Configuration
 
-For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file. 
+For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file.
 
 ## Making a plugin
 
-Making a plugin is amazing! There's two routes to follow, first-party or third-party. First-party plugins are included in this repo and get included by default with all other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first party plugins for plugins you expect others to use and want, and third party for things specifc to you. 
+Creating a plugin is a rewarding experience! You can choose between first-party or third-party plugins. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you.
 
 ### First Party How-To
-1. Clone the pluigins repo
+
+1. Clone the plugins repo
 1. Follow the structure of the other plugins, implementing the plugin interface as required
 1. Write your tests
 1. Make a PR back to this repo!
 
 ### Third Party How-To
+
 1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
 1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
 
@@ -65,13 +98,13 @@ Making a plugin is amazing! There's two routes to follow, first-party or third-p
 > Thanks for contributing a plugin to the project!
 
 1. Clone this repo.
-1. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple desriptive name such as `notion`, `twitter` or `web_ui`.
-1. Take the files from your third party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
-1. Add your readme from your third party plugin to the folder you created
-1. Add your plugin to the root readme with a description and a link to your plugin specific readme
-1. Add your plugin's python package requirements to `requirements.txt`
+1. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple descriptive name such as `notion`, `twitter`, or `web_ui`.
+1. Take the files from your third-party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
+1. Add your readme from your third-party plugin to the folder you created
+1. Add your plugin to the root readme with a description and a link to your plugin-specific readme
+1. Add your plugin's Python package requirements to `requirements.txt`
 1. Add tests to get your plugin to 80% code coverage
 
 ## Get Help
 
-Visit [discord](https://discord.gg/autogpt) server for more information.
+Visit the [discord](https://discord.gg/autogpt) server for more information.
