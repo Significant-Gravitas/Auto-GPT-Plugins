@@ -2,7 +2,6 @@
 
 The Auto-GPT Email Plugin is an innovative and powerful plugin for the groundbreaking base software, Auto-GPT. Harnessing the capabilities of the latest Auto-GPT architecture, Auto-GPT aims to autonomously achieve any goal you set, pushing the boundaries of what is possible with artificial intelligence. This email plugin takes Auto-GPT to the next level by enabling it to send and read emails, opening up a world of exciting use cases.
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/riensen/Auto-GPT-Email-Plugin?style=social)](https://github.com/riensen/Auto-GPT-Email-Plugin/stargazers)
 [![Twitter Follow](https://img.shields.io/twitter/follow/riensen?style=social)](https://twitter.com/riensen)
 
 
