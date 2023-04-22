@@ -2,7 +2,6 @@
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-
 PromptGenerator = TypeVar("PromptGenerator")
 
 
@@ -19,15 +18,16 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Email-Plugin"
-        self._version = "0.1.2"
+        self._version = "0.1.3"
         self._description = "Auto-GPT Email Plugin: Supercharge email management."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        from .email import (
+        from .email_plugin.email_plugin import (
             read_emails,
             send_email,
-            send_email_with_attachment
+            send_email_with_attachment,
         )
+
         prompt.add_command(
             "Read Emails",
             "read_emails",

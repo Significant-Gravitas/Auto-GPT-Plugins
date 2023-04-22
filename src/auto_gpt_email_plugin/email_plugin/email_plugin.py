@@ -1,4 +1,3 @@
-# email imports
 import os
 import json
 import smtplib
@@ -6,23 +5,41 @@ import email
 import imaplib
 import mimetypes
 import time
-import autogpt
 from email.header import decode_header
 from email.message import EmailMessage
 
 
-email_sender = os.getenv("EMAIL_ADDRESS")
-email_password = os.getenv("EMAIL_PASSWORD")
-signature = os.getenv("EMAIL_SIGNATURE")
-imap_server = os.getenv("EMAIL_IMAP_SERVER")
+def getSender():
+    email_sender = os.getenv("EMAIL_ADDRESS")
+    if not email_sender:
+        return "Error: email not sent. EMAIL_ADDRESS not set in environment."
+    return email_sender
+
+
+def getPwd():
+    email_password = os.getenv("EMAIL_PASSWORD")
+    if not email_password:
+        return "Error: email not sent. EMAIL_PASSWORD not set in environment."
+    return email_password
 
 
 def send_email(recipient: str, subject: str, message: str) -> str:
-    return send_email_with_attachment(recipient, subject, message, None)
+    return send_email_with_attachment_internal(recipient, subject, message, None, None)
 
 
 def send_email_with_attachment(
     recipient: str, subject: str, message: str, attachment: str
+) -> str:
+    from autogpt.workspace import path_in_workspace
+
+    attachment_path = path_in_workspace(attachment)
+    return send_email_with_attachment_internal(
+        recipient, subject, message, attachment_path, attachment
+    )
+
+
+def send_email_with_attachment_internal(
+    recipient: str, subject: str, message: str, attachment_path: str, attachment: str
 ) -> str:
     """Send an email
 
@@ -34,29 +51,27 @@ def send_email_with_attachment(
     Returns:
         str: Any error messages
     """
-    if not email_sender:
-        return "Error: email not sent. EMAIL_ADDRESS not set in environment."
-    elif not email_password:
-        return "Error: email not sent. EMAIL_PASSWORD not set in environment."
+    email_sender = getSender()
+    email_password = getPwd()
 
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = email_sender
     msg["To"] = recipient
 
+    signature = os.getenv("EMAIL_SIGNATURE")
     if signature:
         message += f"\n{signature}"
 
     msg.set_content(message)
 
-    if attachment:
-        relative_path = autogpt.workspace.path_in_workspace(attachment)
-        ctype, encoding = mimetypes.guess_type(relative_path)
+    if attachment_path:
+        ctype, encoding = mimetypes.guess_type(attachment_path)
         if ctype is None or encoding is not None:
             # No guess could be made, or the file is encoded (compressed)
             ctype = "application/octet-stream"
         maintype, subtype = ctype.split("/", 1)
-        with open(relative_path, "rb") as fp:
+        with open(attachment_path, "rb") as fp:
             msg.add_attachment(
                 fp.read(), maintype=maintype, subtype=subtype, filename=attachment
             )
@@ -72,10 +87,10 @@ def send_email_with_attachment(
             smtp.starttls()
             smtp.login(email_sender, email_password)
             smtp.send_message(msg)
+            smtp.quit()
         return f"Email was sent to {recipient}!"
     else:
-        conn = imapOpen(draft_folder)
-        conn.select(draft_folder)
+        conn = imap_open(draft_folder, email_sender, email_password)
         conn.append(
             draft_folder,
             "",
@@ -96,20 +111,23 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
     Returns:
         str: Any error messages
     """
+    email_sender = getSender()
+    email_password = getPwd()
 
-    mark_as_read = os.getenv("EMAIL_MARK_AS_SEEN")
-    if isinstance(mark_as_read, str):
-        mark_as_read = json.loads(mark_as_read.lower())
+    mark_as_seen = os.getenv("EMAIL_MARK_AS_SEEN")
+    if isinstance(mark_as_seen, str):
+        mark_as_seen = json.loads(mark_as_seen.lower())
 
-    conn = imapOpen(imap_folder)
+    conn = imap_open(imap_folder, email_sender, email_password)
     _, search_data = conn.search(None, imap_search_command)
 
     messages = []
     for num in search_data[0].split():
-        if mark_as_read:
-            _, msg_data = conn.fetch(num, "(RFC822)")
+        if mark_as_seen:
+            message_parts = "(RFC822)"
         else:
-            _, msg_data = conn.fetch(num, "(BODY.PEEK[])")
+            message_parts = "(BODY.PEEK[])"
+        _, msg_data = conn.fetch(num, message_parts)
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
@@ -137,11 +155,17 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
 
     conn.logout()
     if not messages:
-        return f"There are no Emails in your folder `{imap_folder}` when searching with imap command `{imap_search_command}`"
+        return (
+            f"There are no Emails in your folder `{imap_folder}` "
+            f"when searching with imap command `{imap_search_command}`"
+        )
     return messages
 
 
-def imapOpen(imap_folder: str) -> imaplib.IMAP4_SSL:
+def imap_open(
+    imap_folder: str, email_sender: str, email_password: str
+) -> imaplib.IMAP4_SSL:
+    imap_server = os.getenv("EMAIL_IMAP_SERVER")
     conn = imaplib.IMAP4_SSL(imap_server)
     conn.login(email_sender, email_password)
     conn.select(imap_folder)
