@@ -10,6 +10,7 @@ from email.message import EmailMessage
 
 
 def getSender():
+    """Gets the sender from the environement"""
     email_sender = os.getenv("EMAIL_ADDRESS")
     if not email_sender:
         return "Error: email not sent. EMAIL_ADDRESS not set in environment."
