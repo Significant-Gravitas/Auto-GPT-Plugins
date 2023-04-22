@@ -40,9 +40,23 @@ Some third-party plugins have been created by contributors that are not included
 | Notion      | Notion plugin for Auto-GPT.  | [doutv/Auto-GPT-Notion](https://github.com/doutv/Auto-GPT-Notion) |
 | Email Plugin | Revolutionize Your Email Management with Auto-GPT | [riensen/Auto-GPT-Email-Plugin](https://github.com/riensen/Auto-GPT-Email-Plugin)
 | Telegram | A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [Wladastic/Auto-GPT-Telegram-Plugin](https://github.com/Wladastic/Auto-GPT-Telegram-Plugin)
+
 ## Configuration
 
 For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file. 
+
+## Making a plugin
+
+Making a plugin is amazing! There's two routes to follow, first-party or third-party. First-party plugins are included in this repo and get included by default with all other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first party plugins for plugins you expect others to use and want, and third party for things specifc to you. 
+
+### First Party How-To
+1. Clone the pluigins repo
+1. Follow the structure of the other plugins, implementing the plugin interface as required
+1. Make a PR back to this repo!
+
+### Third Party How-To
+1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
+1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
 
 ## Get Help
 
