@@ -1,5 +1,9 @@
 # Auto-GPT-Plugins
 
+
+> ⚠️💀 **WARNING** 💀⚠️:
+> Review the code of any plugin you use thoroughly, as plugins can execute any Python code, potentially leading to malicious activities, such as stealing your API keys.
+
 ## Installation
 
 Download this repository as a .zip file, copy it to ./plugins/, and rename it to [Auto-GPT-Plugins.zip](https://github.com/Significant-Gravitas/Auto-GPT/archive/refs/heads/master.zip)
