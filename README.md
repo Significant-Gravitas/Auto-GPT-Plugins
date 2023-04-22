@@ -82,6 +82,8 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 1. Clone the plugins repo
 1. Follow the structure of the other plugins, implementing the plugin interface as required
 1. Write your tests
+1. Add your name to the [codeowners](.github/CODEOWNERS) file
+1. Add your plugin to the [Readme](README.md)
 1. Make a PR back to this repo!
 
 ### Third Party How-To
@@ -100,6 +102,9 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 1. Add your plugin to the root readme with a description and a link to your plugin-specific readme
 1. Add your plugin's Python package requirements to `requirements.txt`
 1. Add tests to get your plugin to 80% code coverage
+1. Add your name to the [codeowners](.github/CODEOWNERS) file
+1. Add your plugin to the [Readme](README.md)
+1. Make a PR back to this repo!
 
 ## Get Help
 
