@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "agpt_plugins"
 version = "0.0.2"
 authors = [
-  { name="Torantulino", email="support@agpt.co" },
+  { name="Torantulino", email="support@agpt.co" }, { name="Riensen", email="3340218+riensen@users.noreply.github.com" }
 ]
 description = "The plugins for Auto-GPT."
 readme = "README.md"
