@@ -60,6 +60,7 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 |--------------|-----------|--------|
 | Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
 | Email | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)
+| Bing Baidu |  This search plugin integrates Bing and Baidu search engines into Auto-GPT. | [autogpt_plugins/bing_baidu_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_baidu_search)
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
