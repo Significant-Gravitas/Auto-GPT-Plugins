@@ -1,6 +1,5 @@
 import os
 from unittest.mock import patch, MagicMock
-from unittest.mock import mock_open
 import unittest
 import gradio_tools
 from .tools import (AutoGPTClipInterrogatorTool,

@@ -18,7 +18,7 @@ For example, an LLM could use a Gradio tool to transcribe a voice recording it f
 
 ## Installation
 
-1. Download this repository, and save it as `autogpt-gradiot-ools.zip`
+1. Download this repository, and save it as `autogpt-gradio-tools.zip`
 2. Place the `.zip` file in the plugins directory of your AutoGPT install
 3. Add your twitter API information to the `.env` file within AutoGPT:
 
