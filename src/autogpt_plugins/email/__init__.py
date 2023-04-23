@@ -40,7 +40,7 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
         prompt.add_command(
             "Send Email",
             "send_email",
-            {"to": "<to>", "subject": "<subject>", "body": "<body>"},
+            {"to": "<to>", "title": "<title>", "message": "<message>"},
             send_email,
         )
         prompt.add_command(
@@ -48,8 +48,8 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
             "send_email_with_attachment",
             {
                 "to": "<to>",
-                "subject": "<subject>",
-                "body": "<body>",
+                "title": "<title>",
+                "message": "<message>",
                 "attachment": "<path_to_file>",
             },
             send_email_with_attachment,
