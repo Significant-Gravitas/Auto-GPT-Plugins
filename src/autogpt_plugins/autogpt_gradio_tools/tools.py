@@ -47,7 +47,7 @@ class AutoGPTStableDiffusion(StableDiffusionTool):
 class AutoGPTWhisperTool(WhisperAudioTranscriptionTool):
     def __init__(
         self,
-        name="Whisper",
+        name="WhisperAudioTranscription",
         description="A tool for transcribing audio. Use this tool to transcribe an audio file. "
         "track from an image. Input will be a path to an audio file. "
         "The output will the text transcript of that file.",
@@ -74,16 +74,7 @@ class AutoGPTTextToVideoTool(TextToVideoTool):
 
 
 class AutoGPTPromptGeneratorTool(StableDiffusionPromptGeneratorTool):
-    def __init__(
-        self,
-        name="StableDiffusionPromptGenerator",
-        description="Use this tool to improve a prompt for stable diffusion and other image generators "
-        "This tool will refine your prompt to include key words and phrases that make "
-        "stable diffusion perform better. The input is a prompt text string "
-        "and the output is a prompt text string",
-        src="microsoft/Promptist",
-        hf_token=None,
-    ) -> None:
+    def __init__(self, name="StableDiffusionPromptGenerator", description="Use this tool to improve a prompt for stable diffusion and other image and video generators. " "This tool will refine your prompt to include key words and phrases that make " "stable diffusion and other art generation algorithms perform better. The input is a prompt text string " "and the output is a prompt text string", src="microsoft/Promptist", hf_token=None) -> None:
         super().__init__(name, description, src, hf_token)
         self.args = {"prompt": "text description of image"}
 

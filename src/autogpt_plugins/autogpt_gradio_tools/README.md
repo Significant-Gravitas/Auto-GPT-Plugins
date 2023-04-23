@@ -1,4 +1,4 @@
-# freddyaboulton/gradio-tools 🤝
+# freddyaboulton/autogpt-gradio-tools 🤝
 
 A plugin giving AutoGPT access to [Gradio](https://github.com/gradio-app/gradio) spaces running on
 the [huggingface hub](https://huggingface.co/spaces) and elsewhere!

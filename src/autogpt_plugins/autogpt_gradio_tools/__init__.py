@@ -1,4 +1,4 @@
-"""Twitter API integrations using Tweepy."""
+"""Integration with Gradio Spaces On HuggingFace via gradio_tools."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from dotenv import load_dotenv
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
@@ -16,9 +16,9 @@ from gradio_tools import GradioTool
 
 PromptGenerator = TypeVar("PromptGenerator")
 
-
-with open(str(Path(os.getcwd()) / ".env"), 'r') as fp:
-    load_dotenv(stream=fp)
+if (Path(os.getcwd()) / ".env").exists():
+    with open(str(Path(os.getcwd()) / ".env"), 'r') as fp:
+        load_dotenv(stream=fp)
 
 
 TOOLS = [
@@ -233,7 +233,8 @@ class AutoGPTGradioTools(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        for tool in self.tools:
-            prompt.add_command(tool.description, tool.name.lower(), tool.args, tool.run)
+        if self.tools:
+            for tool in self.tools:
+                prompt.add_command(tool.description, tool.name.lower(), tool.args, tool.run)
 
         return prompt
