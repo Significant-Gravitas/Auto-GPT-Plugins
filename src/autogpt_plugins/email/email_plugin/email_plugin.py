@@ -23,18 +23,18 @@ def getPwd():
     return email_password
 
 
-def send_email(to: str, title: str, message: str) -> str:
-    return send_email_with_attachment_internal(to, title, message, None, None)
+def send_email(to: str, subject: str, body: str) -> str:
+    return send_email_with_attachment_internal(to, subject, body, None, None)
 
 
 def send_email_with_attachment(
-    to: str, title: str, message: str, attachment: str
+    to: str, subject: str, body: str, attachment: str
 ) -> str:
     from autogpt.workspace import path_in_workspace
 
     attachment_path = path_in_workspace(attachment)
     return send_email_with_attachment_internal(
-        to, title, message, attachment_path, attachment
+        to, subject, body, attachment_path, attachment
     )
 
 
