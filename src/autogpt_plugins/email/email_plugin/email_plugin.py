@@ -103,6 +103,19 @@ def send_email_with_attachment_internal(
 
 
 def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
+    """Read emails from an IMAP mailbox.
+
+    This function reads emails from a specified IMAP folder, using a given IMAP search command.
+    It returns a list of emails with their details, including the sender, recipient, date, CC, subject, and message body.
+
+    Args:
+        imap_folder (str, optional): The name of the IMAP folder to read emails from. Defaults to "inbox".
+        imap_search_command (str, optional): The IMAP search command to filter emails. Defaults to "UNSEEN".
+
+    Returns:
+        str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
+             a string indicating that no matching emails were found.
+    """
     email_sender = getSender()
     email_password = getPwd()
 
