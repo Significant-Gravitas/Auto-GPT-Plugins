@@ -8,6 +8,8 @@ import time
 from email.header import decode_header
 from email.message import EmailMessage
 
+def bothEmailAndPwdSet() -> bool:
+    return True if os.getenv("EMAIL_ADDRESS") and os.getenv("EMAIL_PASSWORD") else False
 
 def getSender():
     email_sender = os.getenv("EMAIL_ADDRESS")
@@ -23,29 +25,29 @@ def getPwd():
     return email_password
 
 
-def send_email(recipient: str, subject: str, message: str) -> str:
-    return send_email_with_attachment_internal(recipient, subject, message, None, None)
+def send_email(to: str, subject: str, body: str) -> str:
+    return send_email_with_attachment_internal(to, subject, body, None, None)
 
 
 def send_email_with_attachment(
-    recipient: str, subject: str, message: str, attachment: str
+    to: str, subject: str, body: str, attachment: str
 ) -> str:
     from autogpt.workspace import path_in_workspace
 
     attachment_path = path_in_workspace(attachment)
     return send_email_with_attachment_internal(
-        recipient, subject, message, attachment_path, attachment
+        to, subject, body, attachment_path, attachment
     )
 
 
 def send_email_with_attachment_internal(
-    recipient: str, subject: str, message: str, attachment_path: str, attachment: str
+    to: str, title: str, message: str, attachment_path: str, attachment: str
 ) -> str:
     """Send an email
 
     Args:
-        recipient (str): The email of the recipients
-        subject (str): The subject of the email
+        to (str): The email of the tos
+        title (str): The title of the email
         message (str): The message content of the email
 
     Returns:
@@ -55,9 +57,9 @@ def send_email_with_attachment_internal(
     email_password = getPwd()
 
     msg = EmailMessage()
-    msg["Subject"] = subject
+    msg["Subject"] = title
     msg["From"] = email_sender
-    msg["To"] = recipient
+    msg["To"] = to
 
     signature = os.getenv("EMAIL_SIGNATURE")
     if signature:
@@ -88,7 +90,7 @@ def send_email_with_attachment_internal(
             smtp.login(email_sender, email_password)
             smtp.send_message(msg)
             smtp.quit()
-        return f"Email was sent to {recipient}!"
+        return f"Email was sent to {to}!"
     else:
         conn = imap_open(draft_folder, email_sender, email_password)
         conn.append(
@@ -101,16 +103,6 @@ def send_email_with_attachment_internal(
 
 
 def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
-    """Read emails
-
-    Args:
-        recipient (str): The email of the recipients
-        subject (str): The subject of the email
-        message (str): The message content of the email
-
-    Returns:
-        str: Any error messages
-    """
     email_sender = getSender()
     email_password = getPwd()
 
