@@ -1,4 +1,4 @@
-"""This is the Bing and Baidu search engines plugin for Auto-GPT."""
+"""This is the Bing search engines plugin for Auto-GPT."""
 import json
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
@@ -9,38 +9,6 @@ import requests
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
-
-def baidu_search(query: str, num_results=8):
-    '''
-    Perform a Baidu search and return the results as a JSON string.
-    '''
-
-    headers = {
-        'Cookie': os.getenv("BAIDU_COOKIE"),
-        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:112.0) Gecko/20100101 Firefox/112.0"
-    }
-    url = f'https://www.baidu.com/s?wd={query}&rn={num_results}'
-    response = requests.get(url, headers=headers)
-    response.encoding = 'utf-8'
-    soup = BeautifulSoup(response.text, 'html.parser')
-    search_results = []
-
-    for result in soup.find_all('div', class_=re.compile('^result c-container ')):
-        title = result.find('h3', class_='t').get_text()
-        link = result.find('a', href=True)['href']
-        snippet = result.find('span', class_=re.compile('^content-right_8Zs40'))
-        if snippet:
-            snippet = snippet.get_text()
-        else:
-            snippet = ''
-        search_results.append({
-            'title': title,
-            'href': link,
-            'snippet': snippet
-        })
-
-    return json.dumps(search_results, ensure_ascii=False, indent=4)
-
 
 def _bing_search(query: str, num_results=8) -> str:
     """
@@ -81,13 +49,13 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTBingBaiduSearch(AutoGPTPluginTemplate):
+class AutoGPTBingSearch(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
-        self._name = "Bing-Baidu-Search-Plugin"
+        self._name = "Bing-Search-Plugin"
         self._version = "0.1.0"
         self._description = (
-            "This plugin performs Bing and Baidu searches using the provided query."
+            "This plugin performs Bing searches using the provided query."
         )
         self._query = ""
         self.able_to_handle_post_command = True
@@ -146,7 +114,8 @@ class AutoGPTBingBaiduSearch(AutoGPTPluginTemplate):
         self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         if command_name == "google":
-            if (os.getenv("AZURE_API_KEY") is not None) or (os.getenv("SEARCH_ENGINE") == "baidu" and os.getenv("BAIDU_COOKIE") is not None):
+            search_engine = os.getenv("SEARCH_ENGINE")
+            if search_engine is not None and search_engine.lower() == "bing" and os.getenv("AZURE_API_KEY") is not None:
                 self._query = arguments["query"]
                 # this command does nothing but it is required to continue performing the post_command function
                 return "execute_shell", {"command_line": "pwd"}
@@ -162,13 +131,8 @@ class AutoGPTBingBaiduSearch(AutoGPTPluginTemplate):
 
     def post_command(self, command_name: str, response: str) -> str:
         if self._query != "":
-            result = ""
-            if os.getenv("AZURE_API_KEY") is not None:
-                result = _bing_search(self._query)
-                self._query = ""
-            elif os.getenv("SEARCH_ENGINE") == "baidu":
-                result = baidu_search(self._query)
-                self._query = ""
+            result = _bing_search(self._query)
+            self._query = ""
             return result
 
     def can_handle_chat_completion(

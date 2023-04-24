@@ -1,21 +1,13 @@
 import os
-import json
 import requests
 import unittest
-from unittest.mock import MagicMock
 from typing import List
-from . import AutoGPTBingBaiduSearch, baidu_search, _bing_search
+from . import AutoGPTBingSearch, _bing_search
 
-class TestAutoGPTBingBaiduSearch(unittest.TestCase):
+class TestAutoGPTBingSearch(unittest.TestCase):
 
     def setUp(self):
-        self.plugin = AutoGPTBingBaiduSearch()
-
-    def test_baidu_search(self):
-        query = "test query"
-        result = baidu_search(query)
-        search_results = json.loads(result)
-        self.assertEqual(search_results, [])
+        self.plugin = AutoGPTBingSearch()
 
     def test_bing_search(self):
         query = "test query"
@@ -26,9 +18,16 @@ class TestAutoGPTBingBaiduSearch(unittest.TestCase):
 
     def test_pre_command(self):
         os.environ["AZURE_API_KEY"] = "test_key"
+        os.environ["SEARCH_ENGINE"] = "bing"
+
         command_name, arguments = self.plugin.pre_command("google", {"query": "test query"})
         self.assertEqual(command_name, "execute_shell")
         self.assertEqual(arguments, {"command_line": "pwd"})
+
+        os.environ.pop("SEARCH_ENGINE", None)
+        command_name, arguments = self.plugin.pre_command("google", {"query": "test query"})
+        self.assertEqual(command_name, "google")
+        self.assertEqual(arguments, {"query": "test query"})
 
         command_name, arguments = self.plugin.pre_command("other_command", {})
         self.assertEqual(command_name, "other_command")
