@@ -8,8 +8,10 @@ import time
 from email.header import decode_header
 from email.message import EmailMessage
 
+
 def bothEmailAndPwdSet() -> bool:
     return True if os.getenv("EMAIL_ADDRESS") and os.getenv("EMAIL_PASSWORD") else False
+
 
 def getSender():
     email_sender = os.getenv("EMAIL_ADDRESS")

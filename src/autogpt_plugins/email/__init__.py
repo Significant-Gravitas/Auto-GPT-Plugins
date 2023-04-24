@@ -1,8 +1,6 @@
 """This is the email plugin for Auto-GPT."""
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-import os
-import sys
 from colorama import Fore
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -26,11 +24,12 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         from .email_plugin.email_plugin import (
-                read_emails,
-                send_email,
-                send_email_with_attachment,
-                bothEmailAndPwdSet
-            )
+            read_emails,
+            send_email,
+            send_email_with_attachment,
+            bothEmailAndPwdSet,
+        )
+
         if bothEmailAndPwdSet():
             prompt.add_command(
                 "Read Emails",
@@ -60,7 +59,8 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
             )
         else:
             print(
-                Fore.RED + f"{self._name} - {self._version} - Email plugin not loaded, because EMAIL_PASSWORD or EMAIL_ADDRESS were not set in env."
+                Fore.RED
+                + f"{self._name} - {self._version} - Email plugin not loaded, because EMAIL_PASSWORD or EMAIL_ADDRESS were not set in env."
             )
 
         return prompt
