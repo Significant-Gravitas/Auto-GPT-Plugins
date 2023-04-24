@@ -46,7 +46,7 @@ def send_email_with_attachment_internal(
     """Send an email
 
     Args:
-        to (str): The email of the tos
+        to (str): The email of the recipient
         title (str): The title of the email
         message (str): The message content of the email
 
