@@ -23,7 +23,6 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
         self._name = "Auto-GPT-Email-Plugin"
         self._version = "0.1.3"
         self._description = "Auto-GPT Email Plugin: Supercharge email management."
-        print("ADDR" + os.getenv("EMAIL_ADDRESS"))
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         from .email_plugin.email_plugin import (
