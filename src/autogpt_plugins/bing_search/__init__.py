@@ -1,47 +1,10 @@
 """This is the Bing search engines plugin for Auto-GPT."""
-import json
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-from bs4 import BeautifulSoup
-import re
-
-import requests
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from .bing_search import _bing_search
 
 PromptGenerator = TypeVar("PromptGenerator")
-
-def _bing_search(query: str, num_results=8) -> str:
-    """
-    Perform a Bing search and return the results as a JSON string.
-    """
-    subscription_key = os.getenv("AZURE_API_KEY")
-
-    # Bing Search API endpoint
-    search_url = "https://api.bing.microsoft.com/v7.0/search"
-
-    headers = {"Ocp-Apim-Subscription-Key": subscription_key}
-    params = {
-        "q": query,
-        "count": num_results,
-        "textDecorations": True,
-        "textFormat": "HTML",
-    }
-    response = requests.get(search_url, headers=headers, params=params)
-    response.raise_for_status()
-    search_results = response.json()
-
-    # Extract the search result items from the response
-    web_pages = search_results.get("webPages", {})
-    search_results = web_pages.get("value", [])
-
-    # Create a list of search result dictionaries with 'title', 'href', and 'body' keys
-    search_results_list = [
-        {"title": item["name"], "href": item["url"], "body": item["snippet"]}
-        for item in search_results
-    ]
-
-    # Return the search results as a JSON string
-    return json.dumps(search_results_list, ensure_ascii=False, indent=4)
 
 
 class Message(TypedDict):
@@ -59,6 +22,50 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         )
         self._query = ""
         self.able_to_handle_post_command = True
+        self.load_commands = (
+            os.getenv("SEARCH_ENGINE")
+            and os.getenv("SEARCH_ENGINE").lower() == "bing"
+            and os.getenv("AZURE_API_KEY")
+        )
+
+    def can_handle_post_prompt(self) -> bool:
+        return True
+
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        if self.load_commands:
+            # Add Bing Search command
+            prompt.add_command(
+                "Bing Search",
+                "bing_search",
+                {"query": "<query>"},
+                _bing_search,
+            )
+        else:
+            print(
+                "Warning: Bing-Search-Plugin is not fully functional. "
+                "Please set the SEARCH_ENGINE and AZURE_API_KEY environment variables."
+            )
+        return prompt
+
+    def can_handle_pre_command(self) -> bool:
+        return True
+
+    def pre_command(
+        self, command_name: str, arguments: Dict[str, Any]
+    ) -> Tuple[str, Dict[str, Any]]:
+        if command_name == "google" and self.load_commands:
+            self._query = arguments["query"]
+            # this command does nothing but it is required to continue performing the post_command function
+            return "bing_search", {"query": arguments["query"]}
+        else:
+            self.able_to_handle_post_command = False
+            return command_name, arguments
+
+    def can_handle_post_command(self) -> bool:
+        return False
+
+    def post_command(self, command_name: str, response: str) -> str:
+        pass
 
     def can_handle_on_planning(self) -> bool:
         return False
@@ -68,19 +75,10 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
     ) -> Optional[str]:
         pass
 
-    def can_handle_pre_command(self) -> bool:
-        return True
-
     def can_handle_on_response(self) -> bool:
         return False
 
     def on_response(self, response: str, *args, **kwargs) -> str:
-        pass
-
-    def can_handle_post_prompt(self) -> bool:
-        return False
-
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         pass
 
     def can_handle_post_planning(self) -> bool:
@@ -109,31 +107,6 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
 
     def can_handle_pre_command(self) -> bool:
         return True
-
-    def pre_command(
-        self, command_name: str, arguments: Dict[str, Any]
-    ) -> Tuple[str, Dict[str, Any]]:
-        if command_name == "google":
-            search_engine = os.getenv("SEARCH_ENGINE")
-            if search_engine is not None and search_engine.lower() == "bing" and os.getenv("AZURE_API_KEY") is not None:
-                self._query = arguments["query"]
-                # this command does nothing but it is required to continue performing the post_command function
-                return "execute_shell", {"command_line": "pwd"}
-            else:
-                self.able_to_handle_post_command = False
-                return command_name, arguments
-        else:
-            self.able_to_handle_post_command = False
-            return command_name, arguments
-
-    def can_handle_post_command(self) -> bool:
-        return self.able_to_handle_post_command
-
-    def post_command(self, command_name: str, response: str) -> str:
-        if self._query != "":
-            result = _bing_search(self._query)
-            self._query = ""
-            return result
 
     def can_handle_chat_completion(
         self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
