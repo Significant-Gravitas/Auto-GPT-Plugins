@@ -20,8 +20,6 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         self._description = (
             "This plugin performs Bing searches using the provided query."
         )
-        self._query = ""
-        self.able_to_handle_post_command = True
         self.load_commands = (
             os.getenv("SEARCH_ENGINE")
             and os.getenv("SEARCH_ENGINE").lower() == "bing"
@@ -54,11 +52,9 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         if command_name == "google" and self.load_commands:
-            self._query = arguments["query"]
             # this command does nothing but it is required to continue performing the post_command function
             return "bing_search", {"query": arguments["query"]}
         else:
-            self.able_to_handle_post_command = False
             return command_name, arguments
 
     def can_handle_post_command(self) -> bool:
