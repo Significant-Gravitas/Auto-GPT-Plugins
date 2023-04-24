@@ -7,11 +7,5 @@ wheel
 setuptools
 build
 twine
-<<<<<<< HEAD
 auto_gpt_plugin_template
-=======
-tweepy
-pandas
-auto_gpt_plugin_template
-python-dotenv
->>>>>>> upstream/master
+colorama
