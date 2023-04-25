@@ -6,10 +6,10 @@ Welcome to SceneX, your gateway to revealing the rich narratives hidden within y
 
 ## 🌟 Key Features
 
-- Advanced Large Model: SceneX utilizes state-of-the-art large models and large language models to generate comprehensive, sophisticated textual descriptions for your images, surpassing conventional captioning algorithms.
-- Multilingual Support: SceneX 's powerful AI technology provides seamless multilingual support, enabling users to receive accurate and meaningful descriptions in multiple languages.
-- API Integration: SceneX offers a seamless API integration, empowering developers to effortlessly incorporate our innovative service into their multimodal applications.
-- Fast Batch Performance: Experience up to 3 Query Per Second (QPS) performance, ensuring that SceneX delivers prompt and efficient textual descriptions for your images.
+- **Advanced Large Model**: SceneX utilizes state-of-the-art large models and large language models to generate comprehensive, sophisticated textual descriptions for your images, surpassing conventional captioning algorithms.
+- **Multilingual Support**: SceneX 's powerful AI technology provides seamless multilingual support, enabling users to receive accurate and meaningful descriptions in multiple languages.
+- **API Integration**: SceneX offers a seamless API integration, empowering developers to effortlessly incorporate our innovative service into their multimodal applications.
+- **Fast Batch Performance**: Experience up to 3 Query Per Second (QPS) performance, ensuring that SceneX delivers prompt and efficient textual descriptions for your images.
 
 ## 🔧 Installation
 
