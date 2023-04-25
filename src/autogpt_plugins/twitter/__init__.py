@@ -1,20 +1,30 @@
 """Twitter API integrations using Tweepy."""
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-from dotenv import load_dotenv
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from pathlib import Path
 import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 import tweepy
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from colorama import Fore
+from dotenv import load_dotenv
 
 PromptGenerator = TypeVar("PromptGenerator")
-
-with open(str(Path(os.getcwd()) / ".env"), 'r') as fp:
-    load_dotenv(stream=fp)
 
 
 class Message(TypedDict):
     role: str
     content: str
+
+
+def check_twitter_requirements() -> bool:
+    return (
+        True
+        if os.getenv("TW_CONSUMER_KEY")
+        and os.getenv("TW_CONSUMER_SECRET")
+        and os.getenv("TW_ACCESS_TOKEN")
+        and os.getenv("TW_ACCESS_TOKEN_SECRET")
+        else False
+    )
 
 
 class AutoGPTTwitter(AutoGPTPluginTemplate):
@@ -31,6 +41,7 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         self.twitter_consumer_secret = os.getenv("TW_CONSUMER_SECRET")
         self.twitter_access_token = os.getenv("TW_ACCESS_TOKEN")
         self.twitter_access_token_secret = os.getenv("TW_ACCESS_TOKEN_SECRET")
+        self.api_setup = check_twitter_requirements()
         self.tweet_id = []
         self.tweets = []
 
@@ -229,28 +240,32 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        from .twitter import (
-            get_mentions,
-            post_reply,
-            post_tweet,
-            search_twitter_user,
-        )
+        from .twitter import get_mentions, post_reply, post_tweet, search_twitter_user
 
-        prompt.add_command(
-            "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
-        )
-        prompt.add_command(
-            "post_reply",
-            "Post Twitter Reply",
-            {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
-            post_reply,
-        )
-        prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
-        prompt.add_command(
-            "search_twitter_user",
-            "Search Twitter",
-            {"target_user": "<target_user>",  "number_of_tweets": "<number_of_tweets"},
-            search_twitter_user,
-        )
+        if check_twitter_requirements():
+            prompt.add_command(
+                "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
+            )
+            prompt.add_command(
+                "post_reply",
+                "Post Twitter Reply",
+                {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
+                post_reply,
+            )
+            prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
+            prompt.add_command(
+                "search_twitter_user",
+                "Search Twitter",
+                {
+                    "target_user": "<target_user>",
+                    "number_of_tweets": "<number_of_tweets",
+                },
+                search_twitter_user,
+            )
+        else:
+            print(
+                Fore.RED
+                + f"{self._name} - {self._version} - Twitter plugin not loaded, because TW_CONSUMER_KEY or TW_CONSUMER_SECRET or TW_ACCESS_TOKEN or TW_ACCESS_TOKEN_SECRET"
+            )
 
         return prompt

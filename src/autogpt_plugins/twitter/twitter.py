@@ -1,8 +1,10 @@
 """This module contains functions for interacting with the Twitter API."""
 from __future__ import annotations
-from . import AutoGPTTwitter
+
 import pandas as pd
 import tweepy
+
+from . import AutoGPTTwitter
 
 plugin = AutoGPTTwitter()
 
@@ -17,9 +19,9 @@ def post_tweet(tweet_text: str) -> str:
         str: The tweet that was posted.
     """
 
-    _tweetID = plugin.api.update_status(status=tweet_text)
+    tweet_id = plugin.api.update_status(status=tweet_text)
 
-    return f"Success! Tweet: {_tweetID.text}"
+    return f"Success! Tweet: {tweet_id.text}"
 
 
 def post_reply(tweet_text: str, tweet_id: int) -> str:
@@ -33,12 +35,13 @@ def post_reply(tweet_text: str, tweet_id: int) -> str:
         str: The tweet that was posted.
     """
 
-    replyID = plugin.api.update_status(
-        status=tweet_text, in_reply_to_status_id=tweet_id,
-        auto_populate_reply_metadata=True
+    reply_id = plugin.api.update_status(
+        status=tweet_text,
+        in_reply_to_status_id=tweet_id,
+        auto_populate_reply_metadata=True,
     )
 
-    return f"Success! Tweet: {replyID.text}"
+    return f"Success! Tweet: {reply_id.text}"
 
 
 def get_mentions() -> str | None:
