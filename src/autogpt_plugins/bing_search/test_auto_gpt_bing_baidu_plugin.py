@@ -8,13 +8,13 @@ from .bing_search import _bing_search
 
 class TestAutoGPTBingSearch(unittest.TestCase):
     def setUp(self):
-        os.environ["AZURE_API_KEY"] = "test_key"
+        os.environ["BING_API_KEY"] = "test_key"
         os.environ["SEARCH_ENGINE"] = "bing"
         self.plugin = AutoGPTBingSearch()
 
     def tearDown(self):
         os.environ.pop("SEARCH_ENGINE", None)
-        os.environ.pop("AZURE_API_KEY", None)
+        os.environ.pop("BING_API_KEY", None)
 
     def test_bing_search(self):
         query = "test query"

@@ -16,7 +16,7 @@ def _bing_search(query: str, num_results=8) -> str:
     """
     Perform a Bing search and return the results as a JSON string.
     """
-    subscription_key = os.getenv("AZURE_API_KEY")
+    subscription_key = os.getenv("BING_API_KEY")
 
     # Bing Search API endpoint
     search_url = "https://api.bing.microsoft.com/v7.0/search"

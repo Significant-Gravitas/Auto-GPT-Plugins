@@ -23,7 +23,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         self.load_commands = (
             os.getenv("SEARCH_ENGINE")
             and os.getenv("SEARCH_ENGINE").lower() == "bing"
-            and os.getenv("AZURE_API_KEY")
+            and os.getenv("BING_API_KEY")
         )
 
     def can_handle_post_prompt(self) -> bool:
@@ -41,7 +41,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         else:
             print(
                 "Warning: Bing-Search-Plugin is not fully functional. "
-                "Please set the SEARCH_ENGINE and AZURE_API_KEY environment variables."
+                "Please set the SEARCH_ENGINE and BING_API_KEY environment variables."
             )
         return prompt
 
