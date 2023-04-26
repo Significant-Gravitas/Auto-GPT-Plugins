@@ -16,9 +16,7 @@ A plugin adding [News API](https://newsapi.org/docs) integration into Auto GPT
 ### NEWS API
 ################################################################################
 
-# Consumer Keys are also known as API keys on the dev portal
-
-NEWSAPI_API_KEY
+NEWSAPI_API_KEY=
 ```
 
 ## NEWS API Setup:
