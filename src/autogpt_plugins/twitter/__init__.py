@@ -29,21 +29,30 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         self.tweet_id = []
         self.tweets = []
 
-        # Authenticating to twitter
-        self.auth = tweepy.OAuth1UserHandler(
-            self.twitter_consumer_key,
-            self.twitter_consumer_secret,
-            self.twitter_access_token,
-            self.twitter_access_token_secret,
-        )
+        self.api = None
 
-        self.api = tweepy.API(self.auth)
-        self.stream = tweepy.Stream(
-            self.twitter_consumer_key,
-            self.twitter_consumer_secret,
-            self.twitter_access_token,
-            self.twitter_access_token_secret,
-        )
+        if (
+            self.twitter_consumer_key
+            and self.twitter_consumer_secret
+            and self.twitter_access_token
+            and self.twitter_access_token_secret
+        ) is not None:
+            # Authenticating to twitter
+            self.auth = tweepy.OAuth1UserHandler(
+                self.twitter_consumer_key,
+                self.twitter_consumer_secret,
+                self.twitter_access_token,
+                self.twitter_access_token_secret,
+            )
+            self.api = tweepy.API(self.auth)
+            self.stream = tweepy.Stream(
+                self.twitter_consumer_key,
+                self.twitter_consumer_secret,
+                self.twitter_access_token,
+                self.twitter_access_token_secret,
+            )
+        else:
+            print("Twitter credentials not found in .env file.")
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -224,28 +233,32 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        from .twitter import (
-            get_mentions,
-            post_reply,
-            post_tweet,
-            search_twitter_user,
-        )
+        if self.api:
+            from .twitter import (
+                get_mentions,
+                post_reply,
+                post_tweet,
+                search_twitter_user,
+            )
 
-        prompt.add_command(
-            "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
-        )
-        prompt.add_command(
-            "post_reply",
-            "Post Twitter Reply",
-            {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
-            post_reply,
-        )
-        prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
-        prompt.add_command(
-            "search_twitter_user",
-            "Search Twitter",
-            {"target_user": "<target_user>",  "number_of_tweets": "<number_of_tweets"},
-            search_twitter_user,
-        )
+            prompt.add_command(
+                "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
+            )
+            prompt.add_command(
+                "post_reply",
+                "Post Twitter Reply",
+                {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
+                post_reply,
+            )
+            prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
+            prompt.add_command(
+                "search_twitter_user",
+                "Search Twitter",
+                {
+                    "target_user": "<target_user>",
+                    "number_of_tweets": "<number_of_tweets",
+                },
+                search_twitter_user,
+            )
 
         return prompt
