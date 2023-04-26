@@ -1,7 +1,8 @@
-# Auto-GPT SceneX Plugin: Explore image storytelling beyond pixels
+# Auto-GPT SceneXplain Plugin: Explore image storytelling beyond pixels
 
-Welcome to SceneX, your gateway to revealing the rich narratives hidden within your images. Our cutting-edge AI technology dives deep into every detail, generating sophisticated textual descriptions that breathe life into your visuals. With a user-friendly interface and seamless API integration, SceneX empowers developers to effortlessly incorporate our advanced service into their multimodal applications.
+[SceneXplain](https://scenex.jina.ai) is your gateway to revealing the rich narratives hidden within your images. Our cutting-edge AI technology dives deep into every detail, generating sophisticated textual descriptions that breathe life into your visuals. With a user-friendly interface and seamless API integration, SceneX empowers developers to effortlessly incorporate our advanced service into their multimodal applications.
 
+<img width="1580" alt="image" src="https://user-images.githubusercontent.com/2041322/234498702-39b668a2-d097-4b74-b51f-43073f3aeb3a.png">
 <img width="1116" alt="auto-gpt-scenex-plugin" src="https://user-images.githubusercontent.com/492616/234332762-642bfd6c-045e-426d-b8cd-70aaf53ff894.png">
 
 ## 🌟 Key Features
@@ -43,8 +44,8 @@ Append the following configuration settings to the end of the file:
 SCENEX_API_KEY=
 ```
 
-- `SCENEX_API_KEY`: Your API key for the SceneX API. You can obtain a key by following the steps below.
-  - Sign up for a free account at [SceneX](https://scenex.jina.ai/).
+- `SCENEX_API_KEY`: Your API key for the SceneXplain API. You can obtain a key by following the steps below.
+  - Sign up for a free account at [SceneXplain](https://scenex.jina.ai/).
   - Navigate to the [API Access](https://scenex.jina.ai/api) page and create a new API key.
 
 ### 6. Allowlist Plugin
@@ -74,4 +75,4 @@ Experience the plugin's capabilities by testing it for describing an image.
      2. Goal 2: `Terminate`
 
 2. **Run Auto-GPT:**
-   Launch Auto-GPT, which should use the SceneX plugin to describe an image.
+   Launch Auto-GPT, which should use the SceneXplain plugin to describe an image.
