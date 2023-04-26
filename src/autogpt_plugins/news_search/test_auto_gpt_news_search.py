@@ -22,7 +22,6 @@ class TestAutoGPTNewsSearch(unittest.TestCase):
             self.assertEqual(e.response.status_code, 401)
 
     def test_post_prompt(self):
-        os.environ["SEARCH_ENGINE"] = "bing"
         self.plugin = AutoGPTNewsSearch()
 
         prompt = self.plugin.post_prompt(
