@@ -6,6 +6,7 @@ from email_plugin import (
     read_emails,
     imap_open,
     send_email_with_attachment_internal,
+    bothEmailAndPwdSet,
 )
 from unittest.mock import mock_open
 import unittest
@@ -27,6 +28,51 @@ MOCK_ATTACHMENT_NAME = "file.txt"
 
 
 class TestEmailPlugin(unittest.TestCase):
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "test@example.com",
+            "EMAIL_PASSWORD": "test_password",
+        },
+    )
+    def test_both_email_and_pwd_set(self):
+        self.assertTrue(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_PASSWORD": "test_password",
+        },
+        clear=True,
+    )
+    def test_email_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "",
+            "EMAIL_PASSWORD": "test_password",
+        },
+        clear=True,
+    )
+    def test_email_not_set_2(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "test@example.com",
+        },
+        clear=True,
+    )
+    def test_pwd_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(os.environ, {}, clear=True)
+    def test_both_email_and_pwd_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
         os.environ,

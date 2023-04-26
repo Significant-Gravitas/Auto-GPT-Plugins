@@ -11,46 +11,41 @@ Follow these steps to configure the Auto-GPT Plugins:
 
 1. **Install Auto-GPT**
 
-   If you haven't already, create a folder `Significant-Gravitas` and clone the [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) repository into the folder. Follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT).
+   If you haven't already, follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to install it.
 
-1. **Clone the Auto-GPT-Plugins repository**
+1. **Run the following to pull the plugins folder down from the `root` of `autogpt`**
 
-   Clone this repository into the `Significant-Gravitas` folder as well:
-   ```
-   git clone https://github.com/Significant-Gravitas/Auto-GPT-Plugins.git
-   ```
-   You should now have two folders in your `Significant-Gravitas` folder: `Auto-GPT` and `Auto-GPT-Plugins`.
+    To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
 
-1. **Install required dependencies**
+    ```bash
+    curl -L -o ./plugins/Auto-GPT-Plugins.zip https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip
+    ```
 
-   Navigate to the Auto-GPT-Plugins folder in your terminal and execute the following command to install the necessary dependencies:
+    In PowerShell:
 
-   - For Command Prompt:
-   ```
-   pip install -r requirements.txt
-   ```
-   
-   - For PowerShell:
-   ```
-   pip install -r .\requirements.txt
-   ```
+    ```pwsh
+    Invoke-WebRequest -Uri "https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip"     -OutFile "./plugins/Auto-GPT-Plugins.zip"
+    ```
 
-1. **Package the plugin as a Zip file**
+1. **Run the dependency install script for plugins**
+    You can run it with either:
+    Linux or MacOS:
 
-   Execute the following command to compress the Auto-GPT-Plugins folder and place the archive into the `Auto-GPT/plugins` folder:
+    ```bash
+    ./run.sh --install-plugin-deps
+    ```
 
-   - For Command Prompt:
-   ```
-   zip -ru ../Auto-GPT/plugins/Auto-GPT-Plugins.zip
-   ```
-   
-   - For PowerShell:
-   ```
-   Compress-Archive -Path .\* -DestinationPath ..\Auto-GPT\plugins\Auto-GPT-Plugins.zip -Force
-   ```
+   Windows:
 
-   Alternatively, you can manually zip the `Auto-GPT-Plugins` folder, rename it to Auto-GPT-Plugins.zip, and then paste the zip file into the `Auto-GPT/plugins/` directory.
+    ```pwsh
+   .\run.bat --install-plugin-deps
+    ```
 
+    Or directly via the CLI:
+
+    ```bash
+    python -m autogpt --install-plugin-deps
+    ````
 
 ## Plugins in the repository
 
@@ -60,6 +55,8 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 |--------------|-----------|--------|
 | Twitter      | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.| [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)
 | Email | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)
+| SceneX | Explore image storytelling beyond pixels with the Auto-GPT SceneX Plugin. | [autogpt_plugins/scenex](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/scenex)
+| Bing Search |  This search plugin integrates Bing search engines into Auto-GPT. | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
