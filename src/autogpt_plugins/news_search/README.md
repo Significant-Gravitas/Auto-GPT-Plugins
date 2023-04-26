@@ -1,4 +1,4 @@
-# desojo/autogpt-twitter 🐣
+## Auto-GPT News Search Plugin
 
 A plugin adding [News API](https://newsapi.org/docs) integration into Auto GPT
 
