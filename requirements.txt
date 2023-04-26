@@ -7,6 +7,6 @@ wheel
 setuptools
 build
 twine
-tweepy
+tweepy==4.13.0
 pandas
 auto_gpt_plugin_template
