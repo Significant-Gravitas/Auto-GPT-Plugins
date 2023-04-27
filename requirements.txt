@@ -2,6 +2,7 @@ black
 isort
 flake8
 pylint
+pypdf
 abstract-singleton
 wheel
 setuptools
