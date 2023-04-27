@@ -95,7 +95,7 @@ class AutoGPTNewsSearch(AutoGPTPluginTemplate):
         pass
 
     def can_handle_pre_command(self) -> bool:
-        return True
+        return False
 
     def can_handle_chat_completion(
         self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
