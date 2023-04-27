@@ -26,7 +26,7 @@ class AutoGPTTextParserPlugin(AutoGPTPluginTemplate):
         prompt.add_command(
             "Parse Text",
             "parse_text",
-            {"filepath": "<filepath>"},
+            {"filename": "<filename>"},
             parse_text,
         )
         
