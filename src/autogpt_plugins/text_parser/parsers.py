@@ -1,9 +1,11 @@
 import docx
+import ebooklib
 import json
 import yaml
 import markdown
 from abc import abstractmethod
 from bs4 import BeautifulSoup
+from ebooklib import epub
 from pypdf import PdfReader
 from pylatexenc.latex2text import LatexNodes2Text
 
@@ -76,16 +78,39 @@ class LaTeXParser(Parser):
         text = LatexNodes2Text().latex_to_text(latex)
         return text
     
+class LaTeXParser(Parser):
+    def parse(self, filepath):
+        with open(filepath, "r") as f:
+            latex = f.read()
+        text = LatexNodes2Text().latex_to_text(latex)
+        return text
+    
+class EPUBParser(Parser):
+    # Only read text in <p> tags for now.
+    def chapter_to_str(self, chapter):
+        soup = BeautifulSoup(chapter.get_body_content(), 'html.parser')
+        text = [para.get_text() for para in soup.find_all('p')]
+        return ' '.join(text)
+
+    def parse(self, filepath):
+        with open(filepath, "r") as f:  
+            text = ""
+            book = epub.read_epub(filepath)
+            for chapter in book.get_items_of_type(ebooklib.ITEM_DOCUMENT) :
+                text += self.chapter_to_str(chapter)
+        print(text)
+        return text
+    
 parser_map = {
     ".txt": TxtParser(),
     ".csv": TxtParser(),
     ".pdf": PDFParser(),
-    ".doc": DOCXParser(),
     ".docx": DOCXParser(),
     ".json": JSONParser(),
     ".xml": XMLParser(),
     ".yaml": YAMLParser(),
     ".html": HTMLParser(),
     ".md": MarkdownParser(),
-    ".tex": LaTeXParser()
+    ".tex": LaTeXParser(),
+    ".epub": EPUBParser()
 }
