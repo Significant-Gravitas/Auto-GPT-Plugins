@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Auto-GPT-Plugins
 
 > ⚠️💀 **WARNING** 💀⚠️:
@@ -113,3 +114,7 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 ## Get Help
 
 Visit the [discord](https://discord.gg/autogpt) server for more information.
+=======
+# Auto-GPT-Plugin-Template
+A starting point for developing your own plug-in for Auto-GPT
+>>>>>>> 6b30fc1 (Initial commit)
