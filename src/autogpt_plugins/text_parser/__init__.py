@@ -10,7 +10,7 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTFileReadingPlugin(AutoGPTPluginTemplate):
+class AutoGPTTextParserPlugin(AutoGPTPluginTemplate):
     """
     This is the Auto-GPT text parser plugin.
     """
@@ -26,7 +26,7 @@ class AutoGPTFileReadingPlugin(AutoGPTPluginTemplate):
         prompt.add_command(
             "Parse Text",
             "parse_text",
-            {"filename": "<filename>"},
+            {"filepath": "<filepath>"},
             parse_text,
         )
         
