@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from xml.etree import ElementTree
 from pypdf import PdfWriter
 from reportlab.pdfgen import canvas
+
 from parser_plugin import parse_text
 
 plain_text_str = "Hello, world!"
