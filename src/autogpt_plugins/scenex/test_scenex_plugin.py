@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import MagicMock, patch
 
-from scenex_plugin import describe_image, get_api_key, is_api_key_set
+from scenex_plugin import SceneXplain
 
 MOCK_API_KEY = "secret"
 MOCK_IMAGE = "https://example.com/image.png"
@@ -10,26 +10,6 @@ MOCK_DESCRIPTION = "example description"
 
 
 class TestEmailPlugin(unittest.TestCase):
-    @patch.dict(
-        os.environ,
-        {
-            "SCENEX_API_KEY": MOCK_API_KEY,
-        },
-    )
-    def test_api_key_set(self):
-        self.assertTrue(is_api_key_set())
-        self.assertEqual(get_api_key(), MOCK_API_KEY)
-
-    @patch.dict(os.environ, {}, clear=True)
-    def test_api_key_not_set(self):
-        self.assertFalse(is_api_key_set())
-
-    @patch.dict(
-        os.environ,
-        {
-            "SCENEX_API_KEY": MOCK_API_KEY,
-        },
-    )
     @patch("scenex_plugin.requests.post")
     def test_describe_image(self, mock_post):
         mock_post.return_value = MagicMock(
@@ -45,7 +25,8 @@ class TestEmailPlugin(unittest.TestCase):
             )
         )
 
-        result = describe_image(
+        scenex = SceneXplain(MOCK_API_KEY)
+        result = scenex.describe_image(
             image=MOCK_IMAGE,
             algorithm="Dune",
             features=[],
