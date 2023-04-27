@@ -69,6 +69,7 @@ Some third-party plugins have been created by contributors that are not included
 | Google Analytics | Connect your Google Analytics Account to Auto-GPT. | [isaiahbjork/Auto-GPT-Google-Analytics-Plugin](https://github.com/isaiahbjork/Auto-GPT-Google-Analytics-Plugin)
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube)
 | TiDB Serverless   | Connect your TiDB Serverless database to Auto-GPT, enable get query results from database | [pingcap/Auto-GPT-TiDB-Serverless-Plugin](https://github.com/pingcap/Auto-GPT-TiDB-Serverless-Plugin)
+| Instagram | Instagram access | [jpetzke/AutoGPT-Instagram](https://github.com/jpetzke/AutoGPT-Instagram)
 
 ## Configuration
 
