@@ -1,7 +1,7 @@
 """This is the Text parser plugin for Auto-GPT."""
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .text_parser_plugin import parse_text
+from .parser_plugin import parse_text
 
 PromptGenerator = TypeVar("PromptGenerator")
 
