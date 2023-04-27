@@ -1,4 +1,4 @@
-# Auto-GPT Bing Search Plugin
+# Auto-GPT Text Parser Plugin
 
 The Auto-GPT Text Parser Plugin supports reading text from several types of files directly without converting them to .txt files.
 
