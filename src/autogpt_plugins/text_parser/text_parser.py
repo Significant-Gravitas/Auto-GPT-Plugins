@@ -42,35 +42,35 @@ class JSONParser(Parser):
         return text   
 
 class XMLParser(Parser):
-    def read(self, filepath):
+    def parse(self, filepath):
         with open(filepath, "r") as f:
             soup = BeautifulSoup(f, "xml")
             text = soup.get_text()
         return text
     
 class YAMLParser(Parser):
-    def read(self, filepath):
+    def parse(self, filepath):
         with open(filepath, "r") as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
             text = str(data)
         return text
     
 class HTMLParser(Parser):
-    def read(self, filepath):
+    def parse(self, filepath):
         with open(filepath, "r") as f:
             soup = BeautifulSoup(f, "html.parser")
             text = soup.get_text()
         return text
     
 class MarkdownParser(Parser):
-    def read(self, filepath):
+    def parse(self, filepath):
         with open(filepath, "r") as f:
             html = markdown.markdown(f.read())
             text = "".join(BeautifulSoup(html, "html.parser").findAll(string=True))
         return text
     
 class LaTeXParser(Parser):
-    def read(self, filepath):
+    def parse(self, filepath):
         with open(filepath, "r") as f:
             latex = f.read()
         text = LatexNodes2Text().latex_to_text(latex)

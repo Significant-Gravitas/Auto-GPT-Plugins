@@ -1,5 +1,5 @@
 import os
-from .text_parser import parser_map
+from text_parser import parser_map
 
 def parse_text(filename: str) -> str:
     """
