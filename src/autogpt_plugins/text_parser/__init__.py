@@ -1,6 +1,7 @@
 """This is the Text parser plugin for Auto-GPT."""
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from .text_parser_plugin import parse_text
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -21,19 +22,14 @@ class AutoGPTFileReadingPlugin(AutoGPTPluginTemplate):
         self._description = "This makes possible to read texts from any file extensions."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        if self.load_commands:
-            # Add Bing Search command
-            prompt.add_command(
-                "Text Parse",
-                "text_parse",
-                {"filename": "<filename>"},
-                parse_text,
-            )
-        else:
-            print(
-                "Warning: Bing-Search-Plugin is not fully functional. "
-                "Please set the SEARCH_ENGINE and BING_API_KEY environment variables."
-            )
+        # Add Text Parser command
+        prompt.add_command(
+            "Text Parse",
+            "text_parse",
+            {"filename": "<filename>"},
+            parse_text,
+        )
+        
         return prompt
 
     def can_handle_post_prompt(self) -> bool:
