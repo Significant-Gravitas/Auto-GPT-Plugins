@@ -24,8 +24,8 @@ class AutoGPTFileReadingPlugin(AutoGPTPluginTemplate):
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         # Add Text Parser command
         prompt.add_command(
-            "Text Parse",
-            "text_parse",
+            "Parse Text",
+            "parse_text",
             {"filename": "<filename>"},
             parse_text,
         )

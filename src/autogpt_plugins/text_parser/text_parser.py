@@ -1,11 +1,6 @@
 from abc import abstractmethod
 from pypdf import PdfReader
 
-parser_map = {
-    ".txt": TxtParser(),
-    ".pdf": PDFParser()
-}
-
 class Parser:
     @abstractmethod
     def parse(self, filepath) -> str:
@@ -24,3 +19,8 @@ class PDFParser(Parser):
         for page in reader.pages:
             text += page.extract_text() + "\\n"
         return text
+    
+parser_map = {
+    ".txt": TxtParser(),
+    ".pdf": PDFParser()
+}
