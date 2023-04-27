@@ -1,40 +1,33 @@
-import os
-import requests
-import unittest
-from typing import List
-from . import AutoGPTNewsSearch
-from .news_search import news_search
+from unittest.mock import Mock
+import pytest
+import json
+from .news_search import NewsSearch
 
+class TestNewsSearch():
 
-class TestAutoGPTNewsSearch(unittest.TestCase):
+    def mock_response(self, *args, **kwargs):
+       # Mock Response of NewsAPI. We have result for AutoGPT in technology but not others, 
+       # whereas Cricket is present in Sports/Entertainment but not others
+       if kwargs['q'] == "AI" and kwargs['category'] == "technology":
+          return json.loads("""{"status":"ok","totalResults":1,"articles": [{"title": "AutoGPT"}]}""")
+       elif kwargs['q'] == "Cricket" and kwargs['category'] in ["entertainment", "sports"]:
+          return json.loads("""{"status":"ok","totalResults":1,"articles": [{"title": "World Cup"}]}""")
+       else:
+          return json.loads("""{"status":"ok","totalResults":0,"articles":[]}""")
+    
+    @pytest.fixture(autouse=True)
     def setUp(self):
-        os.environ["NEWSAPI_API_KEY"] = "test_key"
-        self.plugin = AutoGPTNewsSearch()
-
-    def tearDown(self):
-        os.environ.pop("NEWSAPI_API_KEY", None)
+        self.NewsSearch = NewsSearch("testKey")
+        self.NewsSearch.news_api_client.get_top_headlines = Mock(side_effect = self.mock_response)
 
     def test_news_search(self):
-        query = "test query"
-        try:
-            news_search(query)
-        except requests.exceptions.HTTPError as e:
-            self.assertEqual(e.response.status_code, 401)
-
-    def test_post_prompt(self):
-        self.plugin = AutoGPTNewsSearch()
-
-        prompt = self.plugin.post_prompt(
-            "News Search", {"query": "AutoGPT"}
-        )
-        self.assertEqual(prompt, {"query": "AutoGPT"})
-
-    def test_can_handle_pre_command(self):
-        self.assertFalse(self.plugin.can_handle_pre_command())
-
-    def test_can_handle_post_prompt(self):
-        self.assertTrue(self.plugin.can_handle_post_prompt())
-
-
-if __name__ == "__main__":
-    unittest.main()
+        # For AI, only technology should be populated. However, we can't rely on ordering, 
+        # so we'll assert one actual answer and 5 empty answers
+        actual_output_autogpt = self.NewsSearch.news_search("AI")
+        assert actual_output_autogpt.count(['AutoGPT']) == 1
+        assert actual_output_autogpt.count([]) == 5 
+        
+        #For Cricket, we should have sports/entertainment
+        actual_output_cricket = self.NewsSearch.news_search("Cricket")
+        assert actual_output_cricket.count(['World Cup']) == 2
+        assert actual_output_cricket.count([]) == 4
