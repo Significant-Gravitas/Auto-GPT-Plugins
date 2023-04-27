@@ -31,7 +31,15 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         # Search for plugins in the plugins directory.
         # The plugins directory is three levels up from this file.
         unzipped_plugins = []
-        from autogpt.config.config import Config
+        try:
+            from autogpt.config.config import Config
+        except ImportError:
+            if os.environ.get('TEST_MODE') == 'true':
+                # Are we im a test?
+                class Config:
+                    plugins_dir = "./"
+            else:
+                raise
 
         cfg = Config()
         plugins_dir = Path(cfg.plugins_dir)
@@ -41,7 +49,7 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
             if "AllowUnzippedPlugins" in str(path):
                 continue
 
-            print(f"Found module '{path.name}' at: {path}")
+            print(f"Found module '{path.parent.name}' at: {path}")
 
             spec = importlib.util.spec_from_file_location(path.parent.name, str(path))
             loaded_module = importlib.util.module_from_spec(spec)
