@@ -6,6 +6,7 @@ pylatexenc
 pylint
 pypdf
 python-docx
+reportlab
 abstract-singleton
 wheel
 setuptools
