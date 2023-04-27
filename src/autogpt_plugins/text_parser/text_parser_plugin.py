@@ -8,6 +8,3 @@ def parse_text(filename: str) -> str:
     file_extension = os.path.splitext(filename)[1].lower()
     parser = parser_map.get(file_extension)
     return parser.parse(filename)
-    
-
-    

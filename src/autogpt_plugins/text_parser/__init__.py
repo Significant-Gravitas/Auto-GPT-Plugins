@@ -19,7 +19,7 @@ class AutoGPTTextParserPlugin(AutoGPTPluginTemplate):
         super().__init__()
         self._name = "Auto-GPT-Text-Parser-Plugin"
         self._version = "0.1.0"
-        self._description = "This makes possible to read texts from any file extensions."
+        self._description = "This makes possible to parse texts from any file extensions."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         # Add Text Parser command

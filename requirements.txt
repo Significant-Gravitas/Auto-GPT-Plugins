@@ -1,8 +1,11 @@
 black
 isort
 flake8
+markdown
+pylatexenc
 pylint
 pypdf
+python-docx
 abstract-singleton
 wheel
 setuptools
