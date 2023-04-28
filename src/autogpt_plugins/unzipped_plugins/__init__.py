@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
@@ -19,17 +20,18 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Allow-Unzipped-Plugins"
-        self._version = "0.1.3"
+        self._version = "0.1.4"
         self._description = "This plugin allows developers to use unzipped plugins simplifying the plugin development process."
 
         from autogpt.config.config import Config
 
         cfg = Config()
         plugins_dir = Path(cfg.plugins_dir)
-        PluginManager.install_plugin_requirements(plugins_dir)
+        if os.getenv("UNZIPPED_PLUGIN_INSTALL_REQUIREMENTS", "True") == "True":
+            PluginManager.install_plugin_requirements(plugins_dir)
         self._plugins = PluginManager.load_unzipped_plugins(plugins_dir)
 
-    def _can_handle(self, method):
+    def _can_handle(self, method)  -> bool:
         can_handle_method = f"can_handle_{method}"
         return any(
             hasattr(plugin, can_handle_method) and getattr(plugin, can_handle_method)()
@@ -90,6 +92,7 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         return self._can_handle("on_instruction")
 
     def on_instruction(self, messages: List[Message]) -> Optional[str]:
+        plugins_reply = ""
         for plugin in self._plugins:
             if not plugin.can_handle_on_instruction():
                 continue
@@ -127,8 +130,8 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         for plugin in self._plugins:
             if not plugin.can_handle_post_command():
                 continue
-            result = plugin.post_command(command_name, result)
-        return result
+            response = plugin.post_command(command_name, response)
+        return response
 
     def can_handle_chat_completion(
         self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int

@@ -1,4 +1,4 @@
-import importlib
+import importlib.util
 import subprocess
 from pathlib import Path
 import sys
@@ -13,7 +13,7 @@ class PluginManager:
                 subprocess.check_call(
                     [sys.executable, "-m", "pip", "install", "-r", path]
                 )
-            except KeyError:
+            except (subprocess.CalledProcessError, KeyError):
                 continue
 
     @staticmethod
@@ -27,8 +27,12 @@ class PluginManager:
 
             print(f"Found module '{path.parent.name}' at: {path}")
 
-            spec = importlib.util.spec_from_file_location(path.parent.name, str(path))
+            spec = importlib.util.spec_from_file_location(
+                path.parent.name, str(path.resolve())
+            )
             loaded_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(loaded_module)
+            sys.modules[path.parent.name] = loaded_module
 
             for key in dir(loaded_module):
                 if key.startswith("__"):
@@ -39,8 +43,6 @@ class PluginManager:
                     "_abc_impl" in a_keys
                     and a_module.__name__ != "AutoGPTPluginTemplate"
                 ):
-                    spec.loader.exec_module(loaded_module)
-                    sys.modules[path.parent.name] = loaded_module
                     unzipped_plugins.append(a_module())
 
         return unzipped_plugins
