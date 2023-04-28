@@ -48,7 +48,7 @@ Append the following configuration settings to the end of the file:
 EMAIL_ADDRESS=
 EMAIL_PASSWORD=
 EMAIL_SMTP_HOST=smtp.gmail.com
-EMAIL_SMTP_PORT=587
+EMAIL_SMTP_PORT=465
 EMAIL_IMAP_SERVER=imap.gmail.com
 
 #Optional Settings
