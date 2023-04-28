@@ -1,10 +1,7 @@
-import abc
-import importlib
-import os
 from pathlib import Path
-import sys
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from .plugin_manager import PluginManager
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -22,52 +19,15 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Allow-Unzipped-Plugins"
-        self._version = "0.1.0"
+        self._version = "0.1.3"
         self._description = "This plugin allows developers to use unzipped plugins simplifying the plugin development process."
 
-        self._plugins = self.load_unzipped_plugins()
-
-    def load_unzipped_plugins(self):
-        # Search for plugins in the plugins directory.
-        # The plugins directory is three levels up from this file.
-        unzipped_plugins = []
-        try:
-            from autogpt.config.config import Config
-        except ImportError:
-            if os.environ.get('TEST_MODE') == 'true':
-                # Are we im a test?
-                class Config:
-                    plugins_dir = "./"
-            else:
-                raise
+        from autogpt.config.config import Config
 
         cfg = Config()
         plugins_dir = Path(cfg.plugins_dir)
-
-        # Find all dirs that contain a __init__.py file.
-        for path in plugins_dir.rglob("__init__.py"):
-            if "AllowUnzippedPlugins" in str(path):
-                continue
-
-            print(f"Found module '{path.parent.name}' at: {path}")
-
-            spec = importlib.util.spec_from_file_location(path.parent.name, str(path))
-            loaded_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(loaded_module)
-            sys.modules[path.parent.name] = loaded_module
-
-            for key in dir(loaded_module):
-                if key.startswith("__"):
-                    continue
-                a_module = getattr(loaded_module, key)
-                a_keys = dir(a_module)
-                if (
-                    "_abc_impl" in a_keys
-                    and a_module.__name__ != "AutoGPTPluginTemplate"
-                ):
-                    unzipped_plugins.append(a_module())
-
-        return unzipped_plugins
+        PluginManager.install_plugin_requirements(plugins_dir)
+        self._plugins = PluginManager.load_unzipped_plugins(plugins_dir)
 
     def _can_handle(self, method):
         can_handle_method = f"can_handle_{method}"
