@@ -15,37 +15,37 @@ Follow these steps to configure the Auto-GPT Plugins:
 
 1. **Run the following to pull the plugins folder down from the `root` of `autogpt`**
 
-   To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
-   
-   ```bash
-   curl -L -o ./plugins/Auto-GPT-Plugins.zip https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip
-   ```
+    To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
 
-   In PowerShell:
+    ```bash
+    curl -L -o ./plugins/Auto-GPT-Plugins.zip https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip
+    ```
 
-   ```pwsh
-   Invoke-WebRequest -Uri "https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip" -OutFile "./plugins/Auto-GPT-Plugins.zip"
-   ```
+    In PowerShell:
+
+    ```pwsh
+    Invoke-WebRequest -Uri "https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip"     -OutFile "./plugins/Auto-GPT-Plugins.zip"
+    ```
 
 1. **Run the dependency install script for plugins**
-   You can run it with either:
-   Linux or MacOS:
+    You can run it with either:
+    Linux or MacOS:
 
-   ```bash
-   ./run.sh --install-plugin-deps
-   ```
+    ```bash
+    ./run.sh --install-plugin-deps
+    ```
 
-Windows:
+   Windows:
 
- ```pwsh
-.\run.bat --install-plugin-deps
-```
+    ```pwsh
+   .\run.bat --install-plugin-deps
+    ```
 
-Or directly via the CLI:
+    Or directly via the CLI:
 
-```bash
-python -m autogpt --install-plugin-deps
-````
+    ```bash
+    python -m autogpt --install-plugin-deps
+    ````
 
 ## Plugins in the repository
 
