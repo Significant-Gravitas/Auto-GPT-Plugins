@@ -13,6 +13,12 @@ Follow these steps to configure the Auto-GPT Plugins:
 
    If you haven't already, follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to install it.
 
+1. **In the `root` of `autogpt` folder, make sure there is a `.plugins` folder.**
+
+   ```bash
+   mkdir .plugins
+   ```
+
 1. **Run the following to pull the plugins folder down from the `root` of `autogpt`**
 
     To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
