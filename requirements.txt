@@ -7,6 +7,7 @@ pylint
 pypdf
 python-docx
 reportlab
+EbookLib
 abstract-singleton
 wheel
 setuptools
