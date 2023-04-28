@@ -93,7 +93,7 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
 
     def on_instruction(self, messages: List[Message]) -> Optional[str]:
         plugins_reply = ""
-        for plugin in self._plugins:
+        for i, plugin in enumerate(self._plugins):
             if not plugin.can_handle_on_instruction():
                 continue
             if plugin_result := plugin.on_instruction(messages):
