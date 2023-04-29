@@ -7,6 +7,8 @@ from email_plugin import (
     imap_open,
     send_email_with_attachment_internal,
     bothEmailAndPwdSet,
+    adjust_imap_folder_for_gmail,
+    enclose_with_quotes,
 )
 from unittest.mock import mock_open
 import unittest
@@ -72,6 +74,57 @@ class TestEmailPlugin(unittest.TestCase):
     @patch.dict(os.environ, {}, clear=True)
     def test_both_email_and_pwd_not_set(self):
         self.assertFalse(bothEmailAndPwdSet())
+
+    def test_adjust_imap_folder_for_gmail_normal_cases(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Sent", "user@gmail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@googlemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Inbox", "user@gmail.com"), "Inbox"
+        )
+
+    def test_adjust_imap_folder_for_gmail_case_insensitivity(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SeNT", "user@GMail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("DRAFTS", "user@gOogLemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("InbOx", "user@gmail.com"), "InbOx"
+        )
+
+    def test_adjust_imap_folder_for_gmail_non_gmail_sender(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("Sent", "user@yahoo.com"), "Sent")
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@hotmail.com"), "Drafts"
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SENT", "gmail@hotmail.com"), "SENT"
+        )
+
+    def test_adjust_imap_folder_for_gmail_edge_cases(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("", "user@gmail.com"), "")
+        self.assertEqual(adjust_imap_folder_for_gmail("Inbox", ""), "Inbox")
+        self.assertEqual(adjust_imap_folder_for_gmail("", ""), "")
+
+    def test_enclose_with_quotes(self):
+        assert enclose_with_quotes("REVERSE DATE") == '"REVERSE DATE"'
+        assert enclose_with_quotes('"My Search"') == '"My Search"'
+        assert enclose_with_quotes("'test me'") == "'test me'"
+        assert enclose_with_quotes("ALL") == "ALL"
+        assert enclose_with_quotes("quotes needed") == '"quotes needed"'
+        assert enclose_with_quotes("   whitespace  ") == '"   whitespace  "'
+        assert enclose_with_quotes("whitespace\te") == '"whitespace\te"'
+        assert enclose_with_quotes("\"mixed quotes'") == "\"mixed quotes'"
+        assert enclose_with_quotes("'mixed quotes\"") == "'mixed quotes\""
 
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
