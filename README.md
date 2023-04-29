@@ -58,6 +58,7 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 | SceneX | Explore image storytelling beyond pixels with the Auto-GPT SceneX Plugin. | [autogpt_plugins/scenex](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/scenex)
 | Bing Search |  This search plugin integrates Bing search engines into Auto-GPT. | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)
 | News Search |  This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT. | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)
+| Wikipedia Search | This allows AutoGPT to use Wikipedia directly. | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search)
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
@@ -69,6 +70,10 @@ Some third-party plugins have been created by contributors that are not included
 | MetaTrader | Connect your MetaTrader Account to Auto-GPT. | [isaiahbjork/Auto-GPT-MetaTrader-Plugin](https://github.com/isaiahbjork/Auto-GPT-MetaTrader-Plugin) |
 | Google Analytics | Connect your Google Analytics Account to Auto-GPT. | [isaiahbjork/Auto-GPT-Google-Analytics-Plugin](https://github.com/isaiahbjork/Auto-GPT-Google-Analytics-Plugin)
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube)
+| Mastodon  | Simple Mastodon plugin to send toots through a Mastodon account | [ppetermann/AutoGPTMastodonPlugin](https://github.com/ppetermann/AutoGPTMastodonPlugin)
+| TiDB Serverless   | Connect your TiDB Serverless database to Auto-GPT, enable get query results from database | [pingcap/Auto-GPT-TiDB-Serverless-Plugin](https://github.com/pingcap/Auto-GPT-TiDB-Serverless-Plugin)
+| Instagram | Instagram access | [jpetzke/AutoGPT-Instagram](https://github.com/jpetzke/AutoGPT-Instagram)
+| Crypto | Trade crypto with Auto-GPT | [isaiahbjork/Auto-GPT-Crypto-Plugin](https://github.com/isaiahbjork/Auto-GPT-Crypto-Plugin)
 
 ## Configuration
 
