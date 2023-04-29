@@ -20,7 +20,7 @@ class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
         super().__init__()
         self._name = "Auto-GPT-Space-Plugin"
         self._version = "0.1.3"
-        self._description = "Auto-GPT Space Plugin: Supercharge email management."
+        self._description = "Auto-GPT Space Plugin: Get the number of astronauts in space in real-time.."
         self.load_commands = True
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
