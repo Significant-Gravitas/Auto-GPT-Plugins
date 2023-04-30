@@ -11,4 +11,6 @@ tweepy==4.13.0
 pandas
 auto_gpt_plugin_template
 newsapi-python
+requests
+requests-mock
 pytest
