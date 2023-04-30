@@ -1,4 +1,4 @@
-"""Wikipedia search integrations."""
+"""Random Values commands."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
@@ -18,7 +18,7 @@ class Message(TypedDict):
 
 class AutoGPTRandomValues(AutoGPTPluginTemplate):
     """
-    Wikipedia search integrations
+    Random Values plugin for Auto-GPT.
     """
 
     def __init__(self):
@@ -234,7 +234,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         prompt.add_command(
             "generate_placeholder_text",
             "Generate Placeholder Text",
-            {"count": "<integer>"},
+            {"sentences": "<integer>"},
             _generate_placeholder_text
         )
         return prompt

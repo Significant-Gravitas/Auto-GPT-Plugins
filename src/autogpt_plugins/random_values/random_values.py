@@ -8,7 +8,7 @@ import lorem
 
 """Random Number function for Autogpt."""
 
-def _random_number(min: int = 0, max: int = 65535, count: int  = 1) -> str:
+def _random_number(min = 0, max = 65535, count = 1) -> str:
     """Return a random integer between min and max
     Args:
         min (int): The lowest number in the range
@@ -18,6 +18,23 @@ def _random_number(min: int = 0, max: int = 65535, count: int  = 1) -> str:
         str: a json array with 1 to "count" random numbers in the format
         ["<random_number>"]
     """
+
+    # Type-check the arguments
+    if not isinstance(min, int):
+        try:
+            min = int(min)
+        except ValueError:
+            raise ValueError("min must be an integer")
+    if not isinstance(max, int):
+        try:
+            max = int(max)
+        except ValueError:
+            raise ValueError("max must be an integer")
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except ValueError:
+            raise ValueError("count must be an integer")
 
     # Make values sane
     if not (0 <= min <= 65535):
@@ -34,9 +51,10 @@ def _random_number(min: int = 0, max: int = 65535, count: int  = 1) -> str:
 
     return json.dumps(random_numbers)
 
+
 """Random UUID function for Autogpt."""
 
-def _make_uuids(count: int = 1) -> str:
+def _make_uuids(count = 1) -> str:
     """Return a UUID
     Args:
         count (int): The number of UUIDs to return
@@ -44,6 +62,13 @@ def _make_uuids(count: int = 1) -> str:
         str: a json array with 1 to "count" UUIDs
         ["<UUID>"]
     """
+
+    # Type-check the arguments
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except ValueError:
+            raise ValueError("count must be an integer")
 
     # Make values sane
     if not (1 <= count <= 65535):
@@ -56,9 +81,10 @@ def _make_uuids(count: int = 1) -> str:
 
     return json.dumps(uuids)
 
+
 """Random String function for Autogpt."""
 
-def _generate_string(length: int = 10, count: int = 1) -> str:
+def _generate_string(length = 10, count = 1) -> str:
     """Return a random string
     Args:
         length (int): The length of the string
@@ -67,6 +93,18 @@ def _generate_string(length: int = 10, count: int = 1) -> str:
         str: a json array with 1 to "count" strings of "length" length
         ["<string>"]
     """
+
+    # Type-check the arguments
+    if not isinstance(length, int):
+        try:
+            length = int(length)
+        except ValueError:
+            raise ValueError("length must be an integer")
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except ValueError:
+            raise ValueError("count must be an integer")
 
     # Make values sane
     if not (2 <= length <= 65535):
@@ -81,9 +119,10 @@ def _generate_string(length: int = 10, count: int = 1) -> str:
 
     return json.dumps(strings)
 
+
 """Random Password function for Autogpt."""
 
-def _generate_password(length: int = 16, count: int = 1) -> str:
+def _generate_password(length = 16, count = 1) -> str:
     """Return a random password of letters, numbers, and punctuation
     Args:
         length (int): The length of the password
@@ -92,6 +131,18 @@ def _generate_password(length: int = 16, count: int = 1) -> str:
         str: a json array with 1 to "count" passwords of "length" length
         ["<password>"]
     """
+
+    # Type-check the arguments
+    if not isinstance(length, int):
+        try:
+            length = int(length)
+        except ValueError:
+            raise ValueError("length must be an integer")
+    if not isinstance(count, int):
+        try:
+            count = int(count)
+        except ValueError:
+            raise ValueError("count must be an integer")
     
     # Make values sane
     if not (6 <= length <= 65535):
@@ -106,24 +157,32 @@ def _generate_password(length: int = 16, count: int = 1) -> str:
 
     return json.dumps(passwords)
 
+
 """Random Lorem Ipsum function for Autogpt."""
 
-def _generate_placeholder_text(count: int = 1) -> str:
+def _generate_placeholder_text(sentences = 1) -> str:
     """Return a random sentence of lorem ipsum text
     Args:
-        count (int): The number of strings to return
+        sentences (int): The number of strings to return
     Returns:
-        str: a json array with 1 to "count" strings of lorem ipsum
+        str: a json array with 1 to "sentences" strings of lorem ipsum
         ["<string>"]
     """
 
+    # Type-check the arguments
+    if not isinstance(sentences, int):
+        try:
+            sentences = int(sentences)
+        except ValueError:
+            raise ValueError("sentences must be an integer")
+
     # Make values sane
-    if not (1 <= count <= 65535):
-        raise ValueError("count must be between 1 and 65535")
+    if not (1 <= sentences <= 65535):
+        raise ValueError("sentences must be between 1 and 65535")
 
     # Do the thing
     strings = []
-    for _ in range(count):
+    for _ in range(sentences):
         strings.append(lorem.get_sentence())
 
     return json.dumps(strings)
