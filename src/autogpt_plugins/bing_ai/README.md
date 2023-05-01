@@ -12,6 +12,7 @@ The Bing AI Plugin enables Auto-GPT to use Bing AI to research information, ask 
 - Install the cookie editor extension for [Chrome](https://chrome.google.com/webstore/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/)
 - Go to `bing.com`
 - Open the extension
+- You must be logged in to an account with Bing AI access.
 - Click "Export" on the bottom right, then "Export as JSON" (This saves your cookies to clipboard)
 - Paste your cookies into a file `cookies.json`
 
