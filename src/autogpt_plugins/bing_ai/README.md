@@ -2,6 +2,8 @@
 
 The Bing AI Plugin enables Auto-GPT to use Bing AI to research information, ask questions, get advice, and more.
 
+<img width="1150" alt="Screenshot 2023-04-30 at 9 22 56 PM" src="https://user-images.githubusercontent.com/107640947/235422351-a1bedadf-4230-4f58-a148-94d30805ddd1.png">
+
 ## Key Features:
 - Bing AI already implemented researching information, so implementing this plugin will almost entirely negate the need to browse websites and the current implementation of researching information.
 - Allows Auto-GPT to consult Bing AI.
