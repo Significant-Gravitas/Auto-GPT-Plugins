@@ -1,14 +1,14 @@
-# Wikipedia Search Plugin
+# API Tools Plugin
 
-The Wikipedia Search plugin will allow AutoGPT to directly interact with Wikipedia.
+The API Tools Plugin enables Auto-GPT to communicate with APIs.
 
 ## Key Features:
-- Wikipedia Search performs search queries using Wikipedia.
+- Supports GET, POST, PUT, DELETE, PATCH, HEAD and OPTIONS
+- Tries to recover from strange values being used as parameters
+- Accepts custom header values
 
 ## Installation:
-1. Download the Wikipedia Search Plugin repository as a ZIP file.
-2. Copy the ZIP file into the "plugins" folder of your Auto-GPT project.
+As part of the AutoGPT plugins package, follow the [installation instructions](https://github.com/Significant-Gravitas/Auto-GPT-Plugins) on the Auto-GPT-Plugins GitHub reporistory README page.
 
 ## AutoGPT Configuration
-
-Set `ALLOWLISTED_PLUGINS=autogpt-wikipedia-search,example-plugin1,example-plugin2,etc` in your AutoGPT `.env` file.
+Set `ALLOWLISTED_PLUGINS=autogpt-api-tools,example-plugin1,example-plugin2,etc` in your AutoGPT `.env` file.

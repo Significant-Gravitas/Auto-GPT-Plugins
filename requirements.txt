@@ -13,4 +13,5 @@ auto_gpt_plugin_template
 newsapi-python
 requests
 requests-mock
+validators
 pytest

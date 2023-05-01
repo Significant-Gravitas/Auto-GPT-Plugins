@@ -7,15 +7,16 @@ import re
 from typing import Optional, Dict
 from urllib.parse import urlparse
 from urllib.parse import urljoin
+from validators import url as is_valid_url
 
 def _make_api_call(
-        host: str = "https://localhost", 
-        endpoint: str = "/", 
-        method: str = "GET", 
+        host = "", 
+        endpoint = "", 
+        method = "GET", 
         query_params = {},
-        body: str = "", 
-        headers = {},
-        timeout_secs: int = 120) -> str:
+        body = "", 
+        headers = {"Content-Type": "application/json"},
+        timeout_secs = 60) -> str:
     """Return the results of an API call
     Args:
         host (str): The host of the API.
@@ -28,129 +29,166 @@ def _make_api_call(
     Returns:
         str: A JSON string containing the results of the API 
             call in the format
-            {"response": "<response>", "status_code": <status_code>}
+            {"status": "success|error", "status_code": int, "response": str, "response": str}
     """
 
-    def is_valid_url(url: str) -> bool:
+    def sanitize_string(input_string: str) -> str:
+        """Remove potentially harmful characters from the string."""
 
-        """Return True if the url is valid, False otherwise."""
-
-        try:
-            result = urlparse(url)
-            return all([result.scheme, result.netloc])
-        except ValueError:
-            return False
-        
-    # End of is_valid_url
-
-    def sanitize(input_string: str) -> str:
-
-        """Remove potentially harmful characters from the input string."""
-        
-        try:
-            data = json.loads(input_string)
-        except json.JSONDecodeError:
-            # If it's not JSON, sanitize it as a single value.
-            sanitized_string = re.sub(r'[^a-zA-Z0-9_: -{}[\],"]', '', input_string)
-        else:
-            # If it's JSON, sanitize all the values.
-            sanitized_string = json.dumps({sanitize(k): sanitize(str(v)) for k, v in data.items()})
-
-        return sanitized_string
+        return re.sub(r'[^a-zA-Z0-9_: -{}[\],"]', '', input_string)
     
-    # End of sanitize
+    # End of sanitize_string()
+
+
+    def sanitize_json(input_string: str) -> str:
+        """Sanitize all the values in a JSON string."""
+
+        data = json.loads(input_string)
+        sanitized_data = {sanitize_string(k): sanitize_string(str(v)) for k, v in data.items()}
+        return json.dumps(sanitized_data)
+    
+    # End of sanitize_json()
+
+    
+    def sanitize(input_string: str) -> str:
+        """Remove potentially harmful characters from the input string."""
+
+        try:
+            sanitized_string = sanitize_json(input_string)
+        except json.JSONDecodeError:
+            sanitized_string = sanitize_string(input_string)
+        return sanitized_string
+
+    # End of sanitize()
+
 
     # Initialize variables  
     response = {}
-    if isinstance(query_params, str):
+
+    # Type-check inputs - host
+    if not isinstance(host, str):
+        raise ValueError("host must be a string")
+    
+    # Type-check inputs - endpoint
+    if not isinstance(endpoint, str):
+        raise ValueError("endpoint must be a string")
+    
+    # Type-check inputs - method
+    if not isinstance(method, str):
+        raise ValueError("method must be a string")
+    
+    # Type-check inputs - query_params
+    if not query_params:
+        query_params = {}
+    elif isinstance(query_params, str):
         try:
             query_params = json.loads(query_params)
         except json.JSONDecodeError:
-            query_params = {}
-    if isinstance(headers, str):
+            raise ValueError("query_params must be a dictionary")
+    elif isinstance(query_params, dict):
+        new_query_params = {}
+        for k, v in query_params.items():
+            if k is None:
+                raise ValueError("query_params cannot contain None keys")
+            if not isinstance(k, str):
+                k = str(k)
+            if v is not None and not isinstance(v, str):
+                v = str(v)
+            new_query_params[k] = v
+        query_params = new_query_params
+    else:
+        raise ValueError("query_params must be a dictionary or a JSON string")
+
+    # Type-check inputs - body
+    if not isinstance(body, str):
+        try:
+            body = str(body)
+        except ValueError:
+            raise ValueError("body must be a string")
+        
+    # Type-check inputs - headers
+    if not headers:
+        headers = {}
+    elif isinstance(headers, str):
         try:
             headers = json.loads(headers)
         except json.JSONDecodeError:
-            headers = {}
-
-    # Validate inputs
-    if not isinstance(query_params, dict):
-        raise ValueError("query_params must be a dictionary")
-    if not isinstance(headers, dict):
-        raise ValueError("headers must be a dictionary")
-    if not isinstance(timeout_secs, int) or timeout_secs <= 0:
-        raise ValueError("timeout_secs must be a positive integer")
-
-    # Prepare the request -- URL
-    if not host.startswith(("http://", "https://")):
-        host = f"https://{host}"
-    url = urljoin(host, endpoint)
-    if not is_valid_url(url):
-        return json.dumps({
-            "response": 'Invalid host or endpoint',
-            "status_code": None
-        })
-    
-    # Prepare the request -- Method
-    allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-    if method not in allowed_methods:
-        raise ValueError("Invalid method: " + method)
-
-    # Prepare the request -- Headers
-    if 'Content-Type' not in headers:
-        headers['Content-Type'] = 'application/json'
-    sanitized_headers = {sanitize(k): sanitize(v) for k, v in headers.items()}
-    
-    # Prepare the request -- Body
-    sanitized_body = sanitize(str(body))
-    content_type = sanitized_headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            body_dict = json.loads(sanitized_body)
-        except json.JSONDecodeError:
-            body_dict = sanitized_body
-    elif content_type == 'application/x-www-form-urlencoded':
-        body_dict = sanitized_body
-    elif content_type == 'multipart/form-data':
-        raise ValueError("Content type 'multipart/form-data' is not supported.")
+            raise ValueError("headers must be a dictionary")
+    elif isinstance(headers, dict):
+        new_headers = {}
+        for k, v in headers.items():
+            if k is None:
+                raise ValueError("headers cannot contain None keys")
+            if not isinstance(k, str):
+                k = str(k)
+            if v is not None and not isinstance(v, str):
+                v = str(v)
+            new_headers[k] = v
+        headers = new_headers
     else:
-        raise ValueError('Unsupported Content-Type: ' + content_type)
-    
-    # Prepare the request -- Query Parameters
-    sanitized_query_params = {sanitize(k): sanitize(v) for k, v in query_params.items()}
+        raise ValueError("headers must be a dictionary or a JSON string")
+        
+    # Type-check inputs - timeout_secs
+    if timeout_secs is None:
+        raise ValueError("timeout_secs must be an integer")
+    elif not isinstance(timeout_secs, int):
+        try:
+            timeout_secs = int(timeout_secs)
+        except ValueError:
+            raise ValueError("timeout_secs must be an integer")
 
+    # Validate URL
+    if '?' in host or '&' in host:
+        raise ValueError("Invalid URL: Host must not contain query parameters")
+    sanitized_host = sanitize(host)
+    sanitized_endpoint = sanitize(endpoint)
+    if not sanitized_host.startswith(("http://", "https://")):
+        sanitized_host = f"https://{sanitized_host}"
+    url = urljoin(sanitized_host, sanitized_endpoint)
+    if not is_valid_url(url):
+        raise ValueError("Invalid URL: " + url)
+    
+    # Validate method
+    allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
+    sanitized_method = sanitize(method).upper()    
+    if sanitized_method not in allowed_methods:
+        raise ValueError("Invalid method: " + sanitized_method)
+
+    # Validate timeout_secs
+    if not timeout_secs > 0:
+        raise ValueError("timeout_secs must be a positive integer")
+    
     # Make the request
     try:
-        if method == "GET":
-            response = requests.get(url, params=sanitized_query_params, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "HEAD":
-            response = requests.head(url, params=sanitized_query_params, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "OPTIONS":
-            response = requests.options(url, params=sanitized_query_params, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "POST":
-            response = requests.post(url, params=sanitized_query_params, json=body_dict, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "PUT":
-            response = requests.put(url, params=sanitized_query_params, json=body_dict, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "DELETE":
-            response = requests.delete(url, params=sanitized_query_params, json=body_dict, headers=sanitized_headers, timeout=timeout_secs)
-        elif method == "PATCH":
-            response = requests.patch(url, params=sanitized_query_params, json=body_dict, headers=sanitized_headers, timeout=timeout_secs)
+        if sanitized_method == "GET":
+            response = requests.get(url, params=query_params, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "HEAD":
+            response = requests.head(url, params=query_params, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "OPTIONS":
+            response = requests.options(url, params=query_params, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "POST":
+            response = requests.post(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "PUT":
+            response = requests.put(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "DELETE":
+            response = requests.delete(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+        elif sanitized_method == "PATCH":
+            response = requests.patch(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
         else:
             raise ValueError("Invalid method: " + method)
         
-        try:
-            response_text = json.loads(response.text)
-        except json.JSONDecodeError:
-            response_text = response.text
+        response_text = response.text
         response = {
-            "response": response_text,
-            "status_code": response.status_code
+            "status": "success",
+            "status_code": response.status_code,
+            "response": response_text
         }
 
     except requests.exceptions.RequestException as e:
         response = {
-            "error": str(e),
-            "status_code": None
+            "status": "error",
+            "status_code": None,
+            "response": str(e)
         }
 
     return json.dumps(response)
