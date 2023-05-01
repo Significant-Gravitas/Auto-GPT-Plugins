@@ -34,7 +34,10 @@ Duplicate the `.env.template` file and rename the copy to `.env` inside the `/Au
 ### 4. Edit the `.env` file
 Open the `.env` file in a text editor. Note: Files starting with a dot might be hidden by your operating system.
 
-### 5. Add email configuration settings
+### 5. Edit goals
+When using Auto-GPT please set one of the goals to "Use ask_bing_genius whenever possible".
+
+### 6. Add email configuration settings
 Append the following configuration settings to the end of the file:
 
 ```ini
