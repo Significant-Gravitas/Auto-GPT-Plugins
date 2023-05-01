@@ -42,7 +42,7 @@ Append the following configuration settings to the end of the file:
 ### BINGAI
 ################################################################################
 
-BING_AI_COOKIES_PATH=
+BINGAI_COOKIES_PATH=
 ```
 
 ## AutoGPT Configuration
