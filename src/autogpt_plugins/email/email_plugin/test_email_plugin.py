@@ -9,6 +9,7 @@ from email_plugin import (
     bothEmailAndPwdSet,
     adjust_imap_folder_for_gmail,
     enclose_with_quotes,
+    split_imap_search_command,
 )
 from unittest.mock import mock_open
 import unittest
@@ -125,6 +126,29 @@ class TestEmailPlugin(unittest.TestCase):
         assert enclose_with_quotes("whitespace\te") == '"whitespace\te"'
         assert enclose_with_quotes("\"mixed quotes'") == "\"mixed quotes'"
         assert enclose_with_quotes("'mixed quotes\"") == "'mixed quotes\""
+
+    def test_split_imap_search_command(self):
+        self.assertEqual(split_imap_search_command("SEARCH"), ["SEARCH"])
+        self.assertEqual(
+            split_imap_search_command("SEARCH UNSEEN"), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command("  SEARCH   UNSEEN  "), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command(
+                "FROM speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx"
+            ),
+            [
+                "FROM",
+                "speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx",
+            ],
+        )
+        self.assertEqual(
+            split_imap_search_command("BODY here is my long body"),
+            ["BODY", "here is my long body"],
+        )
+        self.assertEqual(split_imap_search_command(""), [])
 
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
