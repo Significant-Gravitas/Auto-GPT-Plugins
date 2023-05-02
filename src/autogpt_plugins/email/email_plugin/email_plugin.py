@@ -7,6 +7,11 @@ import mimetypes
 import time
 from email.header import decode_header
 from email.message import EmailMessage
+import re
+
+
+def bothEmailAndPwdSet() -> bool:
+    return True if os.getenv("EMAIL_ADDRESS") and os.getenv("EMAIL_PASSWORD") else False
 
 
 def getSender():
@@ -23,29 +28,26 @@ def getPwd():
     return email_password
 
 
-def send_email(recipient: str, subject: str, message: str) -> str:
-    return send_email_with_attachment_internal(recipient, subject, message, None, None)
+def send_email(to: str, subject: str, body: str) -> str:
+    return send_email_with_attachment_internal(to, subject, body, None, None)
 
 
-def send_email_with_attachment(
-    recipient: str, subject: str, message: str, attachment: str
-) -> str:
-    from autogpt.workspace import path_in_workspace
-
-    attachment_path = path_in_workspace(attachment)
+def send_email_with_attachment(to: str, subject: str, body: str, filename: str) -> str:
+    attachment_path = filename
+    attachment = os.path.basename(filename)
     return send_email_with_attachment_internal(
-        recipient, subject, message, attachment_path, attachment
+        to, subject, body, attachment_path, attachment
     )
 
 
 def send_email_with_attachment_internal(
-    recipient: str, subject: str, message: str, attachment_path: str, attachment: str
+    to: str, title: str, message: str, attachment_path: str, attachment: str
 ) -> str:
     """Send an email
 
     Args:
-        recipient (str): The email of the recipients
-        subject (str): The subject of the email
+        to (str): The email of the recipient
+        title (str): The title of the email
         message (str): The message content of the email
 
     Returns:
@@ -55,9 +57,9 @@ def send_email_with_attachment_internal(
     email_password = getPwd()
 
     msg = EmailMessage()
-    msg["Subject"] = subject
+    msg["Subject"] = title
     msg["From"] = email_sender
-    msg["To"] = recipient
+    msg["To"] = to
 
     signature = os.getenv("EMAIL_SIGNATURE")
     if signature:
@@ -88,7 +90,7 @@ def send_email_with_attachment_internal(
             smtp.login(email_sender, email_password)
             smtp.send_message(msg)
             smtp.quit()
-        return f"Email was sent to {recipient}!"
+        return f"Email was sent to {to}!"
     else:
         conn = imap_open(draft_folder, email_sender, email_password)
         conn.append(
@@ -101,17 +103,23 @@ def send_email_with_attachment_internal(
 
 
 def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
-    """Read emails
+    """Read emails from an IMAP mailbox.
+
+    This function reads emails from a specified IMAP folder, using a given IMAP search command.
+    It returns a list of emails with their details, including the sender, recipient, date, CC, subject, and message body.
 
     Args:
-        recipient (str): The email of the recipients
-        subject (str): The subject of the email
-        message (str): The message content of the email
+        imap_folder (str, optional): The name of the IMAP folder to read emails from. Defaults to "inbox".
+        imap_search_command (str, optional): The IMAP search command to filter emails. Defaults to "UNSEEN".
 
     Returns:
-        str: Any error messages
+        str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
+             a string indicating that no matching emails were found.
     """
     email_sender = getSender()
+    imap_folder = adjust_imap_folder_for_gmail(imap_folder, email_sender)
+    imap_folder = enclose_with_quotes(imap_folder)
+    imap_search_ar = split_imap_search_command(imap_search_command)
     email_password = getPwd()
 
     mark_as_seen = os.getenv("EMAIL_MARK_AS_SEEN")
@@ -119,7 +127,13 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
         mark_as_seen = json.loads(mark_as_seen.lower())
 
     conn = imap_open(imap_folder, email_sender, email_password)
-    _, search_data = conn.search(None, imap_search_command)
+
+    imap_keyword = imap_search_ar[0]
+    if len(imap_search_ar) == 1:
+        _, search_data = conn.search(None, imap_keyword)
+    else:
+        argument = enclose_with_quotes(imap_search_ar[1])
+        _, search_data = conn.search(None, imap_keyword, argument)
 
     messages = []
     for num in search_data[0].split():
@@ -162,6 +176,15 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
     return messages
 
 
+def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
+    if "@gmail" in email_sender.lower() or "@googlemail" in email_sender.lower():
+        if "sent" in imap_folder.lower():
+            return '"[Gmail]/Sent Mail"'
+        if "draft" in imap_folder.lower():
+            return "[Gmail]/Drafts"
+    return imap_folder
+
+
 def imap_open(
     imap_folder: str, email_sender: str, email_password: str
 ) -> imaplib.IMAP4_SSL:
@@ -181,3 +204,25 @@ def get_email_body(msg: email.message.Message) -> str:
                 return part.get_payload(decode=True).decode()
     else:
         return msg.get_payload(decode=True).decode()
+
+
+def enclose_with_quotes(s):
+    # Check if string contains whitespace
+    has_whitespace = bool(re.search(r"\s", s))
+
+    # Check if string is already enclosed by quotes
+    is_enclosed = s.startswith(("'", '"')) and s.endswith(("'", '"'))
+
+    # If string has whitespace and is not enclosed by quotes, enclose it with double quotes
+    if has_whitespace and not is_enclosed:
+        return f'"{s}"'
+    else:
+        return s
+
+
+def split_imap_search_command(input_string):
+    input_string = input_string.strip()
+    parts = input_string.split(maxsplit=1)
+    parts = [part.strip() for part in parts]
+
+    return parts

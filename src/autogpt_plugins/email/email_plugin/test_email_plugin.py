@@ -6,6 +6,10 @@ from email_plugin import (
     read_emails,
     imap_open,
     send_email_with_attachment_internal,
+    bothEmailAndPwdSet,
+    adjust_imap_folder_for_gmail,
+    enclose_with_quotes,
+    split_imap_search_command,
 )
 from unittest.mock import mock_open
 import unittest
@@ -27,6 +31,125 @@ MOCK_ATTACHMENT_NAME = "file.txt"
 
 
 class TestEmailPlugin(unittest.TestCase):
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "test@example.com",
+            "EMAIL_PASSWORD": "test_password",
+        },
+    )
+    def test_both_email_and_pwd_set(self):
+        self.assertTrue(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_PASSWORD": "test_password",
+        },
+        clear=True,
+    )
+    def test_email_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "",
+            "EMAIL_PASSWORD": "test_password",
+        },
+        clear=True,
+    )
+    def test_email_not_set_2(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": "test@example.com",
+        },
+        clear=True,
+    )
+    def test_pwd_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    @patch.dict(os.environ, {}, clear=True)
+    def test_both_email_and_pwd_not_set(self):
+        self.assertFalse(bothEmailAndPwdSet())
+
+    def test_adjust_imap_folder_for_gmail_normal_cases(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Sent", "user@gmail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@googlemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Inbox", "user@gmail.com"), "Inbox"
+        )
+
+    def test_adjust_imap_folder_for_gmail_case_insensitivity(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SeNT", "user@GMail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("DRAFTS", "user@gOogLemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("InbOx", "user@gmail.com"), "InbOx"
+        )
+
+    def test_adjust_imap_folder_for_gmail_non_gmail_sender(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("Sent", "user@yahoo.com"), "Sent")
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@hotmail.com"), "Drafts"
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SENT", "gmail@hotmail.com"), "SENT"
+        )
+
+    def test_adjust_imap_folder_for_gmail_edge_cases(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("", "user@gmail.com"), "")
+        self.assertEqual(adjust_imap_folder_for_gmail("Inbox", ""), "Inbox")
+        self.assertEqual(adjust_imap_folder_for_gmail("", ""), "")
+
+    def test_enclose_with_quotes(self):
+        assert enclose_with_quotes("REVERSE DATE") == '"REVERSE DATE"'
+        assert enclose_with_quotes('"My Search"') == '"My Search"'
+        assert enclose_with_quotes("'test me'") == "'test me'"
+        assert enclose_with_quotes("ALL") == "ALL"
+        assert enclose_with_quotes("quotes needed") == '"quotes needed"'
+        assert enclose_with_quotes("   whitespace  ") == '"   whitespace  "'
+        assert enclose_with_quotes("whitespace\te") == '"whitespace\te"'
+        assert enclose_with_quotes("\"mixed quotes'") == "\"mixed quotes'"
+        assert enclose_with_quotes("'mixed quotes\"") == "'mixed quotes\""
+
+    def test_split_imap_search_command(self):
+        self.assertEqual(split_imap_search_command("SEARCH"), ["SEARCH"])
+        self.assertEqual(
+            split_imap_search_command("SEARCH UNSEEN"), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command("  SEARCH   UNSEEN  "), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command(
+                "FROM speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx"
+            ),
+            [
+                "FROM",
+                "speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx",
+            ],
+        )
+        self.assertEqual(
+            split_imap_search_command("BODY here is my long body"),
+            ["BODY", "here is my long body"],
+        )
+        self.assertEqual(split_imap_search_command(""), [])
+
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
         os.environ,
