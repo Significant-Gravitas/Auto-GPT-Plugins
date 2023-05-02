@@ -3,7 +3,7 @@
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .todo_list import _todo_list
+from .todo_list import AutoGPTTodoListPluginCommands
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -23,6 +23,7 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
         self._name = "autogpt-todo-list"
         self._version = "0.1.0"
         self._description = "AutoGPT can track tasks in a structured JSON file."
+        self.commands = AutoGPTTodoListPluginCommands()
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -204,27 +205,15 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
 
-        # All todo lists
-        prompt.add_command(
-            "list_todo_lists",
-            "List Todo Lists",
-            {},
-            _list_todo_lists
-        )
-        prompt.add_command(
-            "delete_all_todo_lists",
-            "Delete All Todo Lists",
-            {},
-            _delete_all_todo_lists
-        )
+        # Create and manage todo lists
 
-        # Todo list functions
         prompt.add_command(
             "create_todo_list",
             "Create Todo List",
             {"name": "<name>", "type": "<style>"},
-            _create_todo_list
+           self.commands.create_todo_list
         )
+        """
         prompt.add_command(
             "delete_todo_list",
             "Delete Todo List",
@@ -232,22 +221,22 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
             _delete_todo_list
         )
         prompt.add_command(
-            "complete_todo_list",
-            "Complete Todo List",
-            {"todolist_id": "<todolist_id>"},
-            _complete_todo_list
-        )
-        prompt.add_command(
-            "uncomplete_todo_list",
-            "Uncomplete Todo List",
-            {"todolist_id": "<todolist_id>"},
-            _uncomplete_todo_list
-        )
-        prompt.add_command(
             "rename_todo_list",
             "Rename Todo List",
             {"todolist_id": "<todolist_id>", "name": "<name>"},
             _rename_todo_list
+        )
+        prompt.add_command(
+            "change_todo_list_type",
+            "Change Todo List Type",
+            {"todolist_id": "<todolist_id>", "type": "<style>"},
+            _change_todo_list_type
+        )
+        prompt.add_command(
+            "list_todo_lists",
+            "List Todo Lists",
+            {},
+            _list_todo_lists
         )
 
         # Todo task functions
@@ -258,28 +247,28 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
             _add_to_todo_list
         )
         prompt.add_command(
-            "delete_task_from_todo_list",
-            "Delete Task from Todo List",
+            "delete_from_todo_list",
+            "Delete from Todo List",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _delete_task_from_todo_list
+            _delete_from_todo_list
         )
         prompt.add_command(
-            "complete_todo_task",
-            "Complete Todo Task",
+            "complete_todo_list_task",
+            "Complete Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _complete_todo_task
+            _complete_todo_list_task
         )
         prompt.add_command(
-            "uncomplete_todo_task",
-            "Uncomplete Todo Task",
+            "uncomplete_todo_list_task",
+            "Uncomplete Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _uncomplete_todo_task
+            _uncomplete_todo_list_task
         )
         prompt.add_command(
-            "change_todo_task_description",
-            "Change Todo Task Description",
+            "rename_todo_list_task",
+            "Rename Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>", "description": "<description>"},
-            _change_todo_task_description
+            _rename_todo_list_task
         )
         prompt.add_command(
             "get_next_todo_list_task",
@@ -288,48 +277,23 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
             _get_next_todo_list_task
         )
         prompt.add_command(
-            "get_random_todo_list_task",
-            "Get Random Todo List Task",
-            {"todolist_id": "<todolist_id>"},
-            _get_random_todo_list_task
-        )
-
-        # Todo list bulk task functions
-        prompt.add_command(
             "list_todo_list_tasks",
             "List Todo List Tasks",
             {"todolist_id": "<todolist_id>"},
             _list_todo_list_tasks
         )
-        prompt.add_command(
-            "delete_all_todo_list_tasks",
-            "Delete All Todo List Tasks",
-            {"todolist_id": "<todolist_id>"},
-            _delete_all_todo_list_tasks
-        )
-        prompt.add_command(
-            "complete_all_todo_list_tasks",
-            "Complete All Todo List Tasks",
-            {"todolist_id": "<todolist_id>"},
-            _complete_all_todo_list_tasks
-        )
-        prompt.add_command(
-            "uncomplete_all_todo_list_tasks",
-            "Uncomplete All Todo List Tasks",
-            {"todolist_id": "<todolist_id>"},
-            _uncomplete_all_todo_list_tasks
-        )
         prompt_add_command(
-            "list_completed_tasks",
-            "List Completed Tasks",
+            "list_complete_tasks",
+            "List Complete Tasks",
             {"todolist_id": "<todolist_id>"},
-            _list_completed_tasks
+            _list_complete_tasks
         )
         prompt.add_command(
-            "list_uncompleted_tasks",
-            "List Uncompleted Tasks",
+            "list_uncomplete_tasks",
+            "List Uncomplete Tasks",
             {"todolist_id": "<todolist_id>"},
-            _list_uncompleted_tasks
+            _list_uncomplete_tasks
         )
+        """
 
         return prompt
