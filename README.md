@@ -3,6 +3,9 @@
 > ⚠️💀 **WARNING** 💀⚠️:
 > Review the code of any plugin you use thoroughly, as plugins can execute any Python code, potentially leading to malicious activities, such as stealing your API keys.
 
+> ⚙️ **WORK IN PROGRESS** ⚙️:
+> The plugin api is not yet stabilized. If you are coding a plugin, expect it to change in the next few versions.
+
 ## Installation
 
 **_⚠️This is a work in progress⚠️_**
@@ -13,7 +16,7 @@ Follow these steps to configure the Auto-GPT Plugins:
 
    If you haven't already, follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to install it.
 
-1. **Run the following to pull the plugins folder down from the `root` of `autogpt`**
+1. **Run the following to pull the plugins folder down from the `root` of `Auto-GPT` directory**
 
     To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
 
@@ -57,6 +60,8 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 | Email | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)
 | SceneX | Explore image storytelling beyond pixels with the Auto-GPT SceneX Plugin. | [autogpt_plugins/scenex](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/scenex)
 | Bing Search |  This search plugin integrates Bing search engines into Auto-GPT. | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)
+| News Search |  This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT. | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)
+| Wikipedia Search | This allows AutoGPT to use Wikipedia directly. | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search)
 | Unzipped Plugins  | *⚠️For Devs Only⚠️* This utility allows unzipped plugins to work during development. AutoGPT requires zipped plugins for enhanced security, which may slow down plugin developers.  | [autogpt_plugins/unzipped](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/unzipped)
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
@@ -73,6 +78,8 @@ Some third-party plugins have been created by contributors that are not included
 | TiDB Serverless   | Connect your TiDB Serverless database to Auto-GPT, enable get query results from database | [pingcap/Auto-GPT-TiDB-Serverless-Plugin](https://github.com/pingcap/Auto-GPT-TiDB-Serverless-Plugin)
 | Instagram | Instagram access | [jpetzke/AutoGPT-Instagram](https://github.com/jpetzke/AutoGPT-Instagram)
 | Crypto | Trade crypto with Auto-GPT | [isaiahbjork/Auto-GPT-Crypto-Plugin](https://github.com/isaiahbjork/Auto-GPT-Crypto-Plugin)
+| iMessage | Send and Get iMessages using Auto-GPT | [danikhan632/Auto-GPT-Messages-Plugin](https://github.com/danikhan632/Auto-GPT-Messages-Plugin)
+| Alpaca-Trading | Trade stocks and crypto, paper or live with Auto-GPT | [danikhan632/Auto-GPT-AlpacaTrader-Plugin](https://github.com/danikhan632/Auto-GPT-AlpacaTrader-Plugin)
 
 ## Configuration
 
