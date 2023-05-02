@@ -127,5 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.devcontainer/devcontainer.json
 .idea
+.devcontainer/devcontainer.json
