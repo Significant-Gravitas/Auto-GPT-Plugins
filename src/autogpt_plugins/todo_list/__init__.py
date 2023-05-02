@@ -23,7 +23,7 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
         self._name = "autogpt-todo-list"
         self._version = "0.1.0"
         self._description = "AutoGPT can track tasks in a structured JSON file."
-        self.commands = AutoGPTTodoListPluginCommands()
+        self.commands = AutoGPTTodoListPluginCommands(self)
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -208,35 +208,34 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
         # Create and manage todo lists
 
         prompt.add_command(
-            "create_todo_list",
-            "Create Todo List",
-            {"name": "<name>", "type": "<style>"},
-           self.commands.create_todo_list
+            "start_list",
+            "Start List",
+            {"name": "<string:name>", "items": "<array:items>", "order": "<string:sequential|random>"},
+           self.commands.start_list
         )
-        """
-        prompt.add_command(
+        """prompt.add_command(
             "delete_todo_list",
             "Delete Todo List",
             {"todolist_id": "<todolist_id>"},
-            _delete_todo_list
+            self.commands.delete_todo_list
         )
         prompt.add_command(
             "rename_todo_list",
             "Rename Todo List",
             {"todolist_id": "<todolist_id>", "name": "<name>"},
-            _rename_todo_list
+            self.commands.ename_todo_list
         )
         prompt.add_command(
             "change_todo_list_type",
             "Change Todo List Type",
             {"todolist_id": "<todolist_id>", "type": "<style>"},
-            _change_todo_list_type
+            self.commands.change_todo_list_type
         )
         prompt.add_command(
             "list_todo_lists",
             "List Todo Lists",
             {},
-            _list_todo_lists
+            self.commands.list_todo_lists
         )
 
         # Todo task functions
@@ -244,56 +243,55 @@ class AutoGPTTodoList(AutoGPTPluginTemplate):
             "add_to_todo_list",
             "Add to Todo List",
             {"todolist_id": "<todolist_id>", "description": "<description>"},
-            _add_to_todo_list
+            self.commands.add_to_todo_list
         )
         prompt.add_command(
             "delete_from_todo_list",
             "Delete from Todo List",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _delete_from_todo_list
+            self.commands.delete_from_todo_list
         )
         prompt.add_command(
             "complete_todo_list_task",
             "Complete Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _complete_todo_list_task
+            self.commands.complete_todo_list_task
         )
         prompt.add_command(
             "uncomplete_todo_list_task",
             "Uncomplete Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>"},
-            _uncomplete_todo_list_task
+            self.commands.uncomplete_todo_list_task
         )
         prompt.add_command(
             "rename_todo_list_task",
             "Rename Todo List Task",
             {"todolist_id": "<todolist_id>", "task_id": "<task_id>", "description": "<description>"},
-            _rename_todo_list_task
+            self.commands.rename_todo_list_task
         )
         prompt.add_command(
             "get_next_todo_list_task",
             "Get Next Todo List Task",
             {"todolist_id": "<todolist_id>"},
-            _get_next_todo_list_task
+            self.commands.get_next_todo_list_task
         )
         prompt.add_command(
             "list_todo_list_tasks",
             "List Todo List Tasks",
             {"todolist_id": "<todolist_id>"},
-            _list_todo_list_tasks
+            self.commands.list_todo_list_tasks
         )
         prompt_add_command(
             "list_complete_tasks",
             "List Complete Tasks",
             {"todolist_id": "<todolist_id>"},
-            _list_complete_tasks
+            self.commands.list_complete_tasks
         )
         prompt.add_command(
             "list_uncomplete_tasks",
             "List Uncomplete Tasks",
             {"todolist_id": "<todolist_id>"},
-            _list_uncomplete_tasks
-        )
-        """
+            self.commands.list_uncomplete_tasks
+        )"""
 
         return prompt
