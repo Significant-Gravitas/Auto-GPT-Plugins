@@ -53,7 +53,7 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
                     "to": "<to>",
                     "subject": "<subject>",
                     "body": "<body>",
-                    "attachment": "<path_to_file>",
+                    "filename": "<attachment filename>",
                 },
                 send_email_with_attachment,
             )
