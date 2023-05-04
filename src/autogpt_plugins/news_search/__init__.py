@@ -33,7 +33,7 @@ class AutoGPTNewsSearch(AutoGPTPluginTemplate):
                 "News Search",
                 "news_search",
                 {"query": "<query>"},
-                self.news_search.news_search,
+                self.news_search.news_everything_search,
             )
         else:
             print(
