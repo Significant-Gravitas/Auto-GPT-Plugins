@@ -1,4 +1,4 @@
-"""Wikipedia search command for Autogpt."""
+"""Chat With User Class for the plugin."""
 from __future__ import annotations
 
 import json
@@ -18,5 +18,5 @@ class ChatWithUserPlugin(AutogptPlugin):
             str: The resulting response.
         """
 
-        
+
         
