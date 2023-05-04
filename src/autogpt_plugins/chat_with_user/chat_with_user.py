@@ -1,8 +1,4 @@
 """Chat With User Class for the plugin."""
-from __future__ import annotations
-
-import json
-import re
 import tkinter as tk
 import threading
 import time
@@ -26,11 +22,6 @@ class ChatWithUserPlugin:
         self.timer = None
         self.is_message_received = False
 
-        # Configure the widgets
-        self.text_widget.pack()
-        self.entry_widget.pack()
-        self.send_button.pack()
-
     # End of __init__
 
 
@@ -42,18 +33,6 @@ class ChatWithUserPlugin:
         self.entry_widget.delete(0, tk.END)
         self.timer.cancel()
         self.is_message_received = True
-
-    # End of handle_new_message
-
-
-    def handle_new_message(self) -> None:
-        """Handle a new message from the user."""
-
-        self.message = self.entry_widget.get()
-        self.text_widget.insert(tk.END, "User: " + self.message + "\n")
-        self.entry_widget.delete(0, tk.END)
-        self.timer.cancel()
-        self.window.quit()
 
     # End of handle_new_message
 
@@ -77,9 +56,12 @@ class ChatWithUserPlugin:
             self.entry_widget = tk.Entry(self.window)
             self.text_widget = tk.Text(self.window)
             self.send_button = tk.Button(self.window, text="Send", command=self.handle_new_message)
+            
+            # Pack the widgets here instead
             self.text_widget.pack()
             self.entry_widget.pack()
             self.send_button.pack()
+            
             self.window.bind("<Destroy>", self.handle_window_close)
             self.is_window_open = True
 
@@ -90,20 +72,6 @@ class ChatWithUserPlugin:
         self.is_message_received = False
 
     # End of timer_expired
-
-
-    def handle_window_close(self, event):
-        """Handle the window closing.
-        Args:
-            event (tkinter.Event): The event.
-        """
-
-        self.window = None
-        self.entry_widget = None
-        self.text_widget = None
-        self.send_button = None
-
-    # End of handle_window_close
 
 
     def chat_with_user(
@@ -131,7 +99,7 @@ class ChatWithUserPlugin:
         while not self.is_message_received:
             self.window.update()
             time.sleep(0.2)
-            
+
         self.is_message_received = False
 
         return self.message if self.message else "No response"

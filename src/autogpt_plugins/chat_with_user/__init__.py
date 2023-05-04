@@ -22,7 +22,7 @@ class AutoGPTChatWithUser(AutoGPTPluginTemplate):
         self._name = "autogpt-chat-with-user"
         self._version = "0.1.0"
         self._description = "Adds a chat_with_user command that opens a window."
-        self.plugin = ChatWithUserPlugin()
+        self.plugin = ChatWithUserPlugin(self)
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
