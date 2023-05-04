@@ -80,6 +80,7 @@ class ChatWithUserPluginWindow:
         """This method is called to run the chat window."""
 
         self.process_incoming_messages()
+        self.window.protocol("WM_DELETE_WINDOW", self.window.quit)  # Handle window close button
         self.window.mainloop()
 
     # End of run method
@@ -101,6 +102,7 @@ class ChatWithUserPlugin:
 
         self.plugin = plugin
         self.window = None
+        self.window_open = False
         self.message_event = threading.Event()
         self.window_created_event = threading.Event()
         self.message = None
@@ -129,6 +131,7 @@ class ChatWithUserPlugin:
         """This method is called to handle the window close."""
 
         self.window = None
+        self.window_open = False
 
     # End of handle_window_close method
 
@@ -143,6 +146,7 @@ class ChatWithUserPlugin:
         """
 
         self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
+        self.window_open = True
         self.window_created_event.set()
         self.window.run()
 
@@ -164,11 +168,16 @@ class ChatWithUserPlugin:
             str: The response from the user.
         """
 
-        threading.Thread(target=self.run_chat_window, args=(agent_name,), daemon=True).start()
+        if not self.window_open:
+            # If the window is not open, create a new one.
+            threading.Thread(target=self.run_chat_window, args=(agent_name,), daemon=True).start()
+            self.window_created_event.wait()
 
-        self.window_created_event.wait()
-        self.window.receive_message(message)
-        self.message_event.wait(timeout)
-        self.message_event.clear()
+        # Send the message to the existing window.
+        if self.window_open:
+            self.window.receive_message(message)
+            self.message_event.wait(timeout)
+            self.message_event.clear()
+        return self.message if self.message and self.window_open else "No response"
 
         return self.message if self.message else "No response"
