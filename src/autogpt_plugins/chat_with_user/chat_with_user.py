@@ -95,7 +95,6 @@ class ChatWithUserPlugin:
         self.plugin = plugin
 
         # Create a window
-        self.plugin = plugin
         self.window = None
         self.message_event = threading.Event()
         self.message = None
@@ -125,6 +124,19 @@ class ChatWithUserPlugin:
     # End of handle_window_close
 
 
+    def run_chat_window(
+        self, 
+        agent_name
+    ) -> None:
+        """Run the chat window in the main thread."""
+        
+        if self.window is None:
+            self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
+            self.window.run()
+
+    # End of run_chat_window
+
+
     def chat_with_user(
         self,
         agent_name = 'AutoGPT',
@@ -139,14 +151,13 @@ class ChatWithUserPlugin:
             str: The resulting response.
         """
 
-        if self.window is None:
-            self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
-            threading.Thread(target=self.window.run, daemon=True).start()
-        self.window.receive_message(message)
+        # Run the chat window in the main thread
+        threading.Thread(target=self.run_chat_window, args=(agent_name,), daemon=True).start()
+
+        # Wait for the message event and return the message
         self.message_event.wait(timeout)
         self.message_event.clear()
         return self.message if self.message else "No response"
     
     # End of chat_with_user
 
-        
