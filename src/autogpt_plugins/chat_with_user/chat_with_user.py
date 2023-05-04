@@ -1,6 +1,7 @@
 import tkinter as tk
 import threading
 import queue
+import string
 
 class ChatWithUserPluginWindow:
     """This class is used to create the chat window."""
@@ -113,6 +114,12 @@ class ChatWithUserPlugin:
             plugin (AutoGPTPlugin): The plugin.
         """
 
+        # Constants
+        self.DEFAULT_AGENT_NAME = 'AutoGPT'
+        self.DEFAULT_MESSAGE = ''
+        self.DEFAULT_TIMEOUT = 120
+
+        # Variables
         self.plugin = plugin
         self.window = None
         self.window_open = False
@@ -171,11 +178,31 @@ class ChatWithUserPlugin:
     # End of run_chat_window method
 
 
+    def clean_string(
+        self,
+        string: str
+    ) -> str:
+        """Strip control code characters and other nasty
+        bits from the string.
+        Args:
+            string (str): The string to clean.
+        Returns:
+            str: The cleaned string.
+        """
+
+        remove_chars = dict.fromkeys(range(32), None)
+        table = str.maketrans(remove_chars)
+
+        return string.translate(table)
+
+    # End of clean_string method
+
+
     def chat_with_user(
         self, 
-        agent_name='AutoGPT', 
-        message='', 
-        timeout=120
+        agent_name = 'AutoGPT', 
+        message = '', 
+        timeout = 120
     ) -> str:
         """This method is called to chat with the user.
         Args:
@@ -185,6 +212,30 @@ class ChatWithUserPlugin:
         Returns:
             str: The response from the user.
         """
+
+        # Type-check and clean agent_name
+        if not agent_name:
+            agent_name = self.DEFAULT_AGENT_NAME.copy()
+        elif not isinstance(agent_name, str):
+            agent_name = str(agent_name)
+        agent_name = self.clean_string(agent_name)
+
+        # Type-check and clean message
+        if not message:
+            message = self.DEFAULT_MESSAGE.copy()
+        elif not isinstance(message, str):
+            message = str(message)
+        message = self.clean_string(message)
+
+        # Type-check timeout
+        if not timeout:
+            timeout = self.DEFAULT_TIMEOUT.copy()
+        elif not isinstance(timeout, int):
+            try:
+                timeout = int(timeout)
+            except:
+                timeout = self.DEFAULT_TIMEOUT.copy()
+        
 
         if not self.window_open:
             # If the window is not open, create a new one.
@@ -201,3 +252,7 @@ class ChatWithUserPlugin:
         if not self.window_open:
             return "User closed the window."
         return self.message if self.message else "No response from user."
+    
+    # End of chat_with_user method
+
+# End of ChatWithUserPlugin class
