@@ -16,7 +16,7 @@ class AutoGPTPDFReader(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "local-and-remote-pdf-reader"
+        self._name = "AutoGPTPDFReader"
         self._version = "0.1.0"
         self._description = "Local and remote PDF reader integration for Auto-GPT."
     def can_handle_on_response(self) -> bool:
@@ -200,7 +200,8 @@ class AutoGPTPDFReader(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
-            "read_pdf", "Read PDF", {"filename": "<filename>"}, read_pdf
+            "read_pdf", "Read PDF", {"source": "<location>", "location": "<what_you_want_to_find_on_pdf_file>",}, read_pdf,
+
         )
 
         return prompt
