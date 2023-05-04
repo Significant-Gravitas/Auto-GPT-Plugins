@@ -9,6 +9,7 @@ build
 twine
 tweepy==4.13.0
 pandas
+python-lorem
 auto_gpt_plugin_template
 newsapi-python
 requests
