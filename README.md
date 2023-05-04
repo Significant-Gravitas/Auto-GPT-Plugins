@@ -80,6 +80,7 @@ Some third-party plugins have been created by contributors that are not included
 | Crypto | Trade crypto with Auto-GPT | [isaiahbjork/Auto-GPT-Crypto-Plugin](https://github.com/isaiahbjork/Auto-GPT-Crypto-Plugin)
 | iMessage | Send and Get iMessages using Auto-GPT | [danikhan632/Auto-GPT-Messages-Plugin](https://github.com/danikhan632/Auto-GPT-Messages-Plugin)
 | Alpaca-Trading | Trade stocks and crypto, paper or live with Auto-GPT | [danikhan632/Auto-GPT-AlpacaTrader-Plugin](https://github.com/danikhan632/Auto-GPT-AlpacaTrader-Plugin)
+| BingAI | Enable Auto-GPT to fetch information via BingAI, saving time, API requests while maintaining accuracy | [gravelBridge/AutoGPTBingAI](https://github.com/gravelBridge/AutoGPTBingAI)
 
 ## Configuration
 
