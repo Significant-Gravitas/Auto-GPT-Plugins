@@ -200,7 +200,7 @@ class AutoGPTPDFReader(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
-            "read_pdf", "Read PDF", {"source": "<location>", "location": "<what_you_want_to_find_on_pdf_file>",}, read_pdf,
+            "read_pdf", "Read PDF", {"location": "<location>", "question": "<what_you_want_to_find_on_pdf_file>",}, read_pdf,
 
         )
 
