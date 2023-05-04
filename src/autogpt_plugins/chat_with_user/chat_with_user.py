@@ -29,6 +29,7 @@ class ChatWithUserPluginWindow:
         self.send_button.pack()
         self.window.bind("<Destroy>", lambda e: on_close())
         self.message_queue = queue.Queue()
+        self.process_incoming_messages()
 
     # End of __init__
 
@@ -41,7 +42,6 @@ class ChatWithUserPluginWindow:
         while not self.message_queue.empty():
             message = self.message_queue.get()
             self.text_widget.insert(tk.END, self.agent_name + ": " + message + "\n")
-
         self.window.after(100, self.process_incoming_messages)
 
     # End of process_incoming_messages
@@ -141,15 +141,12 @@ class ChatWithUserPlugin:
 
         if self.window is None:
             self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
-            threading.Thread(target=self.window.run).start()
-
+            threading.Thread(target=self.window.run, daemon=True).start()
         self.window.receive_message(message)
-
         self.message_event.wait(timeout)
         self.message_event.clear()
-
         return self.message if self.message else "No response"
-
+    
     # End of chat_with_user
 
         
