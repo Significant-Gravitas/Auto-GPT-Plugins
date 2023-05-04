@@ -83,7 +83,10 @@ Some third-party plugins have been created by contributors that are not included
 
 ## Configuration
 
-For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file.
+For interactionless use, set:
+
+`ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to allow plugins to load without prompting.
+`DENYLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to block plugins from loading without prompting.
 
 ## Making a plugin
 
