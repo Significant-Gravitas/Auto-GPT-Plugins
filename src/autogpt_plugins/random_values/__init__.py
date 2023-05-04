@@ -2,11 +2,14 @@
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .random_values import _random_number
-from .random_values import _make_uuids
-from .random_values import _generate_string
-from .random_values import _generate_password
-from .random_values import _generate_placeholder_text
+
+from .random_values import (
+    _generate_password,
+    _generate_placeholder_text,
+    _generate_string,
+    _make_uuids,
+    _random_number,
+)
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -53,7 +56,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-            self, prompt: PromptGenerator, messages: List[str]
+        self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
         """This method is called before the planning chat completeion is done.
         Args:
@@ -134,7 +137,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-            self, command_name: str, arguments: Dict[str, Any]
+        self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -163,11 +166,11 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         pass
 
     def can_handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
@@ -181,11 +184,11 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -211,30 +214,27 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
             "random_number",
             "Random Number",
             {"min": "<integer>", "max": "<integer>", "count": "<integer>"},
-            _random_number
+            _random_number,
         )
         prompt.add_command(
-            "make_uuids",
-            "Make UUIDs",
-            {"count": "<integer>"},
-            _make_uuids
+            "make_uuids", "Make UUIDs", {"count": "<integer>"}, _make_uuids
         )
         prompt.add_command(
             "generate_string",
             "Generate String",
             {"length": "<integer>", "count": "<integer>"},
-            _generate_string
+            _generate_string,
         )
         prompt.add_command(
             "generate_password",
             "Generate Password",
             {"length": "<integer>", "count": "<integer>"},
-            _generate_password
+            _generate_password,
         )
         prompt.add_command(
             "generate_placeholder_text",
             "Generate Placeholder Text",
             {"sentences": "<integer>"},
-            _generate_placeholder_text
+            _generate_placeholder_text,
         )
         return prompt

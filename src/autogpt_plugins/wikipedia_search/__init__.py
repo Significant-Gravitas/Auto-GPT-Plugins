@@ -2,6 +2,7 @@
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+
 from .wikipedia_search import _wikipedia_search
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -49,7 +50,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-            self, prompt: PromptGenerator, messages: List[str]
+        self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
         """This method is called before the planning chat completeion is done.
         Args:
@@ -130,7 +131,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-            self, command_name: str, arguments: Dict[str, Any]
+        self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -159,11 +160,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         pass
 
     def can_handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
@@ -177,11 +178,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -207,6 +208,6 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
             "wikipedia_search",
             "Wikipedia search",
             {"query": "<query>"},
-            _wikipedia_search
+            _wikipedia_search,
         )
         return prompt
