@@ -1,6 +1,7 @@
 """Chat With User Class for the plugin."""
 import tkinter as tk
 import threading
+import queue
 
 class ChatWithUserPluginWindow:
 
@@ -27,25 +28,28 @@ class ChatWithUserPluginWindow:
         self.entry_widget.pack()
         self.send_button.pack()
         self.window.bind("<Destroy>", lambda e: on_close())
-        self.thread = threading.Thread(target=self.run)
-        self.thread.start()
+        self.message_queue = queue.Queue()
 
     # End of __init__
 
 
-    def run(
+    def process_incoming_messages(
         self
-    ):
-        """Run the window."""
+    ) -> None:
+        """Process the incoming messages."""
 
-        self.window.mainloop()
+        while not self.message_queue.empty():
+            message = self.message_queue.get()
+            self.text_widget.insert(tk.END, self.agent_name + ": " + message + "\n")
 
-    # End of run
+        self.window.after(100, self.process_incoming_messages)
+
+    # End of process_incoming_messages
 
 
     def send_message(
         self
-    ):
+    ) -> None:
         """Send a message."""
 
         message = self.entry_widget.get()
@@ -59,12 +63,23 @@ class ChatWithUserPluginWindow:
     def receive_message(
         self, 
         message
-    ):
+    ) -> None:
         """Receive a message."""
 
-        self.text_widget.insert(tk.END, self.agent_name + ": " + message + "\n")
+        self.message_queue.put(message)
 
     # End of receive_message
+
+    
+    def run(
+        self
+    ) -> None:
+        """Run the window."""
+
+        self.process_incoming_messages()
+        self.window.mainloop()
+
+    # End of run
 
 
 class ChatWithUserPlugin:
@@ -80,6 +95,7 @@ class ChatWithUserPlugin:
         self.plugin = plugin
 
         # Create a window
+        self.plugin = plugin
         self.window = None
         self.message_event = threading.Event()
         self.message = None
@@ -88,7 +104,8 @@ class ChatWithUserPlugin:
 
 
     def handle_new_message(
-        self
+        self,
+        message
     ) -> None:
         """Handle a new message from the user."""
 
@@ -124,6 +141,7 @@ class ChatWithUserPlugin:
 
         if self.window is None:
             self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
+            threading.Thread(target=self.window.run).start()
 
         self.window.receive_message(message)
 
