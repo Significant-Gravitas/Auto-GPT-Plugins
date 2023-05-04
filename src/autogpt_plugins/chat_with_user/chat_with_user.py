@@ -30,6 +30,7 @@ class ChatWithUserPluginWindow:
         self.window.bind("<Destroy>", lambda e: on_close())
         self.message_queue = queue.Queue()
         self.process_incoming_messages()
+        self.window.protocol("WM_DELETE_WINDOW", on_close)
 
     # End of __init__ method
 
@@ -80,10 +81,22 @@ class ChatWithUserPluginWindow:
         """This method is called to run the chat window."""
 
         self.process_incoming_messages()
-        self.window.protocol("WM_DELETE_WINDOW", self.window.quit)  # Handle window close button
+        self.window.protocol("WM_DELETE_WINDOW", self.window_destroy)
         self.window.mainloop()
 
     # End of run method
+
+
+    def window_destroy(
+        self
+    ) -> None:
+        """This method is called to destroy the window."""
+
+        self.window.destroy()
+        self.window.quit()
+
+    # End of window_destroy method
+
 
 # End of ChatWithUserPluginWindow class
 
@@ -130,8 +143,11 @@ class ChatWithUserPlugin:
     ) -> None:
         """This method is called to handle the window close."""
 
-        self.window = None
         self.window_open = False
+        self.window = None
+        self.message = "User closed the window."
+        self.message_event.set()
+        self.window_created_event.clear()
 
     # End of handle_window_close method
 
@@ -145,11 +161,13 @@ class ChatWithUserPlugin:
             agent_name (str): The name of the agent.
         """
 
+        self.message = None
+        self.message_event.clear()
         self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
         self.window_open = True
         self.window_created_event.set()
         self.window.run()
-
+        
     # End of run_chat_window method
 
 
@@ -178,6 +196,8 @@ class ChatWithUserPlugin:
             self.window.receive_message(message)
             self.message_event.wait(timeout)
             self.message_event.clear()
-        return self.message if self.message and self.window_open else "No response"
 
-        return self.message if self.message else "No response"
+        # Send the message to the existing window.
+        if not self.window_open:
+            return "User closed the window."
+        return self.message if self.message else "No response from user."
