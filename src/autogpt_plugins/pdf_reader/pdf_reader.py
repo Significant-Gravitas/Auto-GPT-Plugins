@@ -50,7 +50,7 @@ def read_pdf(location: str, question: str) -> str:
         if not is_valid_url(location):
             location = sanitize_url(location)
         if not is_local_file and not is_valid_url(location):
-            raise FileNotFoundError("Invalid URL or local file path to PDF. Please, ensure to provide a valid URL or the complete local file path to PDF.")
+            raise FileNotFoundError("Invalid location to PDF. Ensure to provide a valid PDF location, either as a URL or complete file path.")
 
         # Read PDF content
         if is_local_file:
