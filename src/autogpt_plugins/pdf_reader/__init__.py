@@ -1,4 +1,4 @@
-"""PDF reader integration."""
+"""Local and remote PDF reader integration."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from .pdf_reader import read_pdf
@@ -16,9 +16,9 @@ class AutoGPTPDFReader(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-pdf-reader"
+        self._name = "local-and-remote-pdf-reader"
         self._version = "0.1.0"
-        self._description = "PDF Reader integration for Auto-GPT."
+        self._description = "Local and remote PDF reader integration for Auto-GPT."
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_response method.
@@ -200,7 +200,7 @@ class AutoGPTPDFReader(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
-            "read_pdf", "URL or full local file path of the PDF file", {"pdf_path": "<pdf_path>"}, read_pdf
+            "read_pdf", "Read PDF", {"filename": "<filename>"}, read_pdf
         )
 
         return prompt

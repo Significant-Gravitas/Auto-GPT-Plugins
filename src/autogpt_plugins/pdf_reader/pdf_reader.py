@@ -1,49 +1,56 @@
+from autogpt.commands.command import command
+import autogpt.processing.text as summary
 import os
 import requests
 import magic
 from io import BytesIO
 import PyPDF2
 
-def read_pdf(pdf_path: str) -> str:
+class InvalidFileFormatException(Exception):
+    def __init__(self, message="Invalid file format"):
+        super().__init__(message)
+
+@command("read_pdf", "Read PDF", '"filename": "<filename>"')
+def read_pdf(filename: str) -> str:
     """Handles the read_pdf command for the plugin.
 
     Args:
-        file (str): URL or full local file path of the PDF file.
+        filename (str): Local or remote URL to pdf file.
 
     Returns:
         str: The contents of the PDF file.
     """
     try:
-        is_local_file = os.path.isfile(pdf_path)
-
-        if not is_local_file and not url.startswith("http"):
-            return "Invalid  URL or full local file path of the PDF file. " \
-                "Please ensure to provide the complete file path or valid URL."
+        is_local_file = os.path.isfile(filename)
+        if not is_local_file and not filename.startswith("http"):
+            raise FileNotFoundError("Invalid local or remote URL to pdf file. Please ensure to provide the complete local file path or valid remote URL.")
 
         if is_local_file:
-            with open(pdf_path, "rb") as pdf_content:
-                content = pdf_content.read()
+            with open(filename, "rb") as pdf_file:
+                content = pdf_file.read()
         else:
-            response = requests.get(pdf_path)
-
+            response = requests.get(filename)
             if response.status_code != 200:
-                return "Error downloading the PDF file. Please check the URL and try again."
+                raise FileNotFoundError("Error downloading the PDF file. Please check the URL and try again.")
 
             content = response.content
 
         # Use python-magic to determine the file type based on content
         file_type = magic.from_buffer(content, mime=True)
-
         if file_type != 'application/pdf':
-            return "Invalid file format. Only PDF files are supported."
+            raise InvalidFileFormatException("Invalid file format. Only PDF files are supported.")
 
-        with BytesIO(content) as pdf_content:
-            pdf_reader = PyPDF2.PdfReader(pdf_content)
+        # Read PDF content from binary content
+        with BytesIO(content) as pdf_file:
+            pdf_reader = PyPDF2.PdfReader(pdf_file)
             pdf_content = ""
             for page_num in range(len(pdf_reader.pages)):
                 pdf_content += pdf_reader.pages[page_num].extract_text()
 
-        return pdf_content
+        # Ingest PDF content
+        summary_text = summary.summarize_text(filename, pdf_content, "")
+
+        return f"Summary of PDF: {summary_text}"
 
     except Exception as e:
         return f"Error reading the PDF file: {str(e)}"
