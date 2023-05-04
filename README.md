@@ -63,6 +63,7 @@ For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin
 | News Search |  This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT. | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)
 | Wikipedia Search | This allows AutoGPT to use Wikipedia directly. | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search)
 | Random Values | Enable AutoGPT to generate various random numbers and strings. | [autogpt_plugins/random_values](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/random_values)
+| Chat With User | Give AutoGPT the ability to chat with the user through a more comfortable interface that doesn't take a command cycle. | [autogpt_plugins/chat_with_user](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/chat_with_user)
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
