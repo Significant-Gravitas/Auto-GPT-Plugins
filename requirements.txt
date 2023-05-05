@@ -12,4 +12,6 @@ pandas
 python-lorem
 auto_gpt_plugin_template
 newsapi-python
+
 pytest
+pytest-cov
