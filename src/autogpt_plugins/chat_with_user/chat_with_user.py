@@ -2,15 +2,16 @@ import tkinter as tk
 import threading
 import queue
 import string
+from typing import Callable
 
 class ChatWithUserPluginWindow:
     """This class is used to create the chat window."""
 
     def __init__(
         self, 
-        agent_name, 
-        on_message, 
-        on_close
+        agent_name:str,
+        on_message:Callable[[str], None],
+        on_close:Callable[[], None]
     ) -> None:
         """This method is called when the chat completion is done.
         Args:
@@ -19,15 +20,24 @@ class ChatWithUserPluginWindow:
             on_close (Callable[[], None]): The on close callback.
         """
 
-        self.window = tk.Tk()
+        # Check values of agent_name
+        if agent_name is None or agent_name == '':
+            agent_name = 'AutoGPT'
+
+        # Window stuff
         self.agent_name = agent_name
         self.on_message = on_message
+
+        # Window stuff
+        self.window = tk.Tk()
         self.text_widget = tk.Text(self.window)
         self.entry_widget = tk.Entry(self.window)
         self.send_button = tk.Button(self.window, text="Send", command=self.send_message)
         self.text_widget.pack()
         self.entry_widget.pack()
         self.send_button.pack()
+
+        # Window bindings
         self.window.bind("<Destroy>", lambda e: on_close())
         self.message_queue = queue.Queue()
         self.process_incoming_messages()
@@ -64,7 +74,7 @@ class ChatWithUserPluginWindow:
 
     def receive_message(
         self, 
-        message
+        message:str = ''
     ) -> None:
         """This method is called to receive the message.
         Args:
@@ -132,7 +142,7 @@ class ChatWithUserPlugin:
 
     def handle_new_message(
         self, 
-        message
+        message:str = ''
     ) -> None:
         """This method is called to handle the new message.
         Args:
@@ -161,7 +171,7 @@ class ChatWithUserPlugin:
 
     def run_chat_window(
         self, 
-        agent_name
+        agent_name:str = 'AutoGPT'
     ) -> None:
         """This method is called to run the chat window.
         Args:
@@ -180,7 +190,7 @@ class ChatWithUserPlugin:
 
     def clean_string(
         self,
-        string: str
+        string:str = ''
     ) -> str:
         """Strip control code characters and other nasty
         bits from the string.
