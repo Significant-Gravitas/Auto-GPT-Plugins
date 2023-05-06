@@ -52,7 +52,7 @@ class ChatWithUserPluginWindow:
         self.entry_widget = tk.Entry(self.entry_frame, font=("Arial", 12))
         self.entry_widget.pack(side="left", fill="x", expand=True)
 
-        self.send_button = ttk.Button(
+        self.send_button = tk.Button(
             self.entry_frame,
             text="Send",
             command=self.send_message,
