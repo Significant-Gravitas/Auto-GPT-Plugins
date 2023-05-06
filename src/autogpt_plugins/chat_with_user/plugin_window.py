@@ -1,5 +1,6 @@
 import tkinter as tk
 import queue
+import tkinter.font as tkFont
 from typing import Callable
 
 
@@ -19,11 +20,14 @@ class ChatWithUserPluginWindow:
             on_close (Callable[[], None]): The on close callback.
         """
 
+        # Constants
+        self.DEFAULT_CHAT_LIMIT = 300
+
         # Check values of agent_name
         if not agent_name or agent_name.strip() == '':
             agent_name = 'AutoGPT'
 
-        # Window stuff
+        # Variables
         self.agent_name = agent_name
         self.on_message = on_message
         self.on_close = on_close
@@ -32,29 +36,35 @@ class ChatWithUserPluginWindow:
         self.window = tk.Tk()
         self.window.title("Chat with User")
         self.window.configure(bg="white")
-
         self.text_frame = tk.Frame(self.window, padx=10, pady=10)
         self.text_frame.pack(fill="both", expand=True)
-
         self.text_widget = tk.Text(
             self.text_frame,
             font=("Arial", 12),
             wrap="word",
-            bg="white",
+            bg="#F5F5F5",
             fg="black",
             insertbackground="black"
         )
         self.text_widget.pack(fill="both", expand=True)
 
+        # Frame setup
         self.entry_frame = tk.Frame(self.window, padx=10, pady=10)
         self.entry_frame.pack(fill="x")
 
-        self.entry_widget = tk.Entry(self.entry_frame, font=("Arial", 12))
+        # Fonts for chat
+        self.entry_widget = tk.Text(self.entry_frame, font=("Arial", 12), height=3)
         self.entry_widget.pack(side="left", fill="x", expand=True)
 
+        # User labels
+        self.bold_font = tkFont.Font(family="Arial", size=12, weight="bold")
+        self.text_widget.tag_configure('user', font=self.bold_font)
+        self.text_widget.tag_configure('agent', font=self.bold_font)
+
+        # Send button
         self.send_button = tk.Button(
             self.entry_frame,
-            text="Send",
+            text="✈️",
             command=self.send_message,
             cursor="hand2"
         )
@@ -64,8 +74,39 @@ class ChatWithUserPluginWindow:
         self.window.protocol("WM_DELETE_WINDOW", self.window_destroy)
         self.message_queue = queue.Queue()
         self.process_incoming_messages()
+        self.entry_widget.bind("<KeyRelease>", self.limit_chars)
+        self.entry_widget.bind("<Return>", self.handle_return_key)
 
     # End of __init__ method
+
+
+    def limit_chars(
+        self, 
+        event:tk.Event
+    ) -> None:
+        """Limit text in entry widget to 200 characters"""
+
+        value = self.entry_widget.get("1.0", "end-1c")
+        if len(value) > self.DEFAULT_CHAT_LIMIT:
+            self.entry_widget.delete("1.0", "end")
+            self.entry_widget.insert("end", value[:self.DEFAULT_CHAT_LIMIT])
+
+    # End of limit_chars method
+
+
+    def handle_return_key(
+        self, 
+        event:tk.Event
+    ) -> str:
+        """Handle the Return key press event."""
+        
+        # Send the message
+        self.send_message()
+        
+        # Stop the default behavior of creating a new line
+        return "break"
+    
+    # End of handle_return_key method
 
 
     def process_incoming_messages(
@@ -75,7 +116,14 @@ class ChatWithUserPluginWindow:
 
         while not self.message_queue.empty():
             message = self.message_queue.get()
-            self.text_widget.insert(tk.END, self.agent_name + ": " + message + "\n")
+
+            # Insert agent's name with 'agent' tag
+            self.text_widget.insert(tk.END, "\n» ", 'agent')
+            self.text_widget.insert(tk.END, self.agent_name + ": ", 'agent')
+            self.text_widget.insert(tk.END, message + "\n")
+
+            self.text_widget.see(tk.END)
+
         self.window.after(100, self.process_incoming_messages)
 
     # End of process_incoming_messages method
@@ -86,9 +134,19 @@ class ChatWithUserPluginWindow:
     ) -> None:
         """This method is called to send the message."""
 
-        message = self.entry_widget.get()
-        self.entry_widget.delete(0, tk.END)
-        self.text_widget.insert(tk.END, "User: " + message + "\n")
+        # Get message from entry widget
+        message = self.entry_widget.get("1.0", "end-1c")
+        self.entry_widget.delete("1.0", tk.END)
+
+        # Insert 'User' with 'user' tag
+        self.text_widget.insert(tk.END, "\n« ", 'user')
+        self.text_widget.insert(tk.END, "User: ", 'user')
+        self.text_widget.insert(tk.END, message + "\n")
+
+        # Scroll to the end of the text widget
+        self.text_widget.see(tk.END)
+
+        # Send the message
         self.on_message(message)
 
     # End of send_message method
