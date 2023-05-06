@@ -284,8 +284,8 @@ class ChatWithUserPlugin:
 
         # Send the message to the existing window.
         if not self.window_open:
-            return "User closed the window. Re-open to continue conversation?"
-        return self.message if self.message else "No response from user. Timeout too short?"
+            return '"User closed the window. Re-open to continue conversation?"'
+        return f'"{self.message}"' if self.message else '"No response from user. Timeout too short?"'
     
     # End of chat_with_user method
 
