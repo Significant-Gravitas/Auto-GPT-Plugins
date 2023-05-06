@@ -125,6 +125,7 @@ class ChatWithUserPluginWindow:
     ) -> None:
         """This method is called to destroy the window."""
 
+        self.on_close()
         self.window.destroy()
         self.window.quit()
 
@@ -282,8 +283,8 @@ class ChatWithUserPlugin:
 
         # Send the message to the existing window.
         if not self.window_open:
-            return "User closed the window."
-        return self.message if self.message else "No response from user."
+            return "User closed the window. Re-open to continue conversation?"
+        return self.message if self.message else "No response from user. Timeout too short?"
     
     # End of chat_with_user method
 
