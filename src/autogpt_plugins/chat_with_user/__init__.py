@@ -207,7 +207,7 @@ class AutoGPTChatWithUser(AutoGPTPluginTemplate):
         prompt.add_command(
             "chat_with_user",
             "Chat With User",
-            {"agent_name": "<name:str>", "message": "<msg:str>", "timeout": "<secs:int>"},
+            {"agent_name": "<name:str>", "message": "<msg:str>", "timeout": "<secs:int|False>"},
             self.plugin.chat_with_user,
         )
         return prompt

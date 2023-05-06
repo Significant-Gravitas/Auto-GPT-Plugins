@@ -241,33 +241,34 @@ class ChatWithUserPlugin:
         Args:
             agent_name (str): The name of the agent.
             message (str): The message to send.
-            timeout (int): The timeout for the response.
+            timeout (int|False): The timeout for the response.
         Returns:
             str: The response from the user.
         """
 
         # Type-check and clean agent_name
         if not agent_name:
-            agent_name = self.DEFAULT_AGENT_NAME.copy()
+            agent_name = self.DEFAULT_AGENT_NAME
         elif not isinstance(agent_name, str):
             agent_name = str(agent_name)
         agent_name = self.clean_string(agent_name)
 
         # Type-check and clean message
         if not message:
-            message = self.DEFAULT_MESSAGE.copy()
+            message = self.DEFAULT_MESSAGE
         elif not isinstance(message, str):
             message = str(message)
         message = self.clean_string(message)
 
         # Type-check timeout
-        if not timeout:
-            timeout = self.DEFAULT_TIMEOUT.copy()
-        elif not isinstance(timeout, int):
-            try:
-                timeout = int(timeout)
-            except:
-                timeout = self.DEFAULT_TIMEOUT.copy()
+        if timeout in [False, '']:
+            timeout = None
+        else:
+            if not isinstance(timeout, int):
+                try:
+                    timeout = int(timeout)
+                except:
+                    timeout = self.DEFAULT_TIMEOUT
         
 
         if not self.window_open:
