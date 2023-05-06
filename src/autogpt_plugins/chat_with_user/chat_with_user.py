@@ -1,7 +1,6 @@
 import tkinter as tk
 import threading
 import queue
-import string
 from typing import Callable
 
 class ChatWithUserPluginWindow:
@@ -21,27 +20,50 @@ class ChatWithUserPluginWindow:
         """
 
         # Check values of agent_name
-        if agent_name is None or agent_name == '':
+        if not agent_name or agent_name.strip() == '':
             agent_name = 'AutoGPT'
 
         # Window stuff
         self.agent_name = agent_name
         self.on_message = on_message
+        self.on_close = on_close
 
         # Window stuff
         self.window = tk.Tk()
-        self.text_widget = tk.Text(self.window)
-        self.entry_widget = tk.Entry(self.window)
-        self.send_button = tk.Button(self.window, text="Send", command=self.send_message)
-        self.text_widget.pack()
-        self.entry_widget.pack()
-        self.send_button.pack()
+        self.window.title("Chat with User")
+        self.window.configure(bg="white")
+
+        self.text_frame = tk.Frame(self.window, padx=10, pady=10)
+        self.text_frame.pack(fill="both", expand=True)
+
+        self.text_widget = tk.Text(
+            self.text_frame,
+            font=("Arial", 12),
+            wrap="word",
+            bg="white",
+            fg="black",
+            insertbackground="black"
+        )
+        self.text_widget.pack(fill="both", expand=True)
+
+        self.entry_frame = tk.Frame(self.window, padx=10, pady=10)
+        self.entry_frame.pack(fill="x")
+
+        self.entry_widget = tk.Entry(self.entry_frame, font=("Arial", 12))
+        self.entry_widget.pack(side="left", fill="x", expand=True)
+
+        self.send_button = ttk.Button(
+            self.entry_frame,
+            text="Send",
+            command=self.send_message,
+            cursor="hand2"
+        )
+        self.send_button.pack(side="left")
 
         # Window bindings
-        self.window.bind("<Destroy>", lambda e: on_close())
+        self.window.protocol("WM_DELETE_WINDOW", self.window_destroy)
         self.message_queue = queue.Queue()
         self.process_incoming_messages()
-        self.window.protocol("WM_DELETE_WINDOW", on_close)
 
     # End of __init__ method
 
