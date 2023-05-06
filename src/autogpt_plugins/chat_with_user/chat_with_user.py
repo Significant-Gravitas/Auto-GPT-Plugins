@@ -102,7 +102,7 @@ class ChatWithUserPlugin:
         self, 
         agent = 'AutoGPT', 
         msg = '', 
-        wait = 120
+        timeout = 120
     ) -> str:
         """This method is called to chat with the user.
         Args:
@@ -128,14 +128,14 @@ class ChatWithUserPlugin:
         msg = self.clean_string(msg)
 
         # Type-check timeout
-        if wait in [False, '']:
-            wait = None
+        if timeout in [False, '']:
+            timeout = None
         else:
-            if not isinstance(wait, int):
+            if not isinstance(timeout, int):
                 try:
-                    wait = int(wait)
+                    timeout = int(timeout)
                 except:
-                    wait = self.DEFAULT_TIMEOUT
+                    timeout = self.DEFAULT_TIMEOUT
         
 
         if not self.window_open:
@@ -146,7 +146,7 @@ class ChatWithUserPlugin:
         # Send the message to the existing window.
         if self.window_open:
             self.window.receive_message(msg)
-            self.message_event.wait(wait)
+            self.message_event.wait(timeout)
             self.message_event.clear()
 
         # Send the message to the existing window.
