@@ -100,53 +100,53 @@ class ChatWithUserPlugin:
 
     def chat_with_user(
         self, 
-        agent_name = 'AutoGPT', 
-        message = '', 
-        timeout = 120
+        agent = 'AutoGPT', 
+        msg = '', 
+        wait = 120
     ) -> str:
         """This method is called to chat with the user.
         Args:
-            agent_name (str): The name of the agent.
-            message (str): The message to send.
-            timeout (int|False): The timeout for the response.
+            agent (str): The name of the agent.
+            msg (str): The message to send.
+            wait (int|False): The timeout for the response.
         Returns:
             str: The response from the user.
         """
 
         # Type-check and clean agent_name
-        if not agent_name:
-            agent_name = self.DEFAULT_AGENT_NAME
-        elif not isinstance(agent_name, str):
-            agent_name = str(agent_name)
-        agent_name = self.clean_string(agent_name)
+        if not agent:
+            agent = self.DEFAULT_AGENT_NAME
+        elif not isinstance(agent, str):
+            agent = str(agent)
+        agent = self.clean_string(agent)
 
         # Type-check and clean message
-        if not message:
-            message = self.DEFAULT_MESSAGE
-        elif not isinstance(message, str):
-            message = str(message)
-        message = self.clean_string(message)
+        if not msg:
+            msg = self.DEFAULT_MESSAGE
+        elif not isinstance(msg, str):
+            msg = str(msg)
+        msg = self.clean_string(msg)
 
         # Type-check timeout
-        if timeout in [False, '']:
-            timeout = None
+        if wait in [False, '']:
+            wait = None
         else:
-            if not isinstance(timeout, int):
+            if not isinstance(wait, int):
                 try:
-                    timeout = int(timeout)
+                    wait = int(wait)
                 except:
-                    timeout = self.DEFAULT_TIMEOUT
+                    wait = self.DEFAULT_TIMEOUT
         
 
         if not self.window_open:
             # If the window is not open, create a new one.
-            threading.Thread(target=self.run_chat_window, args=(agent_name,), daemon=True).start()
+            threading.Thread(target=self.run_chat_window, args=(agent,), daemon=True).start()
             self.window_created_event.wait()
 
         # Send the message to the existing window.
         if self.window_open:
-            self.window.receive_message(message)
-            self.message_event.wait(timeout)
+            self.window.receive_message(msg)
+            self.message_event.wait(wait)
             self.message_event.clear()
 
         # Send the message to the existing window.
