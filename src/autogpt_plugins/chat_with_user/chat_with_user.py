@@ -26,6 +26,7 @@ class ChatWithUserPlugin:
         self.message_event = threading.Event()
         self.window_created_event = threading.Event()
         self.message = None
+        self.allow_close = True
 
     # End of __init__ method
 
@@ -50,6 +51,10 @@ class ChatWithUserPlugin:
     ) -> None:
         """This method is called to handle the window close."""
 
+        if self.window:
+            self.window.allow_window_close()
+            self.window.window_destroy()
+
         self.window_open = False
         self.window = None
         self.message = "User closed the window."
@@ -70,7 +75,7 @@ class ChatWithUserPlugin:
 
         self.message = None
         self.message_event.clear()
-        self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close)
+        self.window = ChatWithUserPluginWindow(agent_name, self.handle_new_message, self.handle_window_close, self.allow_close)
         self.window_open = True
         self.window_created_event.set()
         self.window.run()
@@ -102,7 +107,8 @@ class ChatWithUserPlugin:
         self, 
         agent = 'AutoGPT', 
         msg = '', 
-        timeout = 120
+        timeout = 120,
+        no_close = False
     ) -> str:
         """This method is called to chat with the user.
         Args:
@@ -137,6 +143,7 @@ class ChatWithUserPlugin:
                 except:
                     timeout = self.DEFAULT_TIMEOUT
         
+        self.allow_close = not no_close
 
         if not self.window_open:
             # If the window is not open, create a new one.

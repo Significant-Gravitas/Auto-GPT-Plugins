@@ -11,7 +11,8 @@ class ChatWithUserPluginWindow:
         self, 
         agent_name:str,
         on_message:Callable[[str], None],
-        on_close:Callable[[], None]
+        on_close:Callable[[], None],
+        allow_close:bool = True
     ) -> None:
         """This method is called when the chat completion is done.
         Args:
@@ -31,6 +32,7 @@ class ChatWithUserPluginWindow:
         self.agent_name = agent_name
         self.on_message = on_message
         self.on_close = on_close
+        self.allow_close = allow_close
 
         # Window stuff
         self.window = tk.Tk()
@@ -78,6 +80,16 @@ class ChatWithUserPluginWindow:
         self.entry_widget.bind("<Return>", self.handle_return_key)
 
     # End of __init__ method
+
+
+    def allow_window_close(
+        self
+    ) -> None:
+        """Allow the window to be closed."""
+
+        self.allow_close = True
+
+    # End of allow_window_close method
 
 
     def limit_chars(
@@ -183,9 +195,10 @@ class ChatWithUserPluginWindow:
     ) -> None:
         """This method is called to destroy the window."""
 
-        self.on_close()
-        self.window.destroy()
-        self.window.quit()
+        if self.allow_close:
+            self.on_close()
+            self.window.destroy()
+            self.window.quit()
 
     # End of window_destroy method
 
