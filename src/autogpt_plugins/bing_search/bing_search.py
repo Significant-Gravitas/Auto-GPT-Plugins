@@ -1,7 +1,8 @@
-import requests
 import json
 import os
 import re
+
+import requests
 
 
 def clean_text(text: str) -> str:
