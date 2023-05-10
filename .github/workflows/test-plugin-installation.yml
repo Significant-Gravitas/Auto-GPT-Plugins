@@ -8,8 +8,6 @@ on:
 jobs:
   test-plugin-installation:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
       - name: Install Kurtosis
         run: |
