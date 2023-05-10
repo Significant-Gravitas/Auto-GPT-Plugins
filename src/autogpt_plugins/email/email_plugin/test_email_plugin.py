@@ -1,19 +1,19 @@
 import os
-from unittest.mock import patch
+import unittest
 from email.message import EmailMessage
+from functools import partial
+from unittest.mock import mock_open, patch
+
 from email_plugin import (
-    send_email,
-    read_emails,
-    imap_open,
-    send_email_with_attachment_internal,
-    bothEmailAndPwdSet,
     adjust_imap_folder_for_gmail,
+    bothEmailAndPwdSet,
     enclose_with_quotes,
+    imap_open,
+    read_emails,
+    send_email,
+    send_email_with_attachment_internal,
     split_imap_search_command,
 )
-from unittest.mock import mock_open
-import unittest
-from functools import partial
 
 MOCK_FROM = "sender@example.com"
 MOCK_PWD = "secret"
