@@ -4,7 +4,6 @@ import unittest
 import requests
 
 from . import AutoGPTWolframAlphaSearch
-from . import _wolframalpha_search
 
 
 class TestAutoGPTWolframAlphaSearch(unittest.TestCase):
@@ -15,9 +14,10 @@ class TestAutoGPTWolframAlphaSearch(unittest.TestCase):
     def tearDown(self):
         os.environ.pop("WOLFRAMALPHA_APPID", None)
 
-    def test_bing_search(self):
+    def test_wolframalpha_search(self):
         query = "2+2"
         try:
+            from .wolframalpha_search import _wolframalpha_search
             _wolframalpha_search(query)
         except requests.exceptions.HTTPError as e:
             self.assertEqual(e.response.status_code, 401)

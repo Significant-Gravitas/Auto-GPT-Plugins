@@ -5,8 +5,6 @@ from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from wolframalpha import Client
 
-from .wolframalpha_search import _wolframalpha_search
-
 PromptGenerator = TypeVar("PromptGenerator")
 
 
@@ -216,6 +214,7 @@ class AutoGPTWolframAlphaSearch(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
         if self.api:
+            from .wolframalpha_search import _wolframalpha_search
             prompt.add_command(
                 "wolframalpha_search",
                 self._description,
