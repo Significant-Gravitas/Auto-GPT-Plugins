@@ -1,4 +1,4 @@
-name: Test plugins nightly
+name: Test installation of plugins
 on:
   push:
     branches: [ master ]
@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test-plugins-nightly:
+  test-plugin-installation:
     runs-on: ubuntu-latest
     permissions:
       issues: write
