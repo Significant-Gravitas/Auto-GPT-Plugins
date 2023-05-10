@@ -127,5 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Dev Environments
 .idea
 .devcontainer/devcontainer.json
+.vscode/settings.json
+
+# Mac OS Files
+**/.DS_Store
