@@ -10,8 +10,11 @@ pylint
 pytest
 pytest-cov
 python-lorem
+requests
+requests-mock
 setuptools
 tweepy==4.13.0
 twine
+validators
 wheel
 wolframalpha==5.0.0
