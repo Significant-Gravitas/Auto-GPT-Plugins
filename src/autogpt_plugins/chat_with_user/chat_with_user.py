@@ -5,11 +5,9 @@ from .plugin_window import ChatWithUserPluginWindow
 class ChatWithUserPlugin:
     """This class is used to create the chat window."""
 
-    def __init__(
-        self, 
-        plugin
-    ) -> None:
-        """This method is called when the chat completion is done.
+    def __init__(self, plugin) -> None:
+        """
+        This method is called when the chat completion is done.
         Args:
             plugin (AutoGPTPlugin): The plugin.
         """
@@ -31,13 +29,11 @@ class ChatWithUserPlugin:
     # End of __init__ method
 
 
-    def handle_new_message(
-        self, 
-        message:str = ''
-    ) -> None:
-        """This method is called to handle the new message.
+    def handle_new_message(self, message:str='') -> None:
+        """
+        This method is called to handle the new message.
         Args:
-            message (str): The message.
+            message (str):  The message.
         """
 
         self.message = message
@@ -46,9 +42,7 @@ class ChatWithUserPlugin:
     # End of handle_new_message method
 
 
-    def handle_window_close(
-        self
-    ) -> None:
+    def handle_window_close(self) -> None:
         """This method is called to handle the window close."""
 
         if self.window:
@@ -64,13 +58,11 @@ class ChatWithUserPlugin:
     # End of handle_window_close method
 
 
-    def run_chat_window(
-        self, 
-        agent_name:str = 'AutoGPT'
-    ) -> None:
-        """This method is called to run the chat window.
+    def run_chat_window(self, agent_name:str='AutoGPT') -> None:
+        """
+        This method is called to run the chat window.
         Args:
-            agent_name (str): The name of the agent.
+            agent_name (str):   The name of the agent.
         """
 
         self.message = None
@@ -83,16 +75,14 @@ class ChatWithUserPlugin:
     # End of run_chat_window method
 
 
-    def clean_string(
-        self,
-        string:str = ''
-    ) -> str:
-        """Strip control code characters and other nasty
+    def clean_string(self, string:str='') -> str:
+        """
+        Strip control code characters and other nasty
         bits from the string.
         Args:
-            string (str): The string to clean.
+            string (str):   The string to clean.
         Returns:
-            str: The cleaned string.
+            str:    The cleaned string.
         """
 
         remove_chars = dict.fromkeys(range(32), None)
@@ -103,19 +93,14 @@ class ChatWithUserPlugin:
     # End of clean_string method
 
 
-    def chat_with_user(
-        self, 
-        agent = 'AutoGPT', 
-        msg = '', 
-        timeout = 120,
-        no_close = False
-    ) -> str:
-        """This method is called to chat with the user.
+    def chat_with_user(self, agent='AutoGPT', msg='', timeout=120, no_close=False) -> str:
+        """
+        This method is called to chat with the user.
         Args:
-            agent (str): The name of the agent.
-            msg (str): The message to send.
-            timeout (int|False): The timeout for the response.
-            no_close (bool): If True, the user cannot close the window.
+            agent (str)           : The name of the agent.
+            msg (str)             : The message to send.
+            timeout (int|bool)    : The timeout for the response.
+            no_close (bool)       : If True, the user cannot close the window.
         Returns:
             str: The response from the user.
         """
