@@ -2,7 +2,7 @@
 import pandas as pd
 import os
 
-from atprototools import Session
+from atproto import Client
 
 
 def username_and_pwd_set() -> bool:
@@ -21,12 +21,14 @@ def post_message(text: str) -> str:
 
     bluesky_username = os.getenv("BLUESKY_USERNAME")
     bluesky_app_password = os.getenv("BLUESKY_APP_PASSWORD")
-    session = Session(bluesky_username, bluesky_app_password)
 
-    _result = session.post_bloot(text)
+    client = Client()
 
-    if _result.status_code != 200:
-        return f"Error! Status Code: {_result.status_code} Message: {_result.text}"
+    try:
+        client.login(bluesky_username, bluesky_app_password)
+        client.send_post(text=text)
+    except Exception as e:
+        return f"Error! Message: {e}"
 
     return f"Success! Message: {text}"
 
@@ -44,19 +46,22 @@ def get_latest_posts(username: str, number_of_posts=5) -> str | None:
 
     bluesky_username = os.getenv("BLUESKY_USERNAME")
     bluesky_app_password = os.getenv("BLUESKY_APP_PASSWORD")
-    session = Session(bluesky_username, bluesky_app_password)
 
-    _result = session.get_latest_n_bloots(username, number_of_posts)
+    client = Client()
 
-    if _result.status_code != 200:
-        return f"Error! Status Code: {_result.status_code} Message: {_result.text}"
+    try:
+        client.login(bluesky_username, bluesky_app_password)
+        profile_feed = client.bsky.feed.get_author_feed(
+            {'actor': username, 'limit': number_of_posts})
+    except Exception as e:
+        return f"Error! Message: {e}"
 
     columns = ["URI", "Text", "Date", "User", "Likes", "Replies"]
     posts = []
 
-    for bloot in _result.json()['feed']:
-        posts.append([bloot['post']['uri'], bloot['post']['record']['text'], bloot['post']['record']['createdAt'],
-                      bloot['post']['author']['handle'], bloot['post']['likeCount'], bloot['post']['replyCount']])
+    for feed in profile_feed.feed:
+        posts.append([feed.post.uri, feed.post.record.text, feed.post.record.createdAt,
+                      feed.post.author.handle, feed.post.likeCount, feed.post.replyCount])
 
     df = str(pd.DataFrame(posts, columns=columns))
 
