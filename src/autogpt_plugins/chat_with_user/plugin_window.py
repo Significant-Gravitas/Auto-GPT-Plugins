@@ -34,6 +34,15 @@ class ChatWithUserPluginWindow:
         self.window = tk.Tk()
         self.window.title("Chat with " + self.agent_name)
         self.window.configure(bg="white")
+
+        # AFK Toggle
+        self.afk_var = tk.IntVar()
+        afk_frame = tk.Frame(self.window)
+        afk_frame.pack(side="top", fill="x")
+        self.afk_checkbutton = tk.Checkbutton(afk_frame, text="Enable AFK", variable=self.afk_var)
+        self.afk_checkbutton.pack(side="left")
+
+        # Text widget
         self.text_frame = tk.Frame(self.window, padx=10, pady=10)
         self.text_frame.pack(fill="both", expand=True)
         self.text_widget = tk.Text(
@@ -140,7 +149,7 @@ class ChatWithUserPluginWindow:
         timestamp = f"Elapsed: {int(hours)}hr {int(minutes)}min {seconds:.2f}sec"
 
         # Get message from entry widget
-        message = self.entry_widget.get("1.0", "end-1c")
+        message = self.entry_widget.get('1.0', 'end-1c')
         self.entry_widget.delete("1.0", tk.END)
 
         # Insert 'User' with 'user' tag
@@ -161,11 +170,18 @@ class ChatWithUserPluginWindow:
         """
         This method is called to receive the message.
         Args:
-            message (str): The message.
+            message (str)                   : The message.
+            message_received_time (float)   : The time the message was received.
         """
 
         self.message_received_time = message_received_time
         self.message_queue.put(message)
+
+        # Handle AFK
+        if self.afk_var.get() == 1:
+            self.entry_widget.delete('1.0', tk.END)
+            self.entry_widget.insert(tk.END, "<User is AFK>")
+            self.send_message()
 
     # End of receive_message method
 
