@@ -81,6 +81,7 @@ Some third-party plugins have been created by contributors that are not included
 | Crypto | Trade crypto with Auto-GPT | [isaiahbjork/Auto-GPT-Crypto-Plugin](https://github.com/isaiahbjork/Auto-GPT-Crypto-Plugin)
 | iMessage | Send and Get iMessages using Auto-GPT | [danikhan632/Auto-GPT-Messages-Plugin](https://github.com/danikhan632/Auto-GPT-Messages-Plugin)
 | Alpaca-Trading | Trade stocks and crypto, paper or live with Auto-GPT | [danikhan632/Auto-GPT-AlpacaTrader-Plugin](https://github.com/danikhan632/Auto-GPT-AlpacaTrader-Plugin)
+| AutoGPT User Input Request | Allow AutoGPT to specifically request user input in continous mode | [HFrovinJensen/Auto-GPT-User-Input-Plugin](https://github.com/HFrovinJensen/Auto-GPT-User-Input-Plugin)
 | Dolly AutoGPT Cloner | A way to compose & run multiple Auto-GPT processes that cooperate, till core has multi-agent support | [pr-0f3t/Auto-GPT-Dolly-Plugin](https://github.com/pr-0f3t/Auto-GPT-Dolly-Plugin)
 | Web-Interaction | Enable Auto-GPT to fully interact with websites! Allows Auto-GPT to click elements, input text, and scroll | [gravelBridge/AutoGPT-Web-Interaction](https://github.com/gravelBridge/AutoGPT-Web-Interaction)
 | BingAI | Enable Auto-GPT to fetch information via BingAI, saving time, API requests while maintaining accuracy. This does not remove the need for OpenAI API keys | [gravelBridge/AutoGPT-BingAI](https://github.com/gravelBridge/AutoGPT-BingAI)
