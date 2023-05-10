@@ -1,8 +1,9 @@
 """Twitter API integrations using Tweepy."""
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
 import os
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 import tweepy
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
 

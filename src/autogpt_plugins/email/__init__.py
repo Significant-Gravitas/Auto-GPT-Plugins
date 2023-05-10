@@ -1,5 +1,6 @@
 """This is the email plugin for Auto-GPT."""
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
 
@@ -24,10 +25,10 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         from .email_plugin.email_plugin import (
+            bothEmailAndPwdSet,
             read_emails,
             send_email,
             send_email_with_attachment,
-            bothEmailAndPwdSet,
         )
 
         if bothEmailAndPwdSet():

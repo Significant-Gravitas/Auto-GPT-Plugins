@@ -1,9 +1,15 @@
-"""Wikipedia search integrations."""
+"""Random Values commands."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-from .wikipedia_search import _wikipedia_search
+from .random_values import (
+    _generate_password,
+    _generate_placeholder_text,
+    _generate_string,
+    _make_uuids,
+    _random_number,
+)
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -13,16 +19,16 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
+class AutoGPTRandomValues(AutoGPTPluginTemplate):
     """
-    Wikipedia search integrations
+    Random Values plugin for Auto-GPT.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-wikipedia-search"
+        self._name = "autogpt-random-values"
         self._version = "0.1.0"
-        self._description = "Wikipedia search integrations."
+        self._description = "Enable Auto-GPT with the power of random values."
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -205,9 +211,30 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
-            "wikipedia_search",
-            "Wikipedia search",
-            {"query": "<query>"},
-            _wikipedia_search,
+            "random_number",
+            "Random Number",
+            {"min": "<integer>", "max": "<integer>", "count": "<integer>"},
+            _random_number,
+        )
+        prompt.add_command(
+            "make_uuids", "Make UUIDs", {"count": "<integer>"}, _make_uuids
+        )
+        prompt.add_command(
+            "generate_string",
+            "Generate String",
+            {"length": "<integer>", "count": "<integer>"},
+            _generate_string,
+        )
+        prompt.add_command(
+            "generate_password",
+            "Generate Password",
+            {"length": "<integer>", "count": "<integer>"},
+            _generate_password,
+        )
+        prompt.add_command(
+            "generate_placeholder_text",
+            "Generate Placeholder Text",
+            {"sentences": "<integer>"},
+            _generate_placeholder_text,
         )
         return prompt

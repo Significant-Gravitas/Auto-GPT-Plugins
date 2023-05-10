@@ -5,8 +5,8 @@ from newsapi import NewsApiClient
 
 categories = ["technology", "business", "entertainment", "health", "sports", "science"]
 
-class NewsSearch(object):
 
+class NewsSearch(object):
     def __init__(self, api_key):
         self.news_api_client = NewsApiClient(api_key)
 
@@ -23,8 +23,20 @@ class NewsSearch(object):
         )
         return [article["title"] for article in result["articles"][:3]]
 
+    def news_everything_search(self, query: str) -> List[str]:
+        """
+        Get all news for query specified.
+        Args:
+            query (str) : The query specified.
+        Returns:
+            list(str): A list of news for the specified category, sorted by relevant.
+        """
+        result = self.news_api_client.get_everything(
+            language="en", page=1, q=query, sort_by="relevancy"
+        )
+        return [article["title"] for article in result["articles"]]
 
-    def news_search(self, query: str) -> List[str]:
+    def news_headlines_search_wrapper(self, query: str) -> List[str]:
         """
         Aggregates top news headlines from the categories.
         Returns:
@@ -33,7 +45,9 @@ class NewsSearch(object):
         with concurrent.futures.ThreadPoolExecutor() as tp:
             futures = []
             for cat in categories:
-                futures.append(tp.submit(self.news_headlines_search, category=cat, query=query))
+                futures.append(
+                    tp.submit(self.news_headlines_search, category=cat, query=query)
+                )
 
             aggregated_headlines = []
             for fut in concurrent.futures.wait(futures)[0]:
