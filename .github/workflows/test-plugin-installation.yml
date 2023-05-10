@@ -19,6 +19,7 @@ jobs:
           echo ${{ github.repository }}
           echo ${{ github.head_ref }}
           echo ${{ github.base_ref }}
+          echo ${{ github.event.pull_request.head.repo.full_name }}
       - name: Install Kurtosis
         run: |
           echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
