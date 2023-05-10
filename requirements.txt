@@ -16,3 +16,4 @@ requests
 requests-mock
 validators
 pytest
+pytest-cov

@@ -1,7 +1,9 @@
 """This is the News search engine plugin for Auto-GPT."""
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+
 from .news_search import NewsSearch
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -17,10 +19,10 @@ class AutoGPTNewsSearch(AutoGPTPluginTemplate):
         super().__init__()
         self._name = "News-Search-Plugin"
         self._version = "0.1.0"
-        self._description = (
-            "This plugin searches the latest news using the provided query and the newsapi aggregator"
-        )
-        self.load_commands = (os.getenv("NEWSAPI_API_KEY")) # Wrapper, if more variables are needed in future
+        self._description = "This plugin searches the latest news using the provided query and the newsapi aggregator"
+        self.load_commands = os.getenv(
+            "NEWSAPI_API_KEY"
+        )  # Wrapper, if more variables are needed in future
         self.news_search = NewsSearch(os.getenv("NEWSAPI_API_KEY"))
 
     def can_handle_post_prompt(self) -> bool:
@@ -33,7 +35,7 @@ class AutoGPTNewsSearch(AutoGPTPluginTemplate):
                 "News Search",
                 "news_search",
                 {"query": "<query>"},
-                self.news_search.news_search,
+                self.news_search.news_everything_search,
             )
         else:
             print(

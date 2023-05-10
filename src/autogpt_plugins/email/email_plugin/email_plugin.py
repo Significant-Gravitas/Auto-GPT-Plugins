@@ -1,13 +1,13 @@
-import os
-import json
-import smtplib
 import email
 import imaplib
+import json
 import mimetypes
+import os
+import re
+import smtplib
 import time
 from email.header import decode_header
 from email.message import EmailMessage
-import re
 
 
 def bothEmailAndPwdSet() -> bool:

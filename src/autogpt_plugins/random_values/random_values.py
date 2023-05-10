@@ -2,13 +2,15 @@
 
 import json
 import random
-import uuid
 import string
+import uuid
+
 import lorem
 
 """Random Number function for Autogpt."""
 
-def _random_number(min = 0, max = 65535, count = 1) -> str:
+
+def _random_number(min=0, max=65535, count=1) -> str:
     """Return a random integer between min and max
     Args:
         min (int): The lowest number in the range
@@ -54,7 +56,8 @@ def _random_number(min = 0, max = 65535, count = 1) -> str:
 
 """Random UUID function for Autogpt."""
 
-def _make_uuids(count = 1) -> str:
+
+def _make_uuids(count=1) -> str:
     """Return a UUID
     Args:
         count (int): The number of UUIDs to return
@@ -84,7 +87,8 @@ def _make_uuids(count = 1) -> str:
 
 """Random String function for Autogpt."""
 
-def _generate_string(length = 10, count = 1) -> str:
+
+def _generate_string(length=10, count=1) -> str:
     """Return a random string
     Args:
         length (int): The length of the string
@@ -115,14 +119,17 @@ def _generate_string(length = 10, count = 1) -> str:
     # Do the thing
     strings = []
     for _ in range(count):
-        strings.append(''.join(random.choice(string.ascii_letters) for i in range(length)))
+        strings.append(
+            "".join(random.choice(string.ascii_letters) for i in range(length))
+        )
 
     return json.dumps(strings)
 
 
 """Random Password function for Autogpt."""
 
-def _generate_password(length = 16, count = 1) -> str:
+
+def _generate_password(length=16, count=1) -> str:
     """Return a random password of letters, numbers, and punctuation
     Args:
         length (int): The length of the password
@@ -143,7 +150,7 @@ def _generate_password(length = 16, count = 1) -> str:
             count = int(count)
         except ValueError:
             raise ValueError("count must be an integer")
-    
+
     # Make values sane
     if not (6 <= length <= 65535):
         raise ValueError("length must be between 6 and 65535")
@@ -153,14 +160,20 @@ def _generate_password(length = 16, count = 1) -> str:
     # Do the thing
     passwords = []
     for _ in range(count):
-        passwords.append(''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(length)))
+        passwords.append(
+            "".join(
+                random.choice(string.ascii_letters + string.digits + string.punctuation)
+                for i in range(length)
+            )
+        )
 
     return json.dumps(passwords)
 
 
 """Random Lorem Ipsum function for Autogpt."""
 
-def _generate_placeholder_text(sentences = 1) -> str:
+
+def _generate_placeholder_text(sentences=1) -> str:
     """Return a random sentence of lorem ipsum text
     Args:
         sentences (int): The number of strings to return
