@@ -1,0 +1,26 @@
+name: Test plugins nightly
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-plugins-nightly:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Install Kurtosis
+        run: |
+          echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
+          sudo apt update
+          sudo apt install kurtosis-cli
+      - name: Install and run different plugins
+        run: |
+          set -euo pipefail
+          plugins_to_test=("twitter email secenex bing_search news_search wikipedia_search api_tools random_values")
+          for plugin in $plugins_to_test; do
+            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "MEMORY_BACKEND": "local"}'
+          done          
+
