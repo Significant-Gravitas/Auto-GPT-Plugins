@@ -32,7 +32,7 @@ class ChatWithUserPluginWindow:
 
         # Window stuff
         self.window = tk.Tk()
-        self.window.title("Chat with User")
+        self.window.title("Chat with " + self.agent_name)
         self.window.configure(bg="white")
         self.text_frame = tk.Frame(self.window, padx=10, pady=10)
         self.text_frame.pack(fill="both", expand=True)
