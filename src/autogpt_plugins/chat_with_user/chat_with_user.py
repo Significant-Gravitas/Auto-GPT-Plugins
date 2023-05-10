@@ -114,7 +114,8 @@ class ChatWithUserPlugin:
         Args:
             agent (str): The name of the agent.
             msg (str): The message to send.
-            wait (int|False): The timeout for the response.
+            timeout (int|False): The timeout for the response.
+            no_close (bool): If True, the user cannot close the window.
         Returns:
             str: The response from the user.
         """
@@ -134,7 +135,7 @@ class ChatWithUserPlugin:
         msg = self.clean_string(msg)
 
         # Type-check timeout
-        if timeout in [False, '']:
+        if timeout in [False, '', None, 'None', 'none', 'False', 'false', '0', 0]:
             timeout = None
         else:
             if not isinstance(timeout, int):
@@ -142,6 +143,14 @@ class ChatWithUserPlugin:
                     timeout = int(timeout)
                 except:
                     timeout = self.DEFAULT_TIMEOUT
+
+        # Type-check no_close
+        if not isinstance(no_close, bool):
+            try:
+                no_close = bool(no_close)
+            except:
+                no_close = False
+
         
         self.allow_close = not no_close
 
