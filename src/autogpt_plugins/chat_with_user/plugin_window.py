@@ -1,5 +1,6 @@
-import tkinter as tk
 import queue
+import time
+import tkinter as tk
 import tkinter.font as tkFont
 from typing import Callable
 
@@ -74,6 +75,9 @@ class ChatWithUserPluginWindow:
         self.entry_widget.bind("<KeyRelease>", self.limit_chars)
         self.entry_widget.bind("<Return>", self.handle_return_key)
 
+        # Time stuff
+        self.message_received_time = None
+
     # End of __init__ method
 
 
@@ -129,6 +133,12 @@ class ChatWithUserPluginWindow:
     def send_message(self) -> None:
         """This method is called to send the message."""
 
+        # Time stuff
+        response_time = time.time() -   self.message_received_time
+        hours, rem = divmod(response_time, 3600)
+        minutes, seconds = divmod(rem, 60)
+        timestamp = f"Elapsed: {int(hours)}hr {int(minutes)}min {seconds:.2f}sec"
+
         # Get message from entry widget
         message = self.entry_widget.get("1.0", "end-1c")
         self.entry_widget.delete("1.0", tk.END)
@@ -142,18 +152,19 @@ class ChatWithUserPluginWindow:
         self.text_widget.see(tk.END)
 
         # Send the message
-        self.on_message(message)
+        self.on_message('"' + message + '" \n' + timestamp)
 
     # End of send_message method
 
 
-    def receive_message(self, message:str='') -> None:
+    def receive_message(self, message:str='', message_received_time:float=None) -> None:
         """
         This method is called to receive the message.
         Args:
             message (str): The message.
         """
 
+        self.message_received_time = message_received_time
         self.message_queue.put(message)
 
     # End of receive_message method

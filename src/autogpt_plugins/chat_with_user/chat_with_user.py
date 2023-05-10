@@ -1,4 +1,5 @@
 import threading
+import time
 
 from .plugin_window import ChatWithUserPluginWindow
 
@@ -25,6 +26,7 @@ class ChatWithUserPlugin:
         self.window_created_event = threading.Event()
         self.message = None
         self.allow_close = True
+        self.start_time = None
 
     # End of __init__ method
 
@@ -149,14 +151,15 @@ class ChatWithUserPlugin:
 
         # Send the message to the existing window.
         if self.window_open:
-            self.window.receive_message(msg)
+            self.start_time = time.time()
+            self.window.receive_message(msg, self.start_time)
             self.message_event.wait(timeout)
             self.message_event.clear()
 
         # Send the message to the existing window.
         if not self.window_open:
             return '"User closed the window. Re-open to continue conversation?"'
-        return f'"{self.message}"' if self.message else '"No response from user. Timeout too short?"'
+        return self.message if self.message else '"No response from user. Timeout too short?"'
     
     # End of chat_with_user method
 
