@@ -7,18 +7,13 @@ from typing import Callable
 class ChatWithUserPluginWindow:
     """This class is used to create the chat window."""
 
-    def __init__(
-        self, 
-        agent_name:str,
-        on_message:Callable[[str], None],
-        on_close:Callable[[], None],
-        allow_close:bool = True
-    ) -> None:
-        """This method is called when the chat completion is done.
+    def __init__(self, agent_name:str, on_message:Callable[[str], None], on_close:Callable[[], None], allow_close:bool = True) -> None:
+        """
+        This method is called when the chat completion is done.
         Args:
-            agent_name (str): The name of the agent.
-            on_message (Callable[[str], None]): The on message callback.
-            on_close (Callable[[], None]): The on close callback.
+            agent_name (str)                      : The name of the agent.
+            on_message (Callable[[str], None])    : The on message callback.
+            on_close (Callable[[], None])         : The on close callback.
         """
 
         # Constants
@@ -42,11 +37,11 @@ class ChatWithUserPluginWindow:
         self.text_frame.pack(fill="both", expand=True)
         self.text_widget = tk.Text(
             self.text_frame,
-            font=("Arial", 12),
-            wrap="word",
-            bg="#F5F5F5",
-            fg="black",
-            insertbackground="black"
+            font                = ("Arial", 12),
+            wrap                = "word",
+            bg                  = "#F5F5F5",
+            fg                  = "black",
+            insertbackground    = "black"
         )
         self.text_widget.pack(fill="both", expand=True)
 
@@ -82,9 +77,7 @@ class ChatWithUserPluginWindow:
     # End of __init__ method
 
 
-    def allow_window_close(
-        self
-    ) -> None:
+    def allow_window_close(self) -> None:
         """Allow the window to be closed."""
 
         self.allow_close = True
@@ -92,10 +85,7 @@ class ChatWithUserPluginWindow:
     # End of allow_window_close method
 
 
-    def limit_chars(
-        self, 
-        event:tk.Event
-    ) -> None:
+    def limit_chars(self, event:tk.Event) -> None:
         """Limit text in entry widget to 200 characters"""
 
         value = self.entry_widget.get("1.0", "end-1c")
@@ -106,10 +96,7 @@ class ChatWithUserPluginWindow:
     # End of limit_chars method
 
 
-    def handle_return_key(
-        self, 
-        event:tk.Event
-    ) -> str:
+    def handle_return_key(self, event:tk.Event) -> str:
         """Handle the Return key press event."""
         
         # Send the message
@@ -121,9 +108,7 @@ class ChatWithUserPluginWindow:
     # End of handle_return_key method
 
 
-    def process_incoming_messages(
-        self
-    ) -> None:
+    def process_incoming_messages(self) -> None:
         """This method is called to process the incoming messages."""
 
         while not self.message_queue.empty():
@@ -141,9 +126,7 @@ class ChatWithUserPluginWindow:
     # End of process_incoming_messages method
 
 
-    def send_message(
-        self
-    ) -> None:
+    def send_message(self) -> None:
         """This method is called to send the message."""
 
         # Get message from entry widget
@@ -164,11 +147,9 @@ class ChatWithUserPluginWindow:
     # End of send_message method
 
 
-    def receive_message(
-        self, 
-        message:str = ''
-    ) -> None:
-        """This method is called to receive the message.
+    def receive_message(self, message:str='') -> None:
+        """
+        This method is called to receive the message.
         Args:
             message (str): The message.
         """
@@ -178,9 +159,7 @@ class ChatWithUserPluginWindow:
     # End of receive_message method
 
 
-    def run(
-        self
-    ) -> None:
+    def run(self) -> None:
         """This method is called to run the chat window."""
 
         self.process_incoming_messages()
@@ -190,9 +169,7 @@ class ChatWithUserPluginWindow:
     # End of run method
 
 
-    def window_destroy(
-        self
-    ) -> None:
+    def window_destroy(self) -> None:
         """This method is called to destroy the window."""
 
         if self.allow_close:
