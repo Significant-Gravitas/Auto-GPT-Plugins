@@ -18,5 +18,4 @@ validators
 pytest
 pytest-cov
 requests
-json
 bs4
