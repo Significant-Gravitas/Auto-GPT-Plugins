@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Echo some variables to see what needs to be passed in a forked PR
         run: |
+          echo "hello"
           echo ${{ github.ref_name }}
           echo ${{ github.ref }}
           echo ${{ github.repository }}
