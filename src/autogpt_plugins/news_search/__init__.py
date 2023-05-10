@@ -1,10 +1,10 @@
-"""This is the Bing search engines plugin for Auto-GPT."""
+"""This is the News search engine plugin for Auto-GPT."""
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-from .bing_search import _bing_search
+from .news_search import NewsSearch
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -14,50 +14,43 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTBingSearch(AutoGPTPluginTemplate):
+class AutoGPTNewsSearch(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
-        self._name = "Bing-Search-Plugin"
+        self._name = "News-Search-Plugin"
         self._version = "0.1.0"
-        self._description = (
-            "This plugin performs Bing searches using the provided query."
-        )
-        self.load_commands = (
-            os.getenv("SEARCH_ENGINE")
-            and os.getenv("SEARCH_ENGINE").lower() == "bing"
-            and os.getenv("BING_API_KEY")
-        )
+        self._description = "This plugin searches the latest news using the provided query and the newsapi aggregator"
+        self.load_commands = os.getenv(
+            "NEWSAPI_API_KEY"
+        )  # Wrapper, if more variables are needed in future
+        self.news_search = NewsSearch(os.getenv("NEWSAPI_API_KEY"))
 
     def can_handle_post_prompt(self) -> bool:
         return True
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         if self.load_commands:
-            # Add Bing Search command
+            # Add News Search command
             prompt.add_command(
-                "Bing Search",
-                "bing_search",
+                "News Search",
+                "news_search",
                 {"query": "<query>"},
-                _bing_search,
+                self.news_search.news_everything_search,
             )
         else:
             print(
-                "Warning: Bing-Search-Plugin is not fully functional. "
-                "Please set the SEARCH_ENGINE and BING_API_KEY environment variables."
+                "Warning: News-Search-Plugin is not fully functional. "
+                "Please set the NEWSAPI_API_KEY environment variable."
             )
         return prompt
 
     def can_handle_pre_command(self) -> bool:
-        return True
+        return False
 
     def pre_command(
         self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
-        if command_name == "google" and self.load_commands:
-            # this command does nothing but it is required to continue performing the post_command function
-            return "bing_search", {"query": arguments["query"]}
-        else:
-            return command_name, arguments
+        pass
 
     def can_handle_post_command(self) -> bool:
         return False
@@ -104,7 +97,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         pass
 
     def can_handle_pre_command(self) -> bool:
-        return True
+        return False
 
     def can_handle_chat_completion(
         self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int

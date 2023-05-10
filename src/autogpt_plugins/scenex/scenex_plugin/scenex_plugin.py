@@ -1,6 +1,7 @@
 import os
-import requests
 from typing import List, Union
+
+import requests
 
 
 def is_api_key_set() -> bool:

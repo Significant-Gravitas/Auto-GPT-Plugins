@@ -1,8 +1,8 @@
 import os
-from unittest.mock import MagicMock, patch
 import unittest
+from unittest.mock import MagicMock, patch
 
-from scenex_plugin import describe_image, is_api_key_set, get_api_key
+from scenex_plugin import describe_image, get_api_key, is_api_key_set
 
 MOCK_API_KEY = "secret"
 MOCK_IMAGE = "https://example.com/image.png"

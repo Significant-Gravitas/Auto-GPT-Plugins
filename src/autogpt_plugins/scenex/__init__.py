@@ -1,5 +1,6 @@
 """This is a SceneX plugin for describing images for Auto-GPT."""
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
 
@@ -23,10 +24,7 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
         self._description = "Auto-GPT Scenex Plugin: Describe any image by URL."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        from .scenex_plugin.scenex_plugin import (
-            describe_image,
-            is_api_key_set,
-        )
+        from .scenex_plugin.scenex_plugin import describe_image, is_api_key_set
 
         if is_api_key_set():
             prompt.add_command(
