@@ -11,15 +11,6 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Echo some variables to see what needs to be passed in a forked PR
-        run: |
-          echo "hello"
-          echo ${{ github.ref_name }}
-          echo ${{ github.ref }}
-          echo ${{ github.repository }}
-          echo ${{ github.head_ref }}
-          echo ${{ github.base_ref }}
-          echo ${{ github.event.pull_request.head.repo.full_name }}
       - name: Install Kurtosis
         run: |
           echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
@@ -30,6 +21,6 @@ jobs:
           set -euo pipefail
           plugins_to_test=("twitter email secenex bing_search news_search wikipedia_search api_tools random_values")
           for plugin in $plugins_to_test; do
-            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "MEMORY_BACKEND": "local"}'
+            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "__plugin_branch_to_use": '\"${{ github.head_ref}}\"', "__plugin_repo_to_use":'\"${{ github.event.pull_request.head.repo.full_name }}\"'}'
           done          
 
