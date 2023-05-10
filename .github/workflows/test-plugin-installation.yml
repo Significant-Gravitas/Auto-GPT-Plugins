@@ -11,6 +11,13 @@ jobs:
     permissions:
       issues: write
     steps:
+      - name: Echo some variables to see what needs to be passed in a forked PR
+        run: |
+          echo ${{ github.ref_name }}
+          echo ${{ github.ref }}
+          echo ${{ github.repository }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.base_ref }}
       - name: Install Kurtosis
         run: |
           echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
