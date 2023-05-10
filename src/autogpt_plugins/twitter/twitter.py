@@ -1,8 +1,10 @@
 """This module contains functions for interacting with the Twitter API."""
 from __future__ import annotations
-from . import AutoGPTTwitter
+
 import pandas as pd
 import tweepy
+
+from . import AutoGPTTwitter
 
 plugin = AutoGPTTwitter()
 
@@ -34,8 +36,9 @@ def post_reply(tweet_text: str, tweet_id: int) -> str:
     """
 
     replyID = plugin.api.update_status(
-        status=tweet_text, in_reply_to_status_id=tweet_id,
-        auto_populate_reply_metadata=True
+        status=tweet_text,
+        in_reply_to_status_id=tweet_id,
+        auto_populate_reply_metadata=True,
     )
 
     return f"Success! Tweet: {replyID.text}"

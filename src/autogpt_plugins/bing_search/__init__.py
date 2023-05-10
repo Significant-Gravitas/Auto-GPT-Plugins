@@ -1,7 +1,9 @@
 """This is the Bing search engines plugin for Auto-GPT."""
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+
 from .bing_search import _bing_search
 
 PromptGenerator = TypeVar("PromptGenerator")

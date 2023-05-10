@@ -1,28 +1,25 @@
-"""Wikipedia search integrations."""
+"""API Tools for Autogpt."""
+
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-
-from .wikipedia_search import _wikipedia_search
+from .api_tools import _make_api_call
 
 PromptGenerator = TypeVar("PromptGenerator")
-
 
 class Message(TypedDict):
     role: str
     content: str
 
-
-class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
+class AutoGPTApiTools(AutoGPTPluginTemplate):
     """
-    Wikipedia search integrations
+    API Tools plugin for Autogpt.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-wikipedia-search"
+        self._name = "autogpt-api-tools"
         self._version = "0.1.0"
-        self._description = "Wikipedia search integrations."
+        self._description = "Allow AutoGPT to make API calls to outside services."
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -50,7 +47,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-        self, prompt: PromptGenerator, messages: List[str]
+            self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
         """This method is called before the planning chat completeion is done.
         Args:
@@ -131,7 +128,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-        self, command_name: str, arguments: Dict[str, Any]
+            self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -160,11 +157,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         pass
 
     def can_handle_chat_completion(
-        self,
-        messages: list[Dict[Any, Any]],
-        model: str,
-        temperature: float,
-        max_tokens: int,
+            self,
+            messages: list[Dict[Any, Any]],
+            model: str,
+            temperature: float,
+            max_tokens: int,
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
@@ -178,11 +175,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-        self,
-        messages: list[Dict[Any, Any]],
-        model: str,
-        temperature: float,
-        max_tokens: int,
+            self,
+            messages: list[Dict[Any, Any]],
+            model: str,
+            temperature: float,
+            max_tokens: int,
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -205,9 +202,9 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
-            "wikipedia_search",
-            "Wikipedia search",
-            {"query": "<query>"},
-            _wikipedia_search,
+            "make_api_call",
+            "Make an API call",
+            {"host": "<host>", "endpoint": "<endpoint>", "method": "<method>", "query_params": "<query_params>", "body": "<body>", "headers": "<headers>"},
+            _make_api_call
         )
         return prompt
