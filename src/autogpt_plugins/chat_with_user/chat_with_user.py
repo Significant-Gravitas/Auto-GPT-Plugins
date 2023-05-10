@@ -139,6 +139,9 @@ class ChatWithUserPlugin:
         
         self.allow_close = not no_close
 
+        if self.window and self.window.agent_name != agent:
+            self.window.update_agent_name(agent)
+
         if not self.window_open:
             # If the window is not open, create a new one.
             threading.Thread(target=self.run_chat_window, args=(agent,), daemon=True).start()

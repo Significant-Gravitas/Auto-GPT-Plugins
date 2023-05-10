@@ -169,6 +169,15 @@ class ChatWithUserPluginWindow:
     # End of run method
 
 
+    def update_agent_name(self, new_name: str) -> None:
+        """Update the agent name and the window title."""
+
+        self.agent_name = new_name
+        self.window.title(f"Chat with {new_name}")
+
+    # End of update_agent_name method
+
+
     def window_destroy(self) -> None:
         """This method is called to destroy the window."""
 
