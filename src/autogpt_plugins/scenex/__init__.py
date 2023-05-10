@@ -28,11 +28,11 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
             "The input can be an image file of any format, and "
             "the output will be a text description that covers every detail of the image."
         )
-        self.scenexplain = SceneXplain(os.getenv("SCENEX_API_KEY"))
-        self._is_api_key_set = bool(os.getenv("SCENEX_API_KEY"))
+        self._api_key = os.getenv("SCENEX_API_KEY")
+        self.scenexplain = SceneXplain(self._api_key)
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        if self._is_api_key_set:
+        if self._api_key:
             prompt.add_command(
                 self._description,
                 "describe_image",
