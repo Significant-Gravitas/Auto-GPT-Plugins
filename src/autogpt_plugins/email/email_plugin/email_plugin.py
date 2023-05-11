@@ -158,7 +158,7 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
                 if isinstance(subject, bytes):
                     try:
                         # If the subject has unknown encoding, return blank
-                        f encoding is not None:
+                        if encoding is not None:
                             subject = subject.decode(encoding)
                         else:
                             subject = ""
