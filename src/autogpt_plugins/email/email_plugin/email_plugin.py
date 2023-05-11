@@ -10,6 +10,7 @@ from email.header import decode_header
 from email.message import EmailMessage
 
 
+
 def bothEmailAndPwdSet() -> bool:
     return True if os.getenv("EMAIL_ADDRESS") and os.getenv("EMAIL_PASSWORD") else False
 
@@ -145,10 +146,24 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
+                
+                # If the subject has unknown encoding, return blank
+                if msg["Subject"] is not None:
+                    subject, encoding = decode_header(msg["Subject"])[0]
+                else:
+                    subject = ""
+                    encoding = ""
 
-                subject, encoding = decode_header(msg["Subject"])[0]
+
                 if isinstance(subject, bytes):
-                    subject = subject.decode(encoding)
+                    try:
+                        # If the subject has unknown encoding, return blank
+                        f encoding is not None:
+                            subject = subject.decode(encoding)
+                        else:
+                            subject = ""
+                    except [LookupError] as e:
+                        pass
 
                 body = get_email_body(msg)
                 from_address = msg["From"]
@@ -201,10 +216,17 @@ def get_email_body(msg: email.message.Message) -> str:
             content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition"))
             if content_type == "text/plain" and "attachment" not in content_disposition:
-                return part.get_payload(decode=True).decode()
+                # If the email body has unknown encoding, return null
+                try:
+                    return part.get_payload(decode=True).decode()
+                except UnicodeDecodeError as e:
+                    pass
     else:
-        return msg.get_payload(decode=True).decode()
-
+        try:
+            # If the email body has unknown encoding, return null
+            return msg.get_payload(decode=True).decode()
+        except UnicodeDecodeError as e:
+            pass
 
 def enclose_with_quotes(s):
     # Check if string contains whitespace
