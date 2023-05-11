@@ -13,6 +13,10 @@ A plugin adding voice command integration into Auto GPT
 2. Add this chunk of code along with your voice command API information to the `.env` file within AutoGPT:
 
 ```
+CHAT_MESSAGES_ENABLED=True
+
+... 
+
 ################################################################################
 ### VOICE COMMAND
 ################################################################################
