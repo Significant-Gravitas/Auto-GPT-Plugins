@@ -57,6 +57,6 @@ Rename the model's name
 ## Usage
 
 1. It is more interactive to use this plugin along with TTS enabled (--speak)
-2. To authorize commands in auto-gpt with a simple yes or no, user can just say 'yes' or 'no'. The plugin will automatically change the wording to character 'y' or 'n' which understood by chat-gpt to execute the command
+2. To authorize commands in auto-gpt with a simple yes or no, user can just say 'yes' or 'no'. The plugin will automatically change the wording to character 'y' or 'n' which understood by auto-gpt to execute the command
 3. To ensure the system will only process based on user's intention, user needs to initiate the call by using wording defined by VOICE_COMMAND_INITCALL. System will reply 'yes sir', before user can start any conversation
 4. To prevent any wrong data being processed, user can enable the VOICE_COMMAND_CONFIRM flag. System will double confirm the question or command from user. User needs to reply 'yes' or 'no' accordingly. If 'no', then user can directly provide the command again
