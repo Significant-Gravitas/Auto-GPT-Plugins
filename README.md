@@ -89,8 +89,8 @@ Some third-party plugins have been created by contributors that are not included
 | WolframAlpha | Access to WolframAlpha to do math and get accurate information | [gravelBridge/AutoGPT-WolframAlpha](https://github.com/gravelBridge/AutoGPT-WolframAlpha)
 | Spoonacular | Find recipe insiprations using Auto-GPT | [minfenglu/Auto-GPT-Spoonacular-Plugin](https://github.com/minfenglu/Auto-GPT-Spoonacular-Plugin)
 | Weather | A simple weather plugin wrapping around python-weather | [ppetermann/Auto-GPT-WeatherPlugin](https://github.com/ppetermann/Auto-GPT-WeatherPlugin)
-| IFTTT webhooks | This plugin allows you to easily integrate IFTTT connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
-| Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity| [AntonioCiolino/AutoGPT-IFTTT](https://github.com/AntonioCiolino/AutoGPT-IFTTT)
+| Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
+| IFTTT webhooks | This plugin allows you to easily integrate IFTTT connectivity using Maker | [AntonioCiolino/AutoGPT-IFTTT](https://github.com/AntonioCiolino/AutoGPT-IFTTT)
 
 ## Configuration
 
