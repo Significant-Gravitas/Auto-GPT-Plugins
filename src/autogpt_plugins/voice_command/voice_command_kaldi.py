@@ -76,8 +76,16 @@ class VoiceCommandKaldi:
                         # state 2 : wait for question
                         if state == 2 and not text == "" and "yes sir" not in text:
                             command_query = text
+                            # Handle simple 'yes/no' answer and return character 'y/n'
+                            if text == "no":
+                                command_query = 'n'
+                                break
+                            elif text == "yes":
+                                command_query = 'y'
+                                break
+
                             if self.confirmation:
-                                speech_txt = "Did you say " + command_query + " ?"
+                                speech_txt = "Did you say " + command_query + " ? yes or no"
                                 print("[System Voice] " + speech_txt)
                                 self._speech(speech_txt)
                                 state = 3
