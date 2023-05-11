@@ -23,15 +23,19 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         self._version = "0.2.0"
         self._description = "This plugin allows developers to use unzipped plugins simplifying the plugin development process."
 
-        from autogpt.config.config import Config
+        # Walk up the directory tree till you find a folder called "plugins"
+        plugins_dir = Path(__file__).parent
+        while plugins_dir.name != "plugins" and plugins_dir.parent != plugins_dir:
+            plugins_dir = plugins_dir.parent
 
-        cfg = Config()
-        plugins_dir = Path(cfg.plugins_dir)
+        if plugins_dir.name != "plugins":
+            raise Exception("Could not find plugins directory")
+
         if os.getenv("UNZIPPED_PLUGIN_INSTALL_REQUIREMENTS", "True") == "True":
             PluginManager.install_plugin_requirements(plugins_dir)
         self._plugins = PluginManager.load_unzipped_plugins(plugins_dir)
 
-    def _can_handle(self, method)  -> bool:
+    def _can_handle(self, method) -> bool:
         can_handle_method = f"can_handle_{method}"
         return any(
             hasattr(plugin, can_handle_method) and getattr(plugin, can_handle_method)()
