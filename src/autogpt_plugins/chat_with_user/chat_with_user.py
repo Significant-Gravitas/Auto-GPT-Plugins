@@ -153,13 +153,14 @@ class ChatWithUserPlugin:
         if self.window_open:
             self.start_time = time.time()
             self.window.receive_message(msg, self.start_time)
+            self.message = None
             self.message_event.wait(timeout)
             self.message_event.clear()
 
         # Send the message to the existing window.
         if not self.window_open:
-            return '"User closed the window. Re-open to continue conversation?"'
-        return self.message if self.message else '"No response from user. Timeout too short?"'
+            return 'User closed the window. Re-open to continue conversation?'
+        return self.message if self.message else 'No response from user. Timeout too short?'
     
     # End of chat_with_user method
 
