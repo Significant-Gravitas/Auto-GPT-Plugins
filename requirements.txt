@@ -18,3 +18,5 @@ validators
 pytest
 pytest-cov
 praw
+requests
+bs4
