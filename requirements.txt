@@ -17,3 +17,5 @@ requests-mock
 validators
 pytest
 pytest-cov
+requests
+bs4

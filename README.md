@@ -98,7 +98,6 @@ Some third-party plugins have been created by contributors that are not included
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
 
-
 ## Configuration
 
 For interactionless use, set:
