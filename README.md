@@ -122,7 +122,7 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 1. Write your tests
 1. Add your name to the [codeowners](.github/CODEOWNERS) file
 1. Add your plugin to the [Readme](README.md)
-1. Add your plugin to the [autogpt-package](https://github.com/kurtosis-tech/autogpt-package/blob/main/plugins.star). You can copy the line of any of the standard plugins and just add another entry in the dictionary. Raise a PR & get it merged.
+1. Add your plugin to the [autogpt-package](https://github.com/kurtosis-tech/autogpt-package/blob/main/plugins.star). You can copy the line of any of the standard plugins and just add another entry in the dictionary. Raise a PR & get it merged
 1. Add your plugin to the [plugin installation integration test](.github/workflows/test-plugin-installation.yml)
 1. Make a PR back to this repo!
 
