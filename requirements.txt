@@ -4,6 +4,7 @@ auto_gpt_plugin_template
 black
 bs4
 build
+colorama
 flake8
 isort
 newsapi-python
