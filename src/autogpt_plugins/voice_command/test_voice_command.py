@@ -4,7 +4,7 @@ import unittest
 from .voice_command_kaldi import VoiceCommandKaldi
 
 
-class TestRandomValueCommands(unittest.TestCase):
+class TestVoiceCommand(unittest.TestCase):
     # voice command Tests
 
     def setUp(self):
