@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import MagicMock, patch
 
-from scenex_plugin import SceneXplain
+from .scenex_plugin import SceneXplain
 
 MOCK_API_KEY = "secret"
 MOCK_IMAGE = "https://example.com/image.png"
