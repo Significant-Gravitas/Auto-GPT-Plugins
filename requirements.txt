@@ -17,3 +17,4 @@ requests-mock
 validators
 pytest
 pytest-cov
+colorama
