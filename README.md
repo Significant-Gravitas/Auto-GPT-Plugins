@@ -50,22 +50,27 @@ Follow these steps to configure the Auto-GPT Plugins:
     python -m autogpt --install-plugin-deps
     ````
 
-## Plugins in the repository
+## Plugins
 
-For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
+> For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
+
+There are two kinds of plugins: **first party** and **third party**. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you. **You can see all the plugins and their contributors on this [directory](https://autoplugins.vercel.app/).**
+
+If you built a plugin and it's not on the directory yet simply make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
+
+You can also see the plugins here:
 
 | Plugin       | Description     | Location |
 |--------------|-----------|--------|
 | API Tools        | This allows AutoGPT to make API calls of various kinds.                                                           | [autogpt_plugins/api_tools](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/api_tools)           |
-| Bing Search      | This search plugin integrates Bing search engines into Auto-GPT.                                                  | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)       |
 | Baidu Search |  This search plugin integrates Baidu search engines into Auto-GPT. | [autogpt_plugins/baidu_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)
+| Bing Search      | This search plugin integrates Bing search engines into Auto-GPT.                                                  | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)       |
 | Email            | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)                 |
 | News Search      | This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT.                 | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)   |
 | Random Values    | Enable AutoGPT to generate various random numbers and strings.                                                    | [autogpt_plugins/random_values](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/random_values) |
 | SceneX           | Explore image storytelling beyond pixels with the Auto-GPT SceneX Plugin.                                        | [autogpt_plugins/scenex](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/scenex)               |
 | Twitter          | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.               | [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)           |
 | Wikipedia Search | This allows AutoGPT to use Wikipedia directly.                                                                    | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search) |
-
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
 
