@@ -159,7 +159,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 16
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_missing_count(self):
         # If missing, count defaults to 1
@@ -168,7 +168,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 10
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_garbage(self):
         with pytest.raises(ValueError) as e:
