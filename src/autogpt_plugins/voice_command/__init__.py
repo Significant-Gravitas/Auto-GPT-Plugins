@@ -267,7 +267,7 @@ class AutoGPTVoiceCommand(AutoGPTPluginTemplate):
             str: The user input.
         """
 
-        return self.voice_command.run()
+        return self.voice_command.run(is_test=False, force_state=None)
 
     def can_handle_report(self) -> bool:
         """This method is called to check that the plugin can

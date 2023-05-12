@@ -15,7 +15,7 @@ class VoiceCommandKaldi:
         self.recognizer = None
         self.model = None
         self.initiator = 'hello'
-        self.confirmation = True
+        self.confirmation = False
 
         print("Display input/output devices")
         print(sd.query_devices())
@@ -23,10 +23,10 @@ class VoiceCommandKaldi:
         device_info = sd.query_devices(sd.default.device[0], 'input')
         self.samplerate = int(device_info['default_samplerate'])
 
-        if os.getenv("VOICE_COMMAND_INITCALL"):
+        if os.getenv("VOICE_COMMAND_INITCALL") is not None:
             self.initiator = os.getenv("VOICE_COMMAND_INITCALL")
 
-        if os.getenv("VOICE_COMMAND_CONFIRM") and os.getenv("VOICE_COMMAND_CONFIRM") == "True":
+        if os.getenv("VOICE_COMMAND_CONFIRM") is not None and os.getenv("VOICE_COMMAND_CONFIRM") == "True":
             self.confirmation = True
 
         print("==> Initial Default Device Number:{} Desc:{}".format(sd.default.device[0], device_info))
@@ -44,7 +44,7 @@ class VoiceCommandKaldi:
         except Exception as e:
             print('MODEL_INIT_ERROR')
 
-    def run(self) -> str:
+    def run(self, is_test=False, force_state=None) -> str:
 
         print("==> Begin recording. Press Ctrl+C to stop the recording ")
         try:
@@ -57,6 +57,8 @@ class VoiceCommandKaldi:
                 # state 3 : wait for confirmation
 
                 state = 1
+                if force_state:
+                    state = force_state
 
                 while True:
                     data = self.q.get()
@@ -71,6 +73,8 @@ class VoiceCommandKaldi:
                             print("[System Voice] " + speech_txt)
                             self._speech(speech_txt)
                             state = 2
+                            if is_test:
+                                return speech_txt
                             continue
 
                         # state 2 : wait for question
@@ -89,6 +93,8 @@ class VoiceCommandKaldi:
                                 print("[System Voice] " + speech_txt)
                                 self._speech(speech_txt)
                                 state = 3
+                                if is_test:
+                                    return speech_txt
                                 continue
                             else:
                                 break
@@ -101,8 +107,12 @@ class VoiceCommandKaldi:
                                 speech_txt = "Please repeat again"
                                 print("[System Voice] " + speech_txt)
                                 self._speech(speech_txt)
+                                if is_test:
+                                    return speech_txt
                                 continue
                             elif "yes" in text:
+                                if is_test:
+                                    command_query = "testing"
                                 break
 
                 return command_query
