@@ -65,6 +65,7 @@ You can also see the plugins here:
 | API Tools        | This allows AutoGPT to make API calls of various kinds.                                                           | [autogpt_plugins/api_tools](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/api_tools)           |
 | Baidu Search |  This search plugin integrates Baidu search engines into Auto-GPT. | [autogpt_plugins/baidu_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)
 | Bing Search      | This search plugin integrates Bing search engines into Auto-GPT.                                                  | [autogpt_plugins/bing_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bing_search)       |
+| Bluesky | Enables Auto-GPT to retrieve posts from Bluesky and create new posts. | [autogpt_plugins/bluesky](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/bluesky)
 | Email            | Revolutionize email management with the Auto-GPT Email Plugin, leveraging AI to automate drafting and intelligent replies. | [autogpt_plugins/email](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/email)                 |
 | News Search      | This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT.                 | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)   |
 | Random Values    | Enable AutoGPT to generate various random numbers and strings.                                                    | [autogpt_plugins/random_values](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/random_values) |
@@ -99,6 +100,7 @@ Some third-party plugins have been created by contributors that are not included
 | WolframAlpha | Access to WolframAlpha to do math and get accurate information | [gravelBridge/AutoGPT-WolframAlpha](https://github.com/gravelBridge/AutoGPT-WolframAlpha)
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
+| Project Management | Streamline your Project Management with ease: Jira, Trello, and Google Calendar Made Effortless| [minfenglu/AutoGPT-PM-Plugin](https://github.com/minfenglu/AutoGPT-PM-Plugin)
 
 ## Configuration
 
