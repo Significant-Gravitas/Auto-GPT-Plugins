@@ -18,3 +18,5 @@ validators
 pytest
 pytest-cov
 atproto
+requests
+bs4
