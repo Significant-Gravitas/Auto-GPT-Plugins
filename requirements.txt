@@ -17,6 +17,7 @@ requests-mock
 validators
 pytest
 pytest-cov
+bs4
 sounddevice
 vosk
 playsound
