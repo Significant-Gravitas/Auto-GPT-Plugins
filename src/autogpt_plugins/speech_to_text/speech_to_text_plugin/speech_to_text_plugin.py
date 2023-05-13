@@ -1,36 +1,49 @@
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+# speech_to_text_plugin.py
 
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .speech_to_text_plugin import transcribe_streaming, record_audio, process_transcribed_text
+import os
+import pyaudio
 import io
+from google.cloud import speech_v1p1beta1 as speech
+from google.cloud.speech_v1p1beta1 import enums
+from google.cloud.speech_v1p1beta1 import types
 
-PromptGenerator = TypeVar("PromptGenerator")
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'path/to/credentials.json'
 
-class SpeechToTextPlugin(AutoGPTPluginTemplate):
-    """
-    This is the Auto-GPT Speech-to-Text plugin.
-    """
+def transcribe_streaming(stream):
+    client = speech.SpeechClient()
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US')
+    streaming_config = types.StreamingRecognitionConfig(config=config)
 
-    def __init__(self):
-        super().__init__()
-        self._name = "Auto-GPT-Speech-to-Text-Plugin"
-        self._version = "0.0.1"
-        self._description = "Auto-GPT Speech-to-Text Plugin: Transcribe spoken input in real-time."
+    requests = (types.StreamingRecognizeRequest(audio_content=chunk) for chunk in stream)
+    responses = client.streaming_recognize(streaming_config, requests)
 
-    def can_handle_post_prompt(self) -> bool:
-        return True
+    for response in responses:
+        if response.results:
+            return response.results[0].alternatives[0].transcript
+    return None
 
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        # Record audio from the built-in microphone
-        audio_data = next(record_audio())
+def record_audio():
+    RATE = 16000
+    CHUNK = int(RATE / 10)
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
 
-        # Transcribe the audio data using Google Speech-to-Text
-        transcript = transcribe_streaming(io.BytesIO(audio_data))
-        if transcript:
-            # Process the transcribed text
-            processed_text = process_transcribed_text(transcript)
+    p = pyaudio.PyAudio()
+    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
 
-            # Add the processed text to the prompt
-            prompt.add_text(processed_text)
+    while True:
+        data = stream.read(CHUNK)
+        yield data
 
-        return prompt
+if __name__ == '__main__':
+    print("Recording... Press Ctrl+C to stop.")
+    try:
+        for data in record_audio():
+            transcript = transcribe_streaming(io.BytesIO(data))
+            if transcript:
+                print("Transcript:", transcript)
+    except KeyboardInterrupt:
+        pass
