@@ -29,11 +29,11 @@ The speech-to-text plugin allows users to transcribe spoken input in real-time a
 
 To install the plugins, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/Frame-Tech-Solutions-Ltd-Co/Auto-GPT-Plugins.git`
+1. Clone this repository: `git clone [https://github.com/Frame-Tech-Solutions-Ltd-Co/Auto-GPT-Plugins](https://github.com/Significant-Gravitas/Auto-GPT).git`
 2. Navigate to the `src/autogpt_plugins` directory.
 3. Install the required dependencies for each plugin as specified in their respective README files or source code comments.
 
-## Contributors
+## Contributing
 
 Nigel Phillips a.k.a. Swooshcode
 Software Developer
