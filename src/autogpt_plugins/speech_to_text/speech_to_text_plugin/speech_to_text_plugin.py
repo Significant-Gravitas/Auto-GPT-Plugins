@@ -1,8 +1,7 @@
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .speech_to_text_plugin import transcribe_streaming, record_audio, process_transcribed_text
-import io
+from .transcribe import record_audio, transcribe_streaming, process_transcribed_text
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -21,16 +20,12 @@ class SpeechToTextPlugin(AutoGPTPluginTemplate):
         return True
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        # Record audio from the built-in microphone
-        audio_data = next(record_audio())
-
-        # Transcribe the audio data using Google Speech-to-Text
-        transcript = transcribe_streaming(io.BytesIO(audio_data))
-        if transcript:
-            # Process the transcribed text
-            processed_text = process_transcribed_text(transcript)
-
-            # Add the processed text to the prompt
-            prompt.add_text(processed_text)
-
+        audio_generator = record_audio()
+        for audio_chunk in audio_generator:
+            transcribed_text = transcribe_streaming(audio_chunk)
+            if transcribed_text:
+                processed_text = process_transcribed_text(transcribed_text)
+                prompt.add_text(processed_text)
         return prompt
+
+    # Add more methods as needed, such as can_handle_on_response, on_response, etc.
