@@ -1,6 +1,9 @@
+# test_speech_to_text_plugin.py
+
 import unittest
 from unittest.mock import patch, MagicMock
 import io
+import pyaudio
 import speech_to_text_plugin
 from google.cloud.speech_v1p1beta1 import types
 
@@ -28,15 +31,16 @@ class TestSpeechToTextPlugin(unittest.TestCase):
 
         self.assertEqual(transcript, sample_transcript)
 
-    def test_process_transcribed_text(self):
-        sample_transcript = "This is a sample transcript."
-        sample_processed_text = "This is a sample processed text."
+    @patch("speech_to_text_plugin.pyaudio.PyAudio")
+    def test_record_audio(self, mock_pyaudio):
+        # Mock the PyAudio's open method to return a stream that yields mock audio data
+        mock_pyaudio().open().read.return_value = b"mock audio data"
 
-        with patch("speech_to_text_plugin.autogpt.process_input") as mock_process_input:
-            mock_process_input.return_value = sample_processed_text
-            processed_text = speech_to_text_plugin.process_transcribed_text(sample_transcript)
+        # Get a generator from the record_audio function
+        audio_data_generator = speech_to_text_plugin.record_audio()
 
-        self.assertEqual(processed_text, sample_processed_text)
+        # Verify the generator yields the expected audio data
+        self.assertEqual(next(audio_data_generator), b"mock audio data")
 
 if __name__ == '__main__':
     unittest.main()
