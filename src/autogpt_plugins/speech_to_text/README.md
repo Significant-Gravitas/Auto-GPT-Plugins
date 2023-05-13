@@ -33,7 +33,7 @@ To install the plugins, follow these steps:
 2. Navigate to the `src/autogpt_plugins` directory.
 3. Install the required dependencies for each plugin as specified in their respective README files or source code comments.
 
-## Contributing
+## Contributors
 
 Nigel Phillips a.k.a. Swooshcode
 Software Developer
