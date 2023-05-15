@@ -11,9 +11,6 @@ from .telegram_chat import TelegramUtils
 
 PromptGenerator = TypeVar("PromptGenerator")
 
-with open(str(Path(os.getcwd()) / ".env"), "r") as fp:
-    load_dotenv(stream=fp)
-
 
 class Message(TypedDict):
     role: str
@@ -61,7 +58,7 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
 
         Returns:
             bool: True if the plugin can handle the post_prompt method."""
-        return True
+        return False
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         """This method is called just after the generate_prompt is called,
@@ -73,19 +70,7 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        prompt.add_command(
-            "send_reporting_message",
-            "Send message to reporting chat without waiting for response",
-            {"message": "<message>"},
-            self.telegram_utils.send_message,
-        )
-        prompt.add_command(
-            "ask_user",
-            "Ask user a question and wait for response",
-            {"prompt": "<message>"},
-            self.telegram_utils.ask_user,
-        )
-        return prompt
+        pass
 
     def can_handle_on_planning(self) -> bool:
         """This method is called to check that the plugin can
