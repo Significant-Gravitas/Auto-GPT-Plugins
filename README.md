@@ -60,10 +60,6 @@ There are two categories of plugins: **first party** and **third party**. First-
 
 If you've built a plugin and it's not listed in the directory, you can make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
 
-There are two kinds of plugins: **first party** and **third party**. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you. **You can see all the plugins and their contributors on this [directory](https://autoplugins.vercel.app/).**
-
-If you built a plugin and it's not on the directory yet simply make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
-
 You can also see the plugins here:
 
 | Plugin       | Description     | Location |
@@ -108,7 +104,6 @@ Some third-party plugins have been created by contributors that are not included
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
 | Project Management | Streamline your Project Management with ease: Jira, Trello, and Google Calendar Made Effortless| [minfenglu/AutoGPT-PM-Plugin](https://github.com/minfenglu/AutoGPT-PM-Plugin)
-
 
 ## Configuration
 
