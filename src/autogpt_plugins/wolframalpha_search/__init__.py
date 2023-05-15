@@ -215,11 +215,11 @@ class AutoGPTWolframAlphaSearch(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-
-        prompt.add_command(
-            "wolframalpha_search",
-            self._description,
-            {"query": "<query>"},
-            _wolframalpha_search,
-        )
+        if self.api:
+            prompt.add_command(
+                "wolframalpha_search",
+                self._description,
+                {"query": "<query>"},
+                _wolframalpha_search,
+            )
         return prompt
