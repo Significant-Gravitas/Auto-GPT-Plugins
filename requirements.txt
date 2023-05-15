@@ -1,6 +1,8 @@
 abstract-singleton
+atproto
 auto_gpt_plugin_template
 black
+bs4
 build
 flake8
 isort
