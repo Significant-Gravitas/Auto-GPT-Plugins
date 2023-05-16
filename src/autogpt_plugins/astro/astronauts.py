@@ -10,6 +10,9 @@ def get_num_astronauts():
     Returns:
         int: The number of astronauts in space.
     """
-    response = requests.get("http://api.open-notify.org/astros.json")#Get the data
-    data = response.json()#Convert it to JSON
-    return data["number"]#Extract the number and return it
+    #Get the data
+    response = requests.get("http://api.open-notify.org/astros.json")
+    #Convert it to JSON
+    data = response.json()
+    #Extract the number and return it
+    return data["number"]
