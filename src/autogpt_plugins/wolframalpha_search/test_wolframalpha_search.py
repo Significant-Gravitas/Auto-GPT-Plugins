@@ -4,10 +4,10 @@ import unittest
 import requests
 
 from . import AutoGPTWolframAlphaSearch
-from .wolframalpha_search import _wolframalpha_search
+from . import _wolframalpha_search
 
 
-class TestAutoGPTBingSearch(unittest.TestCase):
+class TestAutoGPTWolframAlphaSearch(unittest.TestCase):
     def setUp(self):
         os.environ["WOLFRAMALPHA_APPID"] = "test_appid"
         self.plugin = AutoGPTWolframAlphaSearch()
