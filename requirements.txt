@@ -17,6 +17,7 @@ requests-mock
 validators
 pytest
 pytest-cov
+colorama
 atproto
 requests
 bs4
