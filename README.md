@@ -103,6 +103,7 @@ Some third-party plugins have been created by contributors that are not included
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)
 | Project Management | Streamline your Project Management with ease: Jira, Trello, and Google Calendar Made Effortless| [minfenglu/AutoGPT-PM-Plugin](https://github.com/minfenglu/AutoGPT-PM-Plugin)
+| Slack | This plugin allows to receive commands and send messages to slack channels | [adithya77/Auto-GPT-slack-plugin](https://github.com/adithya77/Auto-GPT-slack-plugin)
 
 ## Configuration
 
