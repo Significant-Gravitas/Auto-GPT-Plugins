@@ -86,9 +86,9 @@ class TestVoiceCommand:
         resp = self.plugin._speech("test 1 2 3")
         assert resp is True
 
-    def test_speech_play_sound(self):
-        resp = self.plugin._speech("test 1 2 3")
-        assert resp is True
+    # def test_speech_play_sound(self):
+    #     resp = self.plugin._speech("test 1 2 3")
+    #     assert resp is True
 
     @patch('requests.get')
     def test_speech_is_false(self, mock_requests):

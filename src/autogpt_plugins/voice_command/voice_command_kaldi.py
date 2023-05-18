@@ -164,4 +164,4 @@ class VoiceCommandKaldi:
                 response.status_code,
                 response.content,
             )
-            return False
+        return False
