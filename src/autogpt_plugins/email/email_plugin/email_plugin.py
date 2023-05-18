@@ -197,7 +197,11 @@ def read_emails(
             f"when searching with imap command `{imap_search_command}`"
         )
 
-    # Calculate paginated indexes
+    # Confirm that integer parameters are the right type
+    limit = int(limit)
+    page = int(page)
+
+    # Validate parameter values
     if limit < 1:
         raise ValueError("Error: The message limit should be 1 or greater")
 
@@ -206,6 +210,7 @@ def read_emails(
     if page < 1 or page > page_count:
         raise ValueError("Error: The page value references a page that is not part of the results")
 
+    # Calculate paginated indexes
     start_index = len(messages) - (page * limit + 1)
     end_index = start_index + limit
     start_index = max(start_index, 0)
