@@ -66,6 +66,12 @@ class TestVoiceCommand:
         plugin2 = VoiceCommandKaldi()
         assert plugin2.confirmation is True
 
+    def test_when_recognizer_is_none(self):
+        plugin3 = VoiceCommandKaldi()
+        self.recognizer = None
+        resp = plugin3.run(is_test=True)
+        assert resp == "Module initialization error"
+
     def test_get_state1(self):
 
         self.plugin.recognizer = MagicMock(return_value=KaldiRecognizerMockup)

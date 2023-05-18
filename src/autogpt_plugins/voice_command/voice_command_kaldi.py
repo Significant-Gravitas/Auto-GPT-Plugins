@@ -17,34 +17,38 @@ class VoiceCommandKaldi:
         self.initiator = 'hello'
         self.confirmation = False
 
-        print("Display input/output devices")
-        print(sd.query_devices())
-        print(sd.default.device[0])
-        device_info = sd.query_devices(sd.default.device[0], 'input')
-        self.samplerate = int(device_info['default_samplerate'])
-
         if os.getenv("VOICE_COMMAND_INITCALL") is not None:
             self.initiator = os.getenv("VOICE_COMMAND_INITCALL")
 
         if os.getenv("VOICE_COMMAND_CONFIRM") is not None and os.getenv("VOICE_COMMAND_CONFIRM") == "True":
             self.confirmation = True
 
-        print("==> Initial Default Device Number:{} Desc:{}".format(sd.default.device[0], device_info))
-
         self.q = queue.Queue()
 
         self.init_model()
 
     def init_model(self):
-
         try:
+            print("Display input/output devices")
+            print(sd.query_devices())
+            print(sd.default.device[0])
+
+            device_info = sd.query_devices(sd.default.device[0], 'input')
+            samplerate = int(device_info['default_samplerate'])
+
             self.model = Model(r"./model")
-            self.recognizer = KaldiRecognizer(self.model, self.samplerate)
+            self.recognizer = KaldiRecognizer(self.model, samplerate)
             self.recognizer.SetWords(False)
+
         except Exception as e:
+            self.recognizer = None
             print('MODEL_INIT_ERROR')
 
     def run(self, is_test=False, force_state=None) -> str:
+
+        if self.recognizer is None:
+            print("Please reinitialize the module again")
+            return "Module initialization error"
 
         print("==> Begin recording. Press Ctrl+C to stop the recording ")
         try:
