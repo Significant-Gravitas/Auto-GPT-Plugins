@@ -1,10 +1,13 @@
-"""This is a SceneX plugin for describing images for Auto-GPT."""
+"""Telegram controller bot integration using python-telegram-bot."""
 import os
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
-from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from colorama import Fore
+import re
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
-from .scenex_plugin import SceneXplain
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from dotenv import load_dotenv
+
+from .telegram_chat import TelegramUtils
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -14,48 +17,28 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
+def remove_color_codes(s: str) -> str:
+    ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+    return ansi_escape.sub("", s)
+
+
+class AutoGPTTelegram(AutoGPTPluginTemplate):
     """
-    This is the Auto-GPT SceneX plugin.
+    Telegram controller bot integration using python-telegram-bot.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "ImageExplainer"
-        self._version = "0.0.1"
+        self._name = "Auto-GPT-Telegram"
+        self._version = "0.1.0"
         self._description = (
-            "An Image Captioning Tool: Use this tool to generate a detailed caption for an image. "
-            "The input can be an image file of any format, and "
-            "the output will be a text description that covers every detail of the image."
+            "This integrates a Telegram chat bot with your autogpt instance."
         )
-        self._api_key = os.getenv("SCENEX_API_KEY")
-        self.scenexplain = SceneXplain(self._api_key)
-
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        if self._api_key:
-            prompt.add_command(
-                self._description,
-                "describe_image",
-                {
-                    "image": "<image>",
-                },
-                self.scenexplain.describe_image,
-            )
-        else:
-            print(
-                Fore.RED
-                + f"{self._name} - {self._version} - SceneX plugin not loaded, because SCENEX_API_KEY was not set in env."
-            )
-
-        return prompt
-
-    def can_handle_post_prompt(self) -> bool:
-        """This method is called to check that the plugin can
-        handle the post_prompt method.
-
-        Returns:
-            bool: True if the plugin can handle the post_prompt method."""
-        return True
+        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY")
+        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        self.telegram_utils = TelegramUtils(
+            chat_id=self.telegram_chat_id, api_key=self.telegram_api_key
+        )
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -67,6 +50,26 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
+        pass
+
+    def can_handle_post_prompt(self) -> bool:
+        """This method is called to check that the plugin can
+        handle the post_prompt method.
+
+        Returns:
+            bool: True if the plugin can handle the post_prompt method."""
+        return False
+
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
         pass
 
     def can_handle_on_planning(self) -> bool:
@@ -237,3 +240,36 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
             str: The resulting response.
         """
         pass
+
+    def can_handle_user_input(self, user_input: str) -> bool:
+        """This method is called to check that the plugin can
+        handle the user_input method.
+
+        Args:
+            user_input (str): The user input.
+
+        Returns:
+            bool: True if the plugin can handle the user_input method."""
+        return True
+
+    def user_input(self, user_input: str) -> str:
+        user_input = remove_color_codes(user_input)
+        # if the user_input is too long, shorten it
+        if len(user_input) > 2000:
+            user_input = user_input[:2000] + "..."
+        return self.telegram_utils.ask_user(prompt=user_input)
+
+    def can_handle_report(self) -> bool:
+        """This method is called to check that the plugin can
+        handle the report method.
+
+        Returns:
+            bool: True if the plugin can handle the report method."""
+        return True
+
+    def report(self, message: str) -> None:
+        message = remove_color_codes(message)
+        # if the message is too long, shorten it
+        if len(message) > 2000:
+            message = message[:2000] + "..."
+        self.telegram_utils.send_message(message=message)

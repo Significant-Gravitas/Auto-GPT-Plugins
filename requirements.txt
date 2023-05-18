@@ -17,8 +17,10 @@ requests-mock
 validators
 pytest
 pytest-cov
+colorama
 atproto
 bs4
 sounddevice
 vosk
 playsound
+python-telegram-bot
