@@ -73,6 +73,31 @@ class TestVoiceCommand:
         resp = plugin3.run(is_test=True)
         assert resp == "Module initialization error"
 
+    def test_fill_queue(self):
+        self.plugin._record_cb("test_data".encode(), None, None, None)
+        assert self.plugin.q.empty() is False
+
+    @patch('requests.get')
+    def test_speech_is_true(self, mock_requests):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.content = None
+        mock_requests.return_value = mock_response
+        resp = self.plugin._speech("test 1 2 3")
+        assert resp is True
+
+    def test_speech_play_sound(self):
+        resp = self.plugin._speech("test 1 2 3")
+        assert resp is True
+
+    @patch('requests.get')
+    def test_speech_is_false(self, mock_requests):
+        mock_response = MagicMock()
+        mock_response.status_code = 400
+        mock_requests.return_value = mock_response
+        resp = self.plugin._speech("test 1 2 3")
+        assert resp is False
+
     def test_get_state1(self):
 
         self.plugin.recognizer = MagicMock(return_value=KaldiRecognizerMockup)

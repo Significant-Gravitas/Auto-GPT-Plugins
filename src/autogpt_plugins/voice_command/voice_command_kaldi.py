@@ -149,10 +149,14 @@ class VoiceCommandKaldi:
         response = requests.get(tts_url)
 
         if response.status_code == 200:
-            with open("speech_vc.mp3", "wb") as f:
-                f.write(response.content)
-            playsound("speech_vc.mp3")
-            os.remove("speech_vc.mp3")
+            if response.content is not None:
+                try:
+                    with open("speech_vc.mp3", "wb") as f:
+                        f.write(response.content)
+                    playsound("speech_vc.mp3")
+                    os.remove("speech_vc.mp3")
+                except:
+                    print("Unable to play")
             return True
         else:
             print(
