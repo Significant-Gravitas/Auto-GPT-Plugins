@@ -104,15 +104,19 @@ def send_email_with_attachment_internal(
         return f"Email went to {draft_folder}!"
 
 
-def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
+def read_emails(
+        imap_folder: str = "inbox", imap_search_command: str = "UNSEEN", limit: int = 5,
+        page: int = 1) -> str:
     """Read emails from an IMAP mailbox.
 
-    This function reads emails from a specified IMAP folder, using a given IMAP search command.
+    This function reads emails from a specified IMAP folder, using a given IMAP search command, limits, and page numbers.
     It returns a list of emails with their details, including the sender, recipient, date, CC, subject, and message body.
 
     Args:
         imap_folder (str, optional): The name of the IMAP folder to read emails from. Defaults to "inbox".
         imap_search_command (str, optional): The IMAP search command to filter emails. Defaults to "UNSEEN".
+        limit (int, optional): Number of email's the function should return. Defaults to 5 emails.
+        page (int, optional): The index of the page result the function should resturn. Defaults to 0, the first page.
 
     Returns:
         str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
@@ -192,7 +196,22 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
             f"There are no Emails in your folder `{imap_folder}` "
             f"when searching with imap command `{imap_search_command}`"
         )
-    return messages
+
+    # Calculate paginated indexes
+    if limit < 1:
+        raise ValueError("Error: The message limit should be 1 or greater")
+
+    page_count = len(messages) // limit + (len(messages) % limit > 0)
+
+    if page < 1 or page > page_count:
+        raise ValueError("Error: The page value references a page that is not part of the results")
+
+    start_index = len(messages) - (page * limit + 1)
+    end_index = start_index + limit
+    start_index = max(start_index, 0)
+
+    # Return paginated indexes
+    return messages[start_index:end_index]
 
 
 def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
