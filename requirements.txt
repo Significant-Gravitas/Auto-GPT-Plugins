@@ -21,3 +21,4 @@ colorama
 atproto
 requests
 bs4
+python-telegram-bot
