@@ -8,6 +8,7 @@ import smtplib
 import time
 from email.header import decode_header
 from email.message import EmailMessage
+from bs4 import BeautifulSoup
 
 
 
@@ -166,6 +167,9 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
                         pass
 
                 body = get_email_body(msg)
+                # Clean email body
+                body = clean_email_body(body)
+
                 from_address = msg["From"]
                 to_address = msg["To"]
                 date = msg["Date"]
@@ -248,3 +252,35 @@ def split_imap_search_command(input_string):
     parts = [part.strip() for part in parts]
 
     return parts
+
+def clean_email_body(email_body):
+    """Remove formating and URL's from an email's body
+
+    Args:
+        email_body (str, optional): The email's body
+
+    Returns:
+        str: The email's body without any formating or URL's
+    """
+
+    # If body is None, return an empty string
+    if email_body is None: email_body = ""
+
+    # Remove any HTML tags
+    email_body = BeautifulSoup(email_body, "html.parser")
+    email_body = email_body.get_text()
+
+    # Remove return characters
+    email_body = "".join(email_body.splitlines())
+
+    # Remove extra spaces
+    email_body = " ".join(email_body.split())
+
+    # Remove unicode characters
+    email_body = email_body.encode("ascii", "ignore")
+    email_body = email_body.decode("utf-8", "ignore")
+
+    # Remove any remaining URL's
+    email_body = re.sub(r"http\S+", "", email_body)
+
+    return email_body

@@ -19,7 +19,21 @@ MOCK_FROM = "sender@example.com"
 MOCK_PWD = "secret"
 MOCK_TO = "test@example.com"
 MOCK_DATE = "Fri, 21 Apr 2023 10:00:00 -0000"
-MOCK_CONTENT = "Test message\n"
+MOCK_CONTENT = "Test message"
+MOCK_CONTENT_DIRTY = """
+                        <html>
+                            <head>
+                                <title> Email Title </title>
+                            </head>
+                            <body>
+                                This is an
+                                <div>email template</div>
+                                with a \n return character
+                                and a link at the end</a>
+                            </body>
+                        </html>
+                         (https://e.com) 
+                    """
 MOCK_SUBJECT = "Test Subject"
 MOCK_IMAP_SERVER = "imap.example.com"
 MOCK_SMTP_SERVER = "smtp.example.com"
@@ -492,6 +506,51 @@ class TestEmailPlugin(unittest.TestCase):
                 "CC": "",
                 "Subject": MOCK_SUBJECT,
                 "Message Body": "�������\n",
+            }
+        ]
+        assert result == expected_result
+
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
+
+    # Test for cleaning an email's bodies
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+        },
+    )
+    def test_clean_email_body(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = MOCK_SUBJECT
+        message.set_content(MOCK_CONTENT_DIRTY)
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails function
+        result = read_emails("inbox", "UNSEEN")
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": MOCK_SUBJECT,
+                "Message Body": MOCK_CONTENT,
             }
         ]
         assert result == expected_result
