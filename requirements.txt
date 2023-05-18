@@ -13,6 +13,7 @@ pylint
 pytest
 pytest-cov
 python-lorem
+python-telegram-bot
 requests
 requests-mock
 setuptools
