@@ -2,7 +2,7 @@ import json
 import os
 import pytest
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, mock_open
 
 from .voice_command_kaldi import VoiceCommandKaldi
 
@@ -31,6 +31,7 @@ class TestVoiceCommand:
 
     @pytest.fixture(autouse=True)
     def setUp(self):
+
         os.environ["VOICE_COMMAND_ENABLE"] = "True"
         os.environ["VOICE_COMMAND_SDK"] = "kaldi"
         # os.environ["VOICE_COMMAND_INITCALL"] = "hello"
@@ -80,7 +81,10 @@ class TestVoiceCommand:
         self.plugin._speech = MagicMock(return_value=mock_speech)
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "hello"}))
-        resp = self.plugin.run(is_test=True)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True)
         assert resp == "yes sir"
 
     def test_get_state2_no(self):
@@ -90,7 +94,10 @@ class TestVoiceCommand:
         self.plugin._speech = MagicMock(return_value=mock_speech)
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "no"}))
-        resp = self.plugin.run(is_test=True, force_state=2)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=2)
         assert resp == "n"
 
     def test_get_state2_yes(self):
@@ -100,7 +107,10 @@ class TestVoiceCommand:
         self.plugin._speech = MagicMock(return_value=mock_speech)
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "yes"}))
-        resp = self.plugin.run(is_test=True, force_state=2)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=2)
         assert resp == "y"
 
     def test_get_state2_query_without_confirmation(self):
@@ -111,7 +121,10 @@ class TestVoiceCommand:
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "call me"}))
         self.plugin.confirmation = False
-        resp = self.plugin.run(is_test=True, force_state=2)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=2)
         assert resp == "call me"
 
     def test_get_state2_query_with_confirmation(self):
@@ -122,7 +135,10 @@ class TestVoiceCommand:
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "call me"}))
         self.plugin.confirmation = True
-        resp = self.plugin.run(is_test=True, force_state=2)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=2)
         assert resp == "Did you say call me ? yes or no"
 
     def test_get_state3_no(self):
@@ -133,7 +149,10 @@ class TestVoiceCommand:
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "no"}))
         self.plugin.confirmation = True
-        resp = self.plugin.run(is_test=True, force_state=3)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=3)
         assert resp == "Please repeat again"
 
     def test_get_state3_yes(self):
@@ -144,5 +163,8 @@ class TestVoiceCommand:
         self.plugin._record_cb = MagicMock(return_value=mock_record_cb)
         self.plugin.recognizer.Result = MagicMock(return_value=json.dumps({"text": "yes"}))
         self.plugin.confirmation = True
-        resp = self.plugin.run(is_test=True, force_state=3)
+
+        m = mock_open()
+        with patch('sounddevice.RawInputStream', m, create=True):
+            resp = self.plugin.run(is_test=True, force_state=3)
         assert resp == "testing"
