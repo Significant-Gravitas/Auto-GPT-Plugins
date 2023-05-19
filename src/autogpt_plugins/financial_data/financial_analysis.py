@@ -4,6 +4,7 @@ from yahooquery import Ticker
 from datetime import datetime 
 import requests
 from bs4 import BeautifulSoup
+import os
 
 def download_data(symbol, start_date, end_date):
     data = yf.download(symbol, start_date, end_date)

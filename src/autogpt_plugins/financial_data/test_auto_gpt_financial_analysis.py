@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch, Mock
-import os
 from datetime import datetime
 import yfinance as yf
 import pandas as pd
