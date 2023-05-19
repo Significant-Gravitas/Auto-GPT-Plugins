@@ -5,7 +5,6 @@ from datetime import datetime
 import yfinance as yf
 import pandas as pd
 import numpy as np
-
 from .financial_analysis import download_data, fetch_financial_data, calc_stats, get_yahoo_finance_news, generate_financial_data
 from . import AutoGPTFinancialAnalysis
 
@@ -28,14 +27,14 @@ class TestAutoGPTFinancialAnalysis(unittest.TestCase):
     def test_can_handle_pre_command(self):
         self.assertTrue(self.plugin.can_handle_pre_command())
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.yf.download')
+    @patch('financial_analysis.yf.download')
     def test_download_data(self, mock_download):
         mock_download.return_value = self.dummy_data
         data = download_data(self.symbol, "2022-01-01", "2023-01-01")
         self.assertTrue(isinstance(data, pd.DataFrame))
         self.assertEqual(len(data), 10)
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.Ticker')
+    @patch('financial_analysis.Ticker')
     def test_fetch_financial_data(self, mock_ticker):
         df_income = pd.DataFrame({
             'periodType': ['3M', '3M', '6M', '6M'],
@@ -77,15 +76,15 @@ class TestAutoGPTFinancialAnalysis(unittest.TestCase):
         result = fetch_financial_data(self.symbol)
         self.assertTrue(isinstance(result, str))
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.yf.Ticker')
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.download_data')
+    @patch('financial_analysis.yf.Ticker')
+    @patch('financial_analysis.download_data')
     def test_calc_stats(self, mock_download_data, mock_ticker):
         mock_download_data.return_value = self.dummy_data
         mock_ticker.return_value.info.get.return_value = "2022-01-01"
         result = calc_stats(self.symbol)
         self.assertTrue(isinstance(result, str))
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.requests.get')
+    @patch('financial_analysis.requests.get')
     def test_get_yahoo_finance_news(self, mock_get):
         mock_response = Mock()
         mock_response.content = b'<rss><channel><item><title>Test news</title><pubDate>2023-05-19</pubDate><description>Test description</description></item></channel></rss>'
@@ -93,9 +92,9 @@ class TestAutoGPTFinancialAnalysis(unittest.TestCase):
         result = get_yahoo_finance_news(self.symbol)
         self.assertTrue(isinstance(result, str))
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.fetch_financial_data')
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.calc_stats')
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.get_yahoo_finance_news')
+    @patch('financial_analysis.fetch_financial_data')
+    @patch('financial_analysis.calc_stats')
+    @patch('financial_analysis.get_yahoo_finance_news')
     def test_generate_financial_data(self, mock_news, mock_stats, mock_fin_data):
         mock_news.return_value = "News"
         mock_stats.return_value = "Stats"
@@ -103,7 +102,7 @@ class TestAutoGPTFinancialAnalysis(unittest.TestCase):
         result = generate_financial_data(self.symbol)
         self.assertTrue(isinstance(result, str))
 
-    @patch('src.autogpt_plugin_financial_analysis.financial_analysis.os.getcwd')
+    @patch('financial_analysis.os.getcwd')
     def test_pre_command(self, mock_getcwd):
         mock_getcwd.return_value = '/home'
         command_name, arguments = self.plugin.pre_command(
