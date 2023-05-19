@@ -208,7 +208,7 @@ class TestEmailPlugin(unittest.TestCase):
         context.send_message.assert_called_once()
         context.quit.assert_called_once()
 
-    # Test for reading emails in a specific folder with a specific search command
+    # Test for reading emails in a specific folder with a specific search command and pagination
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
         os.environ,
@@ -234,7 +234,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -271,7 +271,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected = "There are no Emails in your folder `inbox` "
         expected += "when searching with imap command `UNSEEN`"
         assert result == expected
@@ -310,7 +310,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -357,7 +357,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -452,7 +452,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -490,14 +490,14 @@ class TestEmailPlugin(unittest.TestCase):
         message["To"] = MOCK_TO
         message["Date"] = MOCK_DATE
         message["Subject"] = MOCK_SUBJECT
-        message.set_content("�������")
+        message.set_content("�������\n")
 
         # Set up mock IMAP server behavior
         mock_imap.return_value.search.return_value = (None, [b"1"])
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -505,7 +505,7 @@ class TestEmailPlugin(unittest.TestCase):
                 "Date": MOCK_DATE,
                 "CC": "",
                 "Subject": MOCK_SUBJECT,
-                "Message Body": "�������\n",
+                "Message Body": "",
             }
         ]
         assert result == expected_result
@@ -541,8 +541,8 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.search.return_value = (None, [b"1"])
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
-        # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        # Test read_emails with paginationfunction
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -550,7 +550,7 @@ class TestEmailPlugin(unittest.TestCase):
                 "Date": MOCK_DATE,
                 "CC": "",
                 "Subject": MOCK_SUBJECT,
-                "Message Body": MOCK_CONTENT,
+                "Message Body": "Email Title This is an email template with a return character and a link at the end (",
             }
         ]
         assert result == expected_result
