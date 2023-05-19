@@ -216,7 +216,10 @@ def read_emails(
     start_index = max(start_index, 0)
 
     # Return paginated indexes
-    return messages[start_index:end_index]
+    if start_index == end_index:
+        return [messages[start_index]]
+    else:
+        return messages[start_index:end_index]
 
 
 def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
