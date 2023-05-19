@@ -22,3 +22,5 @@ atproto
 requests
 bs4
 python-telegram-bot
+yfinance
+yahooquery
