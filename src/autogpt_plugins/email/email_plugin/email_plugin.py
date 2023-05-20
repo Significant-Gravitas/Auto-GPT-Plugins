@@ -8,6 +8,8 @@ import smtplib
 import time
 from email.header import decode_header
 from email.message import EmailMessage
+from bs4 import BeautifulSoup
+
 
 
 def bothEmailAndPwdSet() -> bool:
@@ -102,15 +104,19 @@ def send_email_with_attachment_internal(
         return f"Email went to {draft_folder}!"
 
 
-def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN") -> str:
+def read_emails(
+        imap_folder: str = "inbox", imap_search_command: str = "UNSEEN", limit: int = 5,
+        page: int = 1) -> str:
     """Read emails from an IMAP mailbox.
 
-    This function reads emails from a specified IMAP folder, using a given IMAP search command.
+    This function reads emails from a specified IMAP folder, using a given IMAP search command, limits, and page numbers.
     It returns a list of emails with their details, including the sender, recipient, date, CC, subject, and message body.
 
     Args:
         imap_folder (str, optional): The name of the IMAP folder to read emails from. Defaults to "inbox".
         imap_search_command (str, optional): The IMAP search command to filter emails. Defaults to "UNSEEN".
+        limit (int, optional): Number of email's the function should return. Defaults to 5 emails.
+        page (int, optional): The index of the page result the function should resturn. Defaults to 0, the first page.
 
     Returns:
         str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
@@ -145,12 +151,29 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
+                
+                # If the subject has unknown encoding, return blank
+                if msg["Subject"] is not None:
+                    subject, encoding = decode_header(msg["Subject"])[0]
+                else:
+                    subject = ""
+                    encoding = ""
 
-                subject, encoding = decode_header(msg["Subject"])[0]
+
                 if isinstance(subject, bytes):
-                    subject = subject.decode(encoding)
+                    try:
+                        # If the subject has unknown encoding, return blank
+                        if encoding is not None:
+                            subject = subject.decode(encoding)
+                        else:
+                            subject = ""
+                    except [LookupError] as e:
+                        pass
 
                 body = get_email_body(msg)
+                # Clean email body
+                body = clean_email_body(body)
+
                 from_address = msg["From"]
                 to_address = msg["To"]
                 date = msg["Date"]
@@ -173,7 +196,30 @@ def read_emails(imap_folder: str = "inbox", imap_search_command: str = "UNSEEN")
             f"There are no Emails in your folder `{imap_folder}` "
             f"when searching with imap command `{imap_search_command}`"
         )
-    return messages
+
+    # Confirm that integer parameters are the right type
+    limit = int(limit)
+    page = int(page)
+
+    # Validate parameter values
+    if limit < 1:
+        raise ValueError("Error: The message limit should be 1 or greater")
+
+    page_count = len(messages) // limit + (len(messages) % limit > 0)
+
+    if page < 1 or page > page_count:
+        raise ValueError("Error: The page value references a page that is not part of the results")
+
+    # Calculate paginated indexes
+    start_index = len(messages) - (page * limit + 1)
+    end_index = start_index + limit
+    start_index = max(start_index, 0)
+
+    # Return paginated indexes
+    if start_index == end_index:
+        return [messages[start_index]]
+    else:
+        return messages[start_index:end_index]
 
 
 def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
@@ -201,10 +247,17 @@ def get_email_body(msg: email.message.Message) -> str:
             content_type = part.get_content_type()
             content_disposition = str(part.get("Content-Disposition"))
             if content_type == "text/plain" and "attachment" not in content_disposition:
-                return part.get_payload(decode=True).decode()
+                # If the email body has unknown encoding, return null
+                try:
+                    return part.get_payload(decode=True).decode()
+                except UnicodeDecodeError as e:
+                    pass
     else:
-        return msg.get_payload(decode=True).decode()
-
+        try:
+            # If the email body has unknown encoding, return null
+            return msg.get_payload(decode=True).decode()
+        except UnicodeDecodeError as e:
+            pass
 
 def enclose_with_quotes(s):
     # Check if string contains whitespace
@@ -226,3 +279,35 @@ def split_imap_search_command(input_string):
     parts = [part.strip() for part in parts]
 
     return parts
+
+def clean_email_body(email_body):
+    """Remove formating and URL's from an email's body
+
+    Args:
+        email_body (str, optional): The email's body
+
+    Returns:
+        str: The email's body without any formating or URL's
+    """
+
+    # If body is None, return an empty string
+    if email_body is None: email_body = ""
+
+    # Remove any HTML tags
+    email_body = BeautifulSoup(email_body, "html.parser")
+    email_body = email_body.get_text()
+
+    # Remove return characters
+    email_body = "".join(email_body.splitlines())
+
+    # Remove extra spaces
+    email_body = " ".join(email_body.split())
+
+    # Remove unicode characters
+    email_body = email_body.encode("ascii", "ignore")
+    email_body = email_body.decode("utf-8", "ignore")
+
+    # Remove any remaining URL's
+    email_body = re.sub(r"http\S+", "", email_body)
+
+    return email_body
