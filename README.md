@@ -96,6 +96,7 @@ Some third-party plugins have been created by contributors that are not included
 | Mastodon  | Simple Mastodon plugin to send toots through a Mastodon account | [ppetermann/AutoGPTMastodonPlugin](https://github.com/ppetermann/AutoGPTMastodonPlugin)
 | MetaTrader | Connect your MetaTrader Account to Auto-GPT. | [isaiahbjork/Auto-GPT-MetaTrader-Plugin](https://github.com/isaiahbjork/Auto-GPT-MetaTrader-Plugin) |
 | Notion      | Notion plugin for Auto-GPT.  | [doutv/Auto-GPT-Notion](https://github.com/doutv/Auto-GPT-Notion) |
+| Slack | This plugin allows to receive commands and send messages to slack channels | [adithya77/Auto-GPT-slack-plugin](https://github.com/adithya77/Auto-GPT-slack-plugin)
 | Spoonacular | Find recipe insiprations using Auto-GPT | [minfenglu/Auto-GPT-Spoonacular-Plugin](https://github.com/minfenglu/Auto-GPT-Spoonacular-Plugin)
 | System Information      | This plugin adds an extra line to the prompt, serving as a hint for the AI to use shell commands likely supported by the current system. By incorporating this plugin, you can ensure that the AI model provides more accurate and system-specific shell commands, improving its overall performance and usefulness. | [hdkiller/Auto-GPT-SystemInfo](https://github.com/hdkiller/Auto-GPT-SystemInfo) |
 | TiDB Serverless   | Connect your TiDB Serverless database to Auto-GPT, enable get query results from database | [pingcap/Auto-GPT-TiDB-Serverless-Plugin](https://github.com/pingcap/Auto-GPT-TiDB-Serverless-Plugin)
