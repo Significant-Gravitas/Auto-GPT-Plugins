@@ -1,22 +1,22 @@
 # Auto-GPT-Plugins
 
 > ⚠️💀 **WARNING** 💀⚠️:
-> Review the code of any plugin you use thoroughly, as plugins can execute any Python code, potentially leading to malicious activities, such as stealing your API keys.
+> Always examine the code of any plugin you use thoroughly, as plugins can execute any Python code, leading to potential malicious activities such as stealing your API keys.
 
 > ⚙️ **WORK IN PROGRESS** ⚙️:
-> The plugin api is not yet stabilized. If you are coding a plugin, expect it to change in the next few versions.
+> The plugin API is still being refined. If you are developing a plugin, expect changes in the upcoming versions.
 
 ## Installation
 
 **_⚠️This is a work in progress⚠️_**
 
-Follow these steps to configure the Auto-GPT Plugins:
+Here are the steps to configure Auto-GPT Plugins:
 
 1. **Install Auto-GPT**
 
-   If you haven't already, follow the installation instructions provided by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to install it.
+   If you haven't done so, follow the installation instructions given by [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to install it.
 
-1. **Run the following to pull the plugins folder down from the `root` of `Auto-GPT` directory**
+1. **Download the plugins folder from the `root` of `Auto-GPT` directory**
 
     To download it directly from your Auto-GPT directory, you can run this command on Linux or MacOS:
 
@@ -24,14 +24,16 @@ Follow these steps to configure the Auto-GPT Plugins:
     curl -L -o ./plugins/Auto-GPT-Plugins.zip https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip
     ```
 
-    In PowerShell:
+    Or in PowerShell:
 
     ```pwsh
     Invoke-WebRequest -Uri "https://github.com/Significant-Gravitas/Auto-GPT-Plugins/archive/refs/heads/master.zip"     -OutFile "./plugins/Auto-GPT-Plugins.zip"
     ```
 
-1. **Run the dependency install script for plugins**
-    You can run it with either:
+1. **Execute the dependency install script for plugins**
+
+    This can be run via:
+
     Linux or MacOS:
 
     ```bash
@@ -54,9 +56,9 @@ Follow these steps to configure the Auto-GPT Plugins:
 
 > For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
 
-There are two kinds of plugins: **first party** and **third party**. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you. **You can see all the plugins and their contributors on this [directory](https://autoplugins.vercel.app/).**
+There are two categories of plugins: **first party** and **third party**. First-party plugins are included in this repo and are installed by default when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for widely-used plugins, and third-party for your specific needs. **You can view all the plugins and their contributors on this [directory](https://autoplugins.vercel.app/).**
 
-If you built a plugin and it's not on the directory yet simply make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
+If you've built a plugin and it's not listed in the directory, you can make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
 
 You can also see the plugins here:
 
@@ -71,9 +73,9 @@ You can also see the plugins here:
 | News Search      | This search plugin integrates News Articles searches, using the NewsAPI aggregator into Auto-GPT.                 | [autogpt_plugins/news_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/news_search)   |
 | Random Values    | Enable Auto-GPT to generate various random numbers and strings.                                                    | [autogpt_plugins/random_values](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/random_values) |
 | SceneX           | Explore image storytelling beyond pixels with the Auto-GPT SceneX Plugin.                                        | [autogpt_plugins/scenex](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/scenex)               |
+| Telegram |  A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [autogpt_plugins/telegram](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/telegram) |
 | Twitter          | AutoGPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.               | [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)           |
 | Wikipedia Search | This allows AutoGPT to use Wikipedia directly.                                                                    | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search) |
-| Telegram |  A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [autogpt_plugins/telegram](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/telegram) |
 
 
 Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
@@ -111,11 +113,11 @@ For interactionless use, set:
 `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to allow plugins to load without prompting.
 `DENYLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to block plugins from loading without prompting.
 
-## Making a plugin
+## Creating a Plugin
 
 Creating a plugin is a rewarding experience! You can choose between first-party or third-party plugins. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you.
 
-### First Party How-To
+### First Party Plugins How-To
 
 1. Clone the plugins repo
 1. Follow the structure of the other plugins, implementing the plugin interface as required
@@ -126,26 +128,26 @@ Creating a plugin is a rewarding experience! You can choose between first-party 
 1. Add your plugin to the [plugin installation integration test](.github/workflows/test-plugin-installation.yml)
 1. Make a PR back to this repo!
 
-### Third Party How-To
+### Third Party Plugins How-To
 
-1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
-1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template)
+1. Clone [the third party template](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template).
+1. Follow the instructions in the [third party template readme](https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template).
 
 ### Migrating Third Party to First Party
 
-> Thanks for contributing a plugin to the project!
+We appreciate your contribution of a plugin to the project!
 
-1. Clone this repo.
-1. Make a folder for your plugin under `src/autogpt_plugins`. Name it a simple descriptive name such as `notion`, `twitter`, or `web_ui`.
-1. Take the files from your third-party plugin located at `src/auto_gpt_plugin_template` and add them into the folder you created
-1. Add your readme from your third-party plugin to the folder you created
-1. Add your plugin to the root readme with a description and a link to your plugin-specific readme
-1. Add your plugin's Python package requirements to `requirements.txt`
-1. Add tests to get your plugin to 80% code coverage
-1. Add your name to the [codeowners](.github/CODEOWNERS) file
-1. Add your plugin to the [Readme](README.md)
-1. Make a PR back to this repo!
+1. Clone this repository.
+1. Make a folder for your plugin under `src/autogpt_plugins`. Use a simple descriptive name such as `notion`, `twitter`, or `web_ui`.
+1. Add the files from your third-party plugin located at `src/auto_gpt_plugin_template` into the folder you created.
+1. Include your README from your third-party plugin in the folder you created.
+1. Add your plugin to the root README with a description and a link to your plugin-specific README.
+1. Add your plugin's Python package requirements to `requirements.txt`.
+1. Add tests to get your plugin to 80% code coverage.
+1. Add your name to the [codeowners](.github/CODEOWNERS) file.
+1. Add your plugin to the [Readme](README.md).
+1. Submit a pull request back to this repository!
 
 ## Get Help
 
-Visit the [discord](https://discord.gg/autogpt) server for more information.
+For more information, visit the [discord](https://discord.gg/autogpt) server.
