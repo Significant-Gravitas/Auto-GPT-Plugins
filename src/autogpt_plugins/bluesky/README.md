@@ -17,7 +17,7 @@ A plugin that adds Bluesky API integration into Auto GPT
 ### BLUESKY API
 ################################################################################
 
-# Create an App Password here: Bluesky -> Settings -> Advanced -> App Passwords
+##Create an App Password here: Bluesky -> Settings -> Advanced -> App Passwords
 
 BLUESKY_USERNAME=
 BLUESKY_APP_PASSWORD=
