@@ -33,7 +33,18 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
 
         if bothEmailAndPwdSet():
             prompt.add_command(
-                "Read Emails",
+                "Read Emails and Return Summarized Results",
+                "read_summarized_emails",
+                {
+                    "imap_folder": "<imap_folder>",
+                    "imap_search_command": "<imap_search_criteria_command>",
+                    "limit": "<email_count_return_limit>",
+                    "page": "<number_of_email_results_page>",
+                },
+                read_emails,
+            )
+            prompt.add_command(
+                "Read Emails and Return Detailed Results",
                 "read_emails",
                 {
                     "imap_folder": "<imap_folder>",
@@ -50,7 +61,7 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
                 send_email,
             )
             prompt.add_command(
-                "Send Email",
+                "Send Email with Attachments",
                 "send_email_with_attachment",
                 {
                     "to": "<to>",
