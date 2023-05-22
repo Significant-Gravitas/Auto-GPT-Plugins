@@ -1,3 +1,4 @@
+""" This module is responsible for loading unzipped plugins. """
 import importlib.util
 import subprocess
 from pathlib import Path
@@ -5,8 +6,18 @@ import sys
 
 
 class PluginManager:
+    """
+    This class is responsible for loading unzipped plugins.
+    """
+
     @staticmethod
     def install_plugin_requirements(plugins_dir: Path):
+        """
+        Searches through the unzipped plugins and installs any requirements.txt files
+
+        Args:
+            plugins_dir (Path): The path to the plugins directory.
+        """
         # Find all dirs that contain a requirements.txt file.
         for path in plugins_dir.rglob("requirements.txt"):
             try:
@@ -17,7 +28,16 @@ class PluginManager:
                 continue
 
     @staticmethod
-    def load_unzipped_plugins(plugins_dir: Path):
+    def load_unzipped_plugins(plugins_dir: Path) -> list:
+        """
+        Loads all unzipped plugins.
+
+        Args:
+            plugins_dir (Path): The path to the plugins directory.
+
+        Returns:
+            list: A list of loaded plugins.
+        """
         unzipped_plugins = []
 
         # Find all dirs that contain a __init__.py file.

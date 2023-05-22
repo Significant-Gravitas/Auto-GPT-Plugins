@@ -1,3 +1,7 @@
+"""
+This plugin allows developers to use unzipped plugins simplifying
+the plugin development process.
+"""
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
@@ -8,32 +12,42 @@ PromptGenerator = TypeVar("PromptGenerator")
 
 
 class Message(TypedDict):
+    """Message type for the on_response method."""
+
     role: str
     content: str
 
 
 class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
     """
-    This plugin allows developers to use unzipped plugins simplifying the plugin development process.
+    This plugin allows developers to use unzipped plugins simplifying
+    the plugin development process.
     """
 
-    def __init__(self):
+    def __init__(self, plugin_manager: PluginManager = None):
         super().__init__()
         self._name = "Auto-GPT-Allow-Unzipped-Plugins"
         self._version = "0.2.0"
-        self._description = "This plugin allows developers to use unzipped plugins simplifying the plugin development process."
+        self._description = (
+            "This plugin allows developers to use "
+            "unzipped plugins simplifying the plugin"
+            "development process."
+        )
 
         # Walk up the directory tree till you find a folder called "plugins"
         plugins_dir = Path(__file__).parent
         while plugins_dir.name != "plugins" and plugins_dir.parent != plugins_dir:
             plugins_dir = plugins_dir.parent
 
+        if plugin_manager is None:
+            plugin_manager = PluginManager
+
         if plugins_dir.name != "plugins":
-            raise Exception("Could not find plugins directory")
+            raise FileNotFoundError("Could not find plugins directory.")
 
         if os.getenv("UNZIPPED_PLUGIN_INSTALL_REQUIREMENTS", "True") == "True":
-            PluginManager.install_plugin_requirements(plugins_dir)
-        self._plugins = PluginManager.load_unzipped_plugins(plugins_dir)
+            plugin_manager.install_plugin_requirements(plugins_dir)
+        self._plugins = plugin_manager.load_unzipped_plugins(plugins_dir)
 
     def _can_handle(self, method) -> bool:
         can_handle_method = f"can_handle_{method}"
@@ -148,14 +162,15 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
     ) -> str:
         pass
 
-    def can_handle_text_embedding(self, text: str) -> bool:
+    def can_handle_text_embedding(self, text: str) -> bool:  # type: ignore
         """Not yet supported by this plugin"""
         return False
 
-    def handle_text_embedding(self, text: str) -> list:
-        pass
+    def handle_text_embedding(self, text: str) -> list:  # type: ignore
+        """Not yet supported by this plugin"""
 
     def can_handle_user_input(self, user_input: str) -> bool:
+        """Check if the plugin can handle user input."""
         return any(
             hasattr(plugin, "can_handle_user_input")
             and plugin.can_handle_user_input(user_input=user_input)
@@ -163,6 +178,9 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         )
 
     def user_input(self, user_input: str) -> str:
+        """
+        Handles user input.
+        """
         for plugin in self._plugins:
             if not hasattr(plugin, "can_handle_user_input"):
                 continue
@@ -176,9 +194,11 @@ class AutoGPTAllowUnzippedPlugins(AutoGPTPluginTemplate):
         return None
 
     def can_handle_report(self) -> bool:
+        """Checks if the plugin can handle reporting."""
         return self._can_handle("report")
 
     def report(self, message: str) -> None:
+        """Handles reporting."""
         for plugin in self._plugins:
             if not hasattr(plugin, "can_handle_report"):
                 continue
