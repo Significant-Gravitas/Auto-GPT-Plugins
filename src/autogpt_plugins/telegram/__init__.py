@@ -30,12 +30,12 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Telegram"
-        self._version = "0.1.0"
+        self._version = "0.2.0"
         self._description = (
             "This integrates a Telegram chat bot with your autogpt instance."
         )
-        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY")
-        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY", None)
+        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
         self.telegram_utils = TelegramUtils(
             chat_id=self.telegram_chat_id, api_key=self.telegram_api_key
         )
