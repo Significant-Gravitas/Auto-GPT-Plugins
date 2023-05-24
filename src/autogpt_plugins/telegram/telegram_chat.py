@@ -21,6 +21,7 @@ class TelegramUtils:
                 "For more information, please visit: https://core.telegram.org/bots/tutorial#6-botfather"
             )
             exit(1)
+
         self.api_key = api_key
 
         if not chat_id:
@@ -212,13 +213,15 @@ class TelegramUtils:
     async def _poll_updates(self):
         global response_queue
         bot = await self.get_bot()
+        print("getting updates...")
 
-        last_update = await bot.get_updates(timeout=30)
+        last_update = await bot.get_updates(timeout=1)
         if len(last_update) > 0:
             last_update_id = last_update[-1].update_id
         else:
-            last_update_id = 0
+            last_update_id = -1
 
+        print("last update id: " + str(last_update_id))
         while True:
             try:
                 print("Polling updates...")
