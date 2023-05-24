@@ -3,6 +3,7 @@ import imaplib
 import json
 import mimetypes
 import os
+import openai
 import re
 import smtplib
 import time
@@ -212,8 +213,8 @@ def read_emails(
 
     # Calculate paginated indexes
     start_index = len(messages) - (page * limit + 1)
-    end_index = start_index + limit
     start_index = max(start_index, 0)
+    end_index = start_index + limit
 
     # Return paginated indexes
     if start_index == end_index:
@@ -311,3 +312,49 @@ def clean_email_body(email_body):
     email_body = re.sub(r"http\S+", "", email_body)
 
     return email_body
+
+def read_summarized_emails(
+        imap_folder: str = "inbox", imap_search_command: str = "UNSEEN", limit: int = 5,
+        page: int = 1):
+    """Read emails from an IMAP mailbox and return summarized results
+
+    This function reads emails from a specified IMAP folder, using a given IMAP search command, limits, and page numbers.
+    It returns a list of emails with their details, including the sender, recipient, date, CC, subject, and summarized 
+    message body.
+
+    Args:
+        imap_folder (str, optional): The name of the IMAP folder to read emails from. Defaults to "inbox".
+        imap_search_command (str, optional): The IMAP search command to filter emails. Defaults to "UNSEEN".
+        limit (int, optional): Number of email's the function should return. Defaults to 5 emails.
+        page (int, optional): The index of the page result the function should resturn. Defaults to 0, the first page.
+
+    Returns:
+        str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
+             a string indicating that no matching emails were found."""
+
+    # Retrieve emails
+    emails = read_emails(imap_folder, imap_search_command, limit, page)
+
+    # Create an OpenAI connection using the Auto-GPT session's API key
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    summarized_emails = []
+    for email in emails:
+        prompt = "Summarize into only one short and concise sentence the most recent email in this email body content .\n\nEmail body:\n " + email["Message Body"] + "\n\nSummary:\n"
+    
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0.7,
+            max_tokens=50,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        
+        email["Summarized Message Body"] = response.choices[0].text
+        email.pop("Message Body")
+
+        summarized_emails.append(email)
+        
+    return summarized_emails
