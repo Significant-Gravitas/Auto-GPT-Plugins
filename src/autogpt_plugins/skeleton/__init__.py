@@ -12,9 +12,8 @@ from .skeleton import update_code_structure
 from .skeleton import force_update_code_structure
 from .skeleton import create_file
 from .skeleton import create_directory
-from .skeleton import change_directory
+from .skeleton import replace_line_in_file
 from .skeleton import write_to_file
-from .skeleton import list_files
 
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -93,6 +92,17 @@ class SkeletonPlugin(AutoGPTPluginTemplate):
                 "directory_name": "<string>",
             },
             create_directory,
+        )
+
+        prompt.add_command(
+            "replace_lines_in_file",
+            "Replaces a line in a file",
+            {
+                "file_name": "<string>",
+                "line_number": "<int>",
+                "content": "<string>",
+            },
+            replace_line_in_file,
         )
 
         return prompt

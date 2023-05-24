@@ -21,6 +21,18 @@ def write_to_file(prompt: Dict[str, Any]) -> str:
     return f"Wrote to file {file_name}"
 
 
+def replace_line_in_file(prompt: Dict[str, Any]) -> str:
+    file_name = prompt["file_name"]
+    line_number = prompt["line_number"]
+    content = prompt["content"]
+    with open(file_name, "r") as f:
+        lines = f.readlines()
+    lines[line_number] = content
+    with open(file_name, "w") as f:
+        f.writelines(lines)
+    return f"Replaced line {line_number} in file {file_name}"
+
+
 def create_directory(prompt: Dict[str, Any]) -> str:
     directory_name = prompt["directory_name"]
     os.makedirs(directory_name, exist_ok=True)
