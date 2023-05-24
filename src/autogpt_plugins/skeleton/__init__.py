@@ -95,22 +95,6 @@ class SkeletonPlugin(AutoGPTPluginTemplate):
             create_directory,
         )
 
-        prompt.add_command(
-            "change_directory",
-            "Changes the current directory",
-            {
-                "directory_name": "<string>",
-            },
-            change_directory,
-        )
-
-        prompt.add_command(
-            "list_files",
-            "Lists all the files in the current directory",
-            {},
-            list_files,
-        )
-
         return prompt
 
     def can_handle_post_prompt(self) -> bool:
