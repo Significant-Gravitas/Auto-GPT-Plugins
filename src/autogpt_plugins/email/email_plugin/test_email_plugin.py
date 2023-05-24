@@ -13,6 +13,7 @@ from email_plugin import (
     send_email,
     send_email_with_attachment_internal,
     split_imap_search_command,
+    read_summarized_emails,
 )
 
 MOCK_FROM = "sender@example.com"
@@ -555,6 +556,51 @@ class TestEmailPlugin(unittest.TestCase):
         ]
         assert result == expected_result
 
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
+
+    # Test for reading summarized emails
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+        },
+    )
+    def test_read_summarized_emails(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = MOCK_SUBJECT
+        message.set_content(MOCK_CONTENT_DIRTY)
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails with paginationfunction
+        result = read_summarized_emails("inbox", "UNSEEN", 1, 1)
+        message_body = result[0].pop("Summarized Message Body")
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": MOCK_SUBJECT,
+            }
+        ]
+        assert result == expected_result
+        assert message_body != MOCK_CONTENT_DIRTY
         # Check if the IMAP object was created and used correctly
         mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
         mock_imap.return_value.select.assert_called_once_with("inbox")
