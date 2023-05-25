@@ -5,26 +5,19 @@ from typing import Dict, Any
 
 
 # Command functions
-def create_file(prompt: Dict[str, Any]) -> str:
-    file_name = prompt["file_name"]
-    initial_content = prompt.get("initial_content", "")
+def create_file(file_name, initial_content) -> str:
     with open(file_name, "w") as f:
         f.write(initial_content)
     return f"Created file {file_name}"
 
 
-def write_to_file(prompt: Dict[str, Any]) -> str:
-    file_name = prompt["file_name"]
-    content = prompt["content"]
+def write_to_file(file_name, content) -> str:
     with open(file_name, "a") as f:
         f.write(content)
     return f"Wrote to file {file_name}"
 
 
-def replace_line_in_file(prompt: Dict[str, Any]) -> str:
-    file_name = prompt["file_name"]
-    line_number = prompt["line_number"]
-    content = prompt["content"]
+def replace_line_in_file(file_name, line_number, content) -> str:
     with open(file_name, "r") as f:
         lines = f.readlines()
     lines[line_number] = content
@@ -33,16 +26,9 @@ def replace_line_in_file(prompt: Dict[str, Any]) -> str:
     return f"Replaced line {line_number} in file {file_name}"
 
 
-def create_directory(prompt: Dict[str, Any]) -> str:
-    directory_name = prompt["directory_name"]
+def create_directory(directory_name) -> str:
     os.makedirs(directory_name, exist_ok=True)
     return f"Created directory {directory_name}"
-
-
-def change_directory(prompt: Dict[str, Any]) -> str:
-    directory_name = prompt["directory_name"]
-    os.chdir(directory_name)
-    return f"Changed directory to {directory_name}"
 
 
 def list_files() -> str:
@@ -123,7 +109,7 @@ def update_code_structure() -> str:
     )
 
 
-def force_update_code_structure(prompt: Dict[str, Any]) -> str:
+def force_update_code_structure() -> str:
     # Get a list of all files in the current directory
     files = [path for path in os.listdir() if os.path.isfile(path)]
 
