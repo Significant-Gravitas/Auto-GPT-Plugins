@@ -164,8 +164,10 @@ class TelegramUtils:
         global response_queue
 
         # only display confirm if the prompt doesnt have the string ""Continue (y/n):"" inside
-        if "Continue (y/n):" not in prompt:
-            question = prompt + " \n Confirm: /yes     Decline: /no \n Or type your answer."
+        if "Continue (y/n):" in prompt or "Waiting for your response..." in prompt:
+            question = prompt + " \n Confirm: /yes     Decline: /no \n Or type your answer. \n or press /auto to let an Agent decide."
+        elif "I want Auto-GPT to:" in prompt:
+            question = prompt
         else:
             question = prompt + " \n Type your answer or press /auto to let an Agent decide."
 
@@ -189,16 +191,7 @@ class TelegramUtils:
                 prompt="You can use /stop to stop me \n and /start to start me again.",
             )
         if response_queue == "/auto":
-            response_queue = await self.ask_user(
-                self,
-                prompt="By this I will make the decision on my own, are you sure? \n Confirm: /yes     Decline: /no \n Or type your answer.",
-            )
-            if response_queue == "/yes":
-                return "s"
-            elif response_queue == "/no":
-                self.ask_user_async(
-                    prompt="Okay. Please type your answer for the previous question: \n {prompt} \n Confirm: /yes     Decline: /no \n Or type your answer.")
-
+            return "s"
         if response_queue == "/stop":
             self.send_message("Stopping Auto-GPT now!")
             exit(0)
