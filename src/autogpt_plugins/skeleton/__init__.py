@@ -31,7 +31,7 @@ class SkeletonPlugin(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "AutoGPT-Skeleton-Plugin"
+        self._name = "Code-Structure-Plugin"
         self._version = "0.0.1"
         self._description = ""
 

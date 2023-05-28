@@ -73,7 +73,7 @@ def update_code_structure() -> str:
     files = [file for file in files if file not in code_structure]
 
     model = os.getenv("SKELETON_MODEL", os.getenv("FAST_LLM_MODEL", "gpt-3.5-turbo"))
-    max_tokens = os.getenv("SKELETONM_TOKEN_LIMIT", os.getenv("FAST_TOKEN_LIMIT", 1500))
+    max_tokens = os.getenv("SKELETON_TOKEN_LIMIT", os.getenv("FAST_TOKEN_LIMIT", 1500))
     temperature = os.getenv("SKELETON_TEMPERATURE", os.getenv("TEMPERATURE", 0.5))
 
     # Generate descriptions for the remaining files
@@ -119,6 +119,7 @@ def force_update_code_structure() -> str:
     model = os.getenv("SKELETON_MODEL", os.getenv("FAST_LLM_MODEL", "gpt-3.5-turbo"))
     max_tokens = os.getenv("SKELETONM_TOKEN_LIMIT", os.getenv("FAST_TOKEN_LIMIT", 1500))
     temperature = os.getenv("SKELETON_TEMPERATURE", os.getenv("TEMPERATURE", 0.5))
+    prompt_prefix = os.getenv("SKELETON_PROMPT_PREFIX", os.getenv("PROMPT_PREFIX", "You are an assistant that generates descriptions of Python code files. Please describe the following file: {file}"))
 
     # Generate descriptions for all files
     for file in files:
@@ -128,7 +129,7 @@ def force_update_code_structure() -> str:
             messages=[
                 {
                     "role": "system",
-                    "content": f"You are an assistant that generates descriptions of Python code files. Please describe the following file: {file}",
+                    "content": prompt_prefix.format(file=file),
                 },
                 {
                     "role": "user",
