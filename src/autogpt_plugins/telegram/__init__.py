@@ -253,8 +253,7 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def user_input(self, user_input: str) -> str:
         user_input = remove_color_codes(user_input)
         # if the user_input is too long, shorten it
-        if len(user_input) > 2000:
-            user_input = user_input[:2000] + "..."
+
         return self.telegram_utils.ask_user(prompt=user_input)
 
     def can_handle_report(self) -> bool:
@@ -268,6 +267,5 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def report(self, message: str) -> None:
         message = remove_color_codes(message)
         # if the message is too long, shorten it
-        if len(message) > 2000:
-            message = message[:2000] + "..."
+
         self.telegram_utils.send_message(message=message)

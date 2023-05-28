@@ -158,7 +158,14 @@ class TelegramUtils:
         print("Sending message to Telegram.. ")
         recipient_chat_id = self.chat_id
         bot = await self.get_bot()
-        await bot.send_message(chat_id=recipient_chat_id, text=message)
+
+        # properly handle messages with more than 2000 characters by chunking them
+        if len(message) > 2000:
+            message_chunks = [message[i:i + 2000] for i in range(0, len(message), 2000)]
+            for message_chunk in message_chunks:
+                await bot.send_message(chat_id=recipient_chat_id, text=message_chunk)
+        else:
+            await bot.send_message(chat_id=recipient_chat_id, text=message)
 
     async def ask_user_async(self, prompt):
         global response_queue
