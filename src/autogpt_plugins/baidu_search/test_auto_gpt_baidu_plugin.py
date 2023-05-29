@@ -1,38 +1,36 @@
 import os
+import requests
 import unittest
 from typing import List
-
-import requests
-
-from . import AutoGPTBingSearch
-from .bing_search import _bing_search
+from . import AutoGPTBaiduSearch
+from .baidu_search import _baidu_search
 
 
-class TestAutoGPTBingSearch(unittest.TestCase):
+class TestAutoGPTBaiduSearch(unittest.TestCase):
     def setUp(self):
-        os.environ["BING_API_KEY"] = "test_key"
-        os.environ["SEARCH_ENGINE"] = "bing"
-        self.plugin = AutoGPTBingSearch()
+        os.environ["BAIDU_COOKIE"] = "test_cookie"
+        os.environ["SEARCH_ENGINE"] = "baidu"
+        self.plugin = AutoGPTBaiduSearch()
 
     def tearDown(self):
         os.environ.pop("SEARCH_ENGINE", None)
-        os.environ.pop("BING_API_KEY", None)
+        os.environ.pop("BAIDU_COOKIE", None)
 
-    def test_bing_search(self):
+    def test_baidu_search(self):
         query = "test query"
         try:
-            _bing_search(query)
+            _baidu_search(query)
         except requests.exceptions.HTTPError as e:
             self.assertEqual(e.response.status_code, 401)
 
     def test_pre_command(self):
-        os.environ["SEARCH_ENGINE"] = "bing"
-        self.plugin = AutoGPTBingSearch()
+        os.environ["SEARCH_ENGINE"] = "baidu"
+        self.plugin = AutoGPTBaiduSearch()
 
         command_name, arguments = self.plugin.pre_command(
             "google", {"query": "test query"}
         )
-        self.assertEqual(command_name, "bing_search")
+        self.assertEqual(command_name, "baidu_search")
         self.assertEqual(arguments, {"query": "test query"})
 
     def test_can_handle_pre_command(self):

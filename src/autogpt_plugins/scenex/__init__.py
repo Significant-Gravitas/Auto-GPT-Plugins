@@ -1,8 +1,10 @@
-"""This is the email plugin for Auto-GPT."""
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-
+"""This is a SceneX plugin for describing images for Auto-GPT."""
+import os
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
+
+from .scenex_plugin import SceneXplain
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -12,58 +14,37 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
+class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
     """
-    This is the Auto-GPT email plugin.
+    This is the Auto-GPT SceneX plugin.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Email-Plugin"
-        self._version = "0.2.0"
-        self._description = "This plugin reads and send emails."
+        self._name = "ImageExplainer"
+        self._version = "0.0.1"
+        self._description = (
+            "An Image Captioning Tool: Use this tool to generate a detailed caption for an image. "
+            "The input can be an image file of any format, and "
+            "the output will be a text description that covers every detail of the image."
+        )
+        self._api_key = os.getenv("SCENEX_API_KEY")
+        self.scenexplain = SceneXplain(self._api_key)
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        from .email_plugin.email_plugin import (
-            bothEmailAndPwdSet,
-            read_emails,
-            send_email,
-            send_email_with_attachment,
-        )
-
-        if bothEmailAndPwdSet():
+        if self._api_key:
             prompt.add_command(
-                "Read Emails",
-                "read_emails",
+                self._description,
+                "describe_image",
                 {
-                    "imap_folder": "<imap_folder>",
-                    "imap_search_command": "<imap_search_criteria_command>",
-                    "limit": "<email_count_return_limit>",
-                    "page": "<number_of_email_results_page>",
+                    "image": "<image>",
                 },
-                read_emails,
-            )
-            prompt.add_command(
-                "Send Email",
-                "send_email",
-                {"to": "<to>", "subject": "<subject>", "body": "<body>"},
-                send_email,
-            )
-            prompt.add_command(
-                "Send Email",
-                "send_email_with_attachment",
-                {
-                    "to": "<to>",
-                    "subject": "<subject>",
-                    "body": "<body>",
-                    "filename": "<attachment filename>",
-                },
-                send_email_with_attachment,
+                self.scenexplain.describe_image,
             )
         else:
             print(
                 Fore.RED
-                + f"{self._name} - {self._version} - Email plugin not loaded, because EMAIL_PASSWORD or EMAIL_ADDRESS were not set in env."
+                + f"{self._name} - {self._version} - SceneX plugin not loaded, because SCENEX_API_KEY was not set in env."
             )
 
         return prompt

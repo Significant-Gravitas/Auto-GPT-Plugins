@@ -1,8 +1,7 @@
 """This is the email plugin for Auto-GPT."""
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from colorama import Fore
+import os
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -12,58 +11,27 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
+class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
     """
-    This is the Auto-GPT email plugin.
+    This is the Auto-GPT space plugin.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Email-Plugin"
-        self._version = "0.2.0"
-        self._description = "This plugin reads and send emails."
+        self._name = "Auto-GPT-Space-Plugin"
+        self._version = "0.1.3"
+        self._description = "Auto-GPT Space Plugin: Get the number of astronauts in space in real-time.."
+        self.load_commands = True
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        from .email_plugin.email_plugin import (
-            bothEmailAndPwdSet,
-            read_emails,
-            send_email,
-            send_email_with_attachment,
-        )
+        if self.load_commands:
+            from .astronauts import get_num_astronauts
 
-        if bothEmailAndPwdSet():
             prompt.add_command(
-                "Read Emails",
-                "read_emails",
-                {
-                    "imap_folder": "<imap_folder>",
-                    "imap_search_command": "<imap_search_criteria_command>",
-                    "limit": "<email_count_return_limit>",
-                    "page": "<number_of_email_results_page>",
-                },
-                read_emails,
-            )
-            prompt.add_command(
-                "Send Email",
-                "send_email",
-                {"to": "<to>", "subject": "<subject>", "body": "<body>"},
-                send_email,
-            )
-            prompt.add_command(
-                "Send Email",
-                "send_email_with_attachment",
-                {
-                    "to": "<to>",
-                    "subject": "<subject>",
-                    "body": "<body>",
-                    "filename": "<attachment filename>",
-                },
-                send_email_with_attachment,
-            )
-        else:
-            print(
-                Fore.RED
-                + f"{self._name} - {self._version} - Email plugin not loaded, because EMAIL_PASSWORD or EMAIL_ADDRESS were not set in env."
+                "Get number of astronauts",
+                "get_num_astronauts",
+                {},
+                get_num_astronauts,
             )
 
         return prompt

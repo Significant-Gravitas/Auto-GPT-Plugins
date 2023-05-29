@@ -1,22 +1,39 @@
 import os
-from unittest.mock import patch
-from email.message import EmailMessage
-from email_plugin import (
-    send_email,
-    read_emails,
-    imap_open,
-    send_email_with_attachment_internal,
-    bothEmailAndPwdSet,
-)
-from unittest.mock import mock_open
 import unittest
+from email.message import EmailMessage
 from functools import partial
+from unittest.mock import mock_open, patch
+
+from email_plugin import (
+    adjust_imap_folder_for_gmail,
+    bothEmailAndPwdSet,
+    enclose_with_quotes,
+    imap_open,
+    read_emails,
+    send_email,
+    send_email_with_attachment_internal,
+    split_imap_search_command,
+)
 
 MOCK_FROM = "sender@example.com"
 MOCK_PWD = "secret"
 MOCK_TO = "test@example.com"
 MOCK_DATE = "Fri, 21 Apr 2023 10:00:00 -0000"
-MOCK_CONTENT = "Test message\n"
+MOCK_CONTENT = "Test message"
+MOCK_CONTENT_DIRTY = """
+                        <html>
+                            <head>
+                                <title> Email Title </title>
+                            </head>
+                            <body>
+                                This is an
+                                <div>email template</div>
+                                with a \n return character
+                                and a link at the end</a>
+                            </body>
+                        </html>
+                         (https://e.com) 
+                    """
 MOCK_SUBJECT = "Test Subject"
 MOCK_IMAP_SERVER = "imap.example.com"
 MOCK_SMTP_SERVER = "smtp.example.com"
@@ -73,6 +90,80 @@ class TestEmailPlugin(unittest.TestCase):
     def test_both_email_and_pwd_not_set(self):
         self.assertFalse(bothEmailAndPwdSet())
 
+    def test_adjust_imap_folder_for_gmail_normal_cases(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Sent", "user@gmail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@googlemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Inbox", "user@gmail.com"), "Inbox"
+        )
+
+    def test_adjust_imap_folder_for_gmail_case_insensitivity(self):
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SeNT", "user@GMail.com"),
+            '"[Gmail]/Sent Mail"',
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("DRAFTS", "user@gOogLemail.com"),
+            "[Gmail]/Drafts",
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("InbOx", "user@gmail.com"), "InbOx"
+        )
+
+    def test_adjust_imap_folder_for_gmail_non_gmail_sender(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("Sent", "user@yahoo.com"), "Sent")
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("Drafts", "user@hotmail.com"), "Drafts"
+        )
+        self.assertEqual(
+            adjust_imap_folder_for_gmail("SENT", "gmail@hotmail.com"), "SENT"
+        )
+
+    def test_adjust_imap_folder_for_gmail_edge_cases(self):
+        self.assertEqual(adjust_imap_folder_for_gmail("", "user@gmail.com"), "")
+        self.assertEqual(adjust_imap_folder_for_gmail("Inbox", ""), "Inbox")
+        self.assertEqual(adjust_imap_folder_for_gmail("", ""), "")
+
+    def test_enclose_with_quotes(self):
+        assert enclose_with_quotes("REVERSE DATE") == '"REVERSE DATE"'
+        assert enclose_with_quotes('"My Search"') == '"My Search"'
+        assert enclose_with_quotes("'test me'") == "'test me'"
+        assert enclose_with_quotes("ALL") == "ALL"
+        assert enclose_with_quotes("quotes needed") == '"quotes needed"'
+        assert enclose_with_quotes("   whitespace  ") == '"   whitespace  "'
+        assert enclose_with_quotes("whitespace\te") == '"whitespace\te"'
+        assert enclose_with_quotes("\"mixed quotes'") == "\"mixed quotes'"
+        assert enclose_with_quotes("'mixed quotes\"") == "'mixed quotes\""
+
+    def test_split_imap_search_command(self):
+        self.assertEqual(split_imap_search_command("SEARCH"), ["SEARCH"])
+        self.assertEqual(
+            split_imap_search_command("SEARCH UNSEEN"), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command("  SEARCH   UNSEEN  "), ["SEARCH", "UNSEEN"]
+        )
+        self.assertEqual(
+            split_imap_search_command(
+                "FROM speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx"
+            ),
+            [
+                "FROM",
+                "speixoto@caicm.ca SINCE 01-JAN-2022 BEFORE 01-FEB-2023 HAS attachment xls OR HAS attachment xlsx",
+            ],
+        )
+        self.assertEqual(
+            split_imap_search_command("BODY here is my long body"),
+            ["BODY", "here is my long body"],
+        )
+        self.assertEqual(split_imap_search_command(""), [])
+
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
         os.environ,
@@ -117,7 +208,7 @@ class TestEmailPlugin(unittest.TestCase):
         context.send_message.assert_called_once()
         context.quit.assert_called_once()
 
-    # Test for reading emails in a specific folder with a specific search command
+    # Test for reading emails in a specific folder with a specific search command and pagination
     @patch("imaplib.IMAP4_SSL")
     @patch.dict(
         os.environ,
@@ -143,7 +234,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -180,7 +271,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected = "There are no Emails in your folder `inbox` "
         expected += "when searching with imap command `UNSEEN`"
         assert result == expected
@@ -219,7 +310,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -266,7 +357,7 @@ class TestEmailPlugin(unittest.TestCase):
         mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
 
         # Test read_emails function
-        result = read_emails("inbox", "UNSEEN")
+        result = read_emails("inbox", "UNSEEN", 1, 1)
         expected_result = [
             {
                 "From": MOCK_FROM,
@@ -335,6 +426,140 @@ class TestEmailPlugin(unittest.TestCase):
         assert MOCK_CONTENT in actual_mime_msg
         assert MOCK_ATTACHMENT_NAME in actual_mime_msg
 
+    # Test for reading an email where the subject has enconding issues or is null
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+        },
+    )
+    def test_read_emails_subject_unknown_encoding(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = None
+        message.set_content(MOCK_CONTENT)
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails function
+        result = read_emails("inbox", "UNSEEN", 1, 1)
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": "",
+                "Message Body": MOCK_CONTENT,
+            }
+        ]
+        assert result == expected_result
+
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
+
+    # Test for reading an email where the body has enconding issues or is null
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+        },
+    )
+    def test_read_emails_body_unknown_encoding(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = MOCK_SUBJECT
+        message.set_content("�������\n")
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails function
+        result = read_emails("inbox", "UNSEEN", 1, 1)
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": MOCK_SUBJECT,
+                "Message Body": "",
+            }
+        ]
+        assert result == expected_result
+
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
+
+    # Test for cleaning an email's bodies
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+        },
+    )
+    def test_clean_email_body(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = MOCK_SUBJECT
+        message.set_content(MOCK_CONTENT_DIRTY)
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails with paginationfunction
+        result = read_emails("inbox", "UNSEEN", 1, 1)
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": MOCK_SUBJECT,
+                "Message Body": "Email Title This is an email template with a return character and a link at the end (",
+            }
+        ]
+        assert result == expected_result
+
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
 
 if __name__ == "__main__":
     unittest.main()
