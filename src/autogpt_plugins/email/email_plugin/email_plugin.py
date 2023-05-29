@@ -215,12 +215,13 @@ def read_emails(
     end_index = start_index + limit
     start_index = max(start_index, 0)
 
-    # Return paginated indexes
+    # Truncate paginated indexes
     if start_index == end_index:
-        return [messages[start_index]]
+        messages = [truncate_emails(messages[start_index])]
     else:
-        return messages[start_index:end_index]
+        messages = truncate_emails(messages[start_index:end_index])
 
+    return messages
 
 def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
     if "@gmail" in email_sender.lower() or "@googlemail" in email_sender.lower():
@@ -311,3 +312,58 @@ def clean_email_body(email_body):
     email_body = re.sub(r"http\S+", "", email_body)
 
     return email_body
+
+def truncate_emails(messages):
+    """Truncate email content based on configuration settings
+
+    Args:
+        messages (messages, optional): List of emails
+
+    Returns:
+        messages: List of truncated emails
+    """
+
+    # If MAX_CHARACTERS is breached
+    messages_length = len(str(messages))
+    if os.getenv("MAX_CHARACTERS") and int(os.getenv("MAX_CHARACTERS")) < int(messages_length):
+
+        # If MAX_NUM_EMAILS is breached, return the maximum number of emails
+        if os.getenv("MAX_NUM_EMAILS") and int(os.getenv("MAX_NUM_EMAILS")) < int(len(messages)):
+            end_index = len(messages) - 1
+            start_index = len(messages) - int(os.getenv("MAX_NUM_EMAILS"))
+
+            return messages[start_index:end_index]
+
+        # If MAX_CHARACTERS is breached while MAX_NUM_EMAILS is not breached, truncate email body's
+        truncation_message = " [Warning: This email's body was truncated by the Auto-GPT email plugin to avoid \"command returned too much output errors\". Retrieve fewer emails to get the full message body]"
+        
+        if os.getenv("MAX_EMAIL_CHARACTERS"):
+            # If messages has only one email, convert to a list to facilitate processing
+            if isinstance(messages, dict):
+                messages = [messages]
+            
+            max_email_characters = int(os.getenv("MAX_EMAIL_CHARACTERS"))
+            
+            for iterator, _ in enumerate(messages):
+                # If the email's length exceeds MAX_EMAIL_CHARACTERS, truncate
+                message_length = len(str(messages[iterator]))
+                if message_length > max_email_characters:
+                    start_index = 0
+                    end_index = max_email_characters - len(truncation_message) - 1
+                    messages[iterator]["Message Body"] = messages[iterator]["Message Body"][start_index:end_index]
+                    messages[iterator]["Message Body"] = messages[iterator]["Message Body"] + truncation_message
+
+                # Return messages if MAX_CHARACTERS is no longer breached
+                messages_length = len(str(messages))
+                if int(os.getenv("MAX_CHARACTERS")) > messages_length:
+                    # If messages has only one email, convert back to a dict before returning
+                    if len(messages) == 1:
+                        return messages[0]
+                    else:
+                        return messages
+
+    # If messages has only one email, convert back to a dict, convert back to dict before returning
+    if len(messages) == 1:
+        return messages[0]
+    else:
+        return messages
