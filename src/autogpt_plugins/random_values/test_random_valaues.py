@@ -1,5 +1,6 @@
 import json
 from unittest.mock import Mock
+import string
 
 import pytest
 
@@ -141,7 +142,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 10
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_strings(self):
         result = json.loads(_generate_password(length="10", count="5"))
@@ -149,7 +150,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 10
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_missing_length(self):
         # If missing, length defaults to 10
@@ -158,7 +159,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 16
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_missing_count(self):
         # If missing, count defaults to 1
@@ -167,7 +168,7 @@ class TestRandomValueCommands:
         for password in result:
             assert len(password) == 10
             # Passwords should contain letters, numbers, and symbols
-            assert not password.isalnum()
+            assert is_password(password)
 
     def test_generate_password_using_garbage(self):
         with pytest.raises(ValueError) as e:
@@ -197,3 +198,11 @@ class TestRandomValueCommands:
         with pytest.raises(ValueError) as e:
             _generate_placeholder_text(sentences="foo")
         assert str(e.value) == "sentences must be an integer"
+
+# checks that the given string only contains ascii letters, digits & punctuation
+def is_password(input_str):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    for character in input_str:
+        if character not in characters:
+            return False
+    return True
