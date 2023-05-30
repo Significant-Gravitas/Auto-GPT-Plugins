@@ -51,7 +51,7 @@ EMAIL_SMTP_HOST=smtp.gmail.com
 EMAIL_SMTP_PORT=587
 EMAIL_IMAP_SERVER=imap.gmail.com
 
-#Optional Settings
+# Optional Settings
 EMAIL_MARK_AS_SEEN=False
 EMAIL_SIGNATURE="This was sent by Auto-GPT"
 EMAIL_DRAFT_MODE_WITH_FOLDER=[Gmail]/Drafts

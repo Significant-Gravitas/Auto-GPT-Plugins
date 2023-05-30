@@ -1,4 +1,6 @@
 import asyncio
+import os
+import random
 import traceback
 
 from telegram import Bot, Update
@@ -10,8 +12,72 @@ response_queue = ""
 
 class TelegramUtils:
     def __init__(self, api_key: str = None, chat_id: str = None):
+        if not api_key:
+            print(
+                "No api key provided. Please set the TELEGRAM_API_KEY environment variable."
+            )
+            print("You can get your api key by talking to @BotFather on Telegram.")
+            print(
+                "For more information, please visit: https://core.telegram.org/bots/tutorial#6-botfather"
+            )
+            exit(1)
+
         self.api_key = api_key
+
+        if not chat_id:
+            print(
+                "TELEGRAM PLUGIN: No chat id provided. Please set the TELEGRAM_CHAT_ID environment variable."
+            )
+            user_input = input(
+                "Would you like to send a test message to your bot to get the id? (y/n): "
+            )
+            if user_input == "y":
+                try:
+                    print("Please send a message to your telegram bot now.")
+                    update = self.poll_anyMessage()
+                    print("Message received! Getting chat id...")
+                    chat_id = update.message.chat.id
+                    print("Your chat id is: " + str(chat_id))
+                    print("And the message is: " + update.message.text)
+                    confirmation = random.randint(1000, 9999)
+                    print("Sending confirmation message: " + str(confirmation))
+                    text = f"Hello! Your chat id is: {chat_id} and the confirmation code is: {confirmation}"
+                    self.chat_id = chat_id
+                    self.send_message(text)  # Send confirmation message
+                    print(
+                        "Please set the TELEGRAM_CHAT_ID environment variable to this value."
+                    )
+                except TimedOut:
+                    print(
+                        "Error while sending test message. Please check your Telegram bot."
+                    )
+            exit(1)
         self.chat_id = chat_id
+
+    def poll_anyMessage(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        return loop.run_until_complete(self.poll_anyMessage_async())
+
+    async def poll_anyMessage_async(self):
+        bot = Bot(token=self.api_key)
+        last_update = await bot.get_updates(timeout=30)
+        if len(last_update) > 0:
+            last_update_id = last_update[-1].update_id
+        else:
+            last_update_id = -1
+
+        while True:
+            try:
+                print("Waiting for first message...")
+                updates = await bot.get_updates(offset=last_update_id + 1, timeout=30)
+                for update in updates:
+                    if update.message:
+                        return update
+            except Exception as e:
+                print(f"Error while polling updates: {e}")
+
+            await asyncio.sleep(1)
 
     def is_authorized_user(self, update: Update):
         return update.effective_user.id == int(self.chat_id)
@@ -66,6 +132,7 @@ class TelegramUtils:
                 ("help", "Show help"),
                 ("yes", "Confirm"),
                 ("no", "Deny"),
+                ("auto", "Let an Agent decide"),
             ]
         )
 
@@ -91,11 +158,25 @@ class TelegramUtils:
         print("Sending message to Telegram.. ")
         recipient_chat_id = self.chat_id
         bot = await self.get_bot()
-        await bot.send_message(chat_id=recipient_chat_id, text=message)
+
+        # properly handle messages with more than 2000 characters by chunking them
+        if len(message) > 2000:
+            message_chunks = [message[i:i + 2000] for i in range(0, len(message), 2000)]
+            for message_chunk in message_chunks:
+                await bot.send_message(chat_id=recipient_chat_id, text=message_chunk)
+        else:
+            await bot.send_message(chat_id=recipient_chat_id, text=message)
 
     async def ask_user_async(self, prompt):
         global response_queue
-        question = prompt + " \n Confirm: /yes     Decline: /no \n Or type your answer."
+
+        # only display confirm if the prompt doesnt have the string ""Continue (y/n):"" inside
+        if "Continue (y/n):" in prompt or "Waiting for your response..." in prompt:
+            question = prompt + " \n Confirm: /yes     Decline: /no \n Or type your answer. \n or press /auto to let an Agent decide."
+        elif "I want Auto-GPT to:" in prompt:
+            question = prompt
+        else:
+            question = prompt + " \n Type your answer or press /auto to let an Agent decide."
 
         response_queue = ""
         # await delete_old_messages()
@@ -116,7 +197,8 @@ class TelegramUtils:
                 self,
                 prompt="You can use /stop to stop me \n and /start to start me again.",
             )
-
+        if response_queue == "/auto":
+            return "s"
         if response_queue == "/stop":
             self.send_message("Stopping Auto-GPT now!")
             exit(0)
@@ -147,13 +229,15 @@ class TelegramUtils:
     async def _poll_updates(self):
         global response_queue
         bot = await self.get_bot()
+        print("getting updates...")
 
-        last_update = await bot.get_updates(timeout=30)
+        last_update = await bot.get_updates(timeout=1)
         if len(last_update) > 0:
             last_update_id = last_update[-1].update_id
         else:
-            last_update_id = 0
+            last_update_id = -1
 
+        print("last update id: " + str(last_update_id))
         while True:
             try:
                 print("Polling updates...")
@@ -183,3 +267,10 @@ class TelegramUtils:
         except TimedOut:
             print("Telegram timeout error, trying again...")
             return self.ask_user(prompt=prompt)
+
+
+if __name__ == "__main__":
+    telegram_api_key = os.getenv("TELEGRAM_API_KEY")
+    telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    telegram_utils = TelegramUtils(chat_id=telegram_chat_id, api_key=telegram_api_key)
+    telegram_utils.send_message("Hello World!")
