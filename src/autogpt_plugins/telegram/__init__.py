@@ -1,11 +1,9 @@
 """Telegram controller bot integration using python-telegram-bot."""
 import os
 import re
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from dotenv import load_dotenv
 
 from .telegram_chat import TelegramUtils
 
@@ -30,12 +28,12 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Telegram"
-        self._version = "0.1.0"
+        self._version = "0.2.0"
         self._description = (
             "This integrates a Telegram chat bot with your autogpt instance."
         )
-        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY")
-        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY", None)
+        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
         self.telegram_utils = TelegramUtils(
             chat_id=self.telegram_chat_id, api_key=self.telegram_api_key
         )
@@ -255,8 +253,7 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def user_input(self, user_input: str) -> str:
         user_input = remove_color_codes(user_input)
         # if the user_input is too long, shorten it
-        if len(user_input) > 2000:
-            user_input = user_input[:2000] + "..."
+
         return self.telegram_utils.ask_user(prompt=user_input)
 
     def can_handle_report(self) -> bool:
@@ -270,6 +267,5 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
     def report(self, message: str) -> None:
         message = remove_color_codes(message)
         # if the message is too long, shorten it
-        if len(message) > 2000:
-            message = message[:2000] + "..."
+
         self.telegram_utils.send_message(message=message)
