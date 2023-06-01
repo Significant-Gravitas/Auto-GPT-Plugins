@@ -1,8 +1,10 @@
-import requests
 import json
 import os
 import re
+
+import requests
 from bs4 import BeautifulSoup
+
 
 def _baidu_search(query: str, num_results=8):
     '''

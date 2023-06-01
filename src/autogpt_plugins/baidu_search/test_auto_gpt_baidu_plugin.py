@@ -1,7 +1,9 @@
 import os
-import requests
 import unittest
 from typing import List
+
+import requests
+
 from . import AutoGPTBaiduSearch
 from .baidu_search import _baidu_search
 

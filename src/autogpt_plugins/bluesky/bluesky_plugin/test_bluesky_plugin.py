@@ -1,10 +1,7 @@
 import os
-from .bluesky_plugin import (
-    username_and_pwd_set,
-    post_message,
-    get_latest_posts,
-)
 import unittest
+
+from .bluesky_plugin import get_latest_posts, post_message, username_and_pwd_set
 
 MOCK_USERNAME = "example.bsky.social"
 MOCK_MESSAGE = "Hello, World!"

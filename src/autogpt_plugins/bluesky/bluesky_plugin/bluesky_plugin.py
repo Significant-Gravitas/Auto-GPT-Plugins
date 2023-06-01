@@ -1,7 +1,7 @@
 """This module contains functions for interacting with the Bluesky API via atprototools."""
-import pandas as pd
 import os
 
+import pandas as pd
 from atproto import Client
 
 

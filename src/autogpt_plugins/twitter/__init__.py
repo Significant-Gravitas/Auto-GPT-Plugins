@@ -263,3 +263,25 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
             )
 
         return prompt
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
+        pass
