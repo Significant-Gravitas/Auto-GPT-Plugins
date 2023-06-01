@@ -1,7 +1,9 @@
 import os
-import requests
 import unittest
 from typing import List
+
+import requests
+
 from . import AutoGPTBingSearch
 from .bing_search import _bing_search
 

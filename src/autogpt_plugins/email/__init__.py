@@ -1,5 +1,6 @@
 """This is the email plugin for Auto-GPT."""
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
 
@@ -19,15 +20,15 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Email-Plugin"
-        self._version = "0.1.3"
-        self._description = "Auto-GPT Email Plugin: Supercharge email management."
+        self._version = "0.2.0"
+        self._description = "This plugin reads and send emails."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         from .email_plugin.email_plugin import (
+            bothEmailAndPwdSet,
             read_emails,
             send_email,
             send_email_with_attachment,
-            bothEmailAndPwdSet,
         )
 
         if bothEmailAndPwdSet():
@@ -37,6 +38,8 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
                 {
                     "imap_folder": "<imap_folder>",
                     "imap_search_command": "<imap_search_criteria_command>",
+                    "limit": "<email_count_return_limit>",
+                    "page": "<number_of_email_results_page>",
                 },
                 read_emails,
             )
