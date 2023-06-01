@@ -1,0 +1,24 @@
+name: Test installation of plugins against the PR
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-plugin-installation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Kurtosis
+        run: |
+          echo "deb [trusted=yes] https://apt.fury.io/kurtosis-tech/ /" | sudo tee /etc/apt/sources.list.d/kurtosis.list
+          sudo apt update
+          sudo apt install kurtosis-cli
+      - name: Install and run different plugins
+        run: |
+          set -euo pipefail
+          plugins_to_test=("AutoGPTTwitter AutoGPTEmailPlugin AutoGPTSceneXPlugin AutoGPTBingSearch AutoGPTNewsSearch AutoGPTWikipediaSearch AutoGPTApiTools AutoGPTRandomValues AutoGPTSpacePlugin AutoGPTBaiduSearch AutoGPTBluesky PlannerPlugin")
+          for plugin in $plugins_to_test; do
+            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "__skip_env_vars_validation": "True", "__skip_env_vars_default_values_set": "True", "__plugin_branch_to_use": '\"${{ github.head_ref}}\"', "__plugin_repo_to_use":'\"${{ github.event.pull_request.head.repo.full_name }}\"'}'
+          done          
+

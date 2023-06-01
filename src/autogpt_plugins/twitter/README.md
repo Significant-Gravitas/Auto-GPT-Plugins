@@ -27,6 +27,13 @@ TW_ACCESS_TOKEN=
 TW_ACCESS_TOKEN_SECRET=
 TW_CLIENT_ID=
 TW_CLIENT_ID_SECRET=
+
+################################################################################
+### ALLOWLISTED PLUGINS
+################################################################################
+
+ALLOWLISTED_PLUGINS=AutoGPTTwitter
+
 ```
 
 ## Twitter API Setup for v1.1 access(soon to be deprecated 😭)
