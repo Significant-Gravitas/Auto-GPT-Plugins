@@ -1,12 +1,15 @@
 """API Tools for Autogpt."""
 
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+
 from .api_tools import _make_api_call
 
 PromptGenerator = TypeVar("PromptGenerator")
 
 class Message(TypedDict):
+    """Message type."""
     role: str
     content: str
 
@@ -30,7 +33,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
-        pass
 
     def can_handle_post_prompt(self) -> bool:
         """This method is called to check that the plugin can
@@ -54,7 +56,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
             prompt (PromptGenerator): The prompt generator.
             messages (List[str]): The list of messages.
         """
-        pass
 
     def can_handle_post_planning(self) -> bool:
         """This method is called to check that the plugin can
@@ -70,7 +71,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
 
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -86,7 +86,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             List[str]: The resulting list of messages.
         """
-        pass
 
     def can_handle_on_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -102,7 +101,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Optional[str]: The resulting message.
         """
-        pass
 
     def can_handle_post_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -118,7 +116,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
 
     def can_handle_pre_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -137,7 +134,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Tuple[str, Dict[str, Any]]: The command name and the arguments.
         """
-        pass
 
     def can_handle_post_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -154,7 +150,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
 
     def can_handle_chat_completion(
             self,
@@ -208,3 +203,25 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
             _make_api_call
         )
         return prompt
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
+        pass

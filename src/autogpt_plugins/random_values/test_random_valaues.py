@@ -1,6 +1,6 @@
 import json
-from unittest.mock import Mock
 import string
+from unittest.mock import Mock
 
 import pytest
 

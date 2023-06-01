@@ -1,8 +1,11 @@
-import pytest
-import random
-import requests_mock
 import json
+import random
+
+import pytest
+import requests_mock
+
 from .api_tools import _make_api_call
+
 
 class TestAutoGPTAPITools():
 
