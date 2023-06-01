@@ -3,16 +3,9 @@ from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-from .random_values import (
-    _generate_password,
-    _generate_placeholder_text,
-    _generate_string,
-    _make_uuids,
-    _random_number,
-)
+from .random_values import RandomValues
 
 PromptGenerator = TypeVar("PromptGenerator")
-
 
 class Message(TypedDict):
     role: str
@@ -26,10 +19,10 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-random-values"
-        self._version = "0.1.1"
+        self._name = "AutoGPTRandomValues"
+        self._version = "0.1.2"
         self._description = "Enable Auto-GPT with the power of random values."
-        self.plugin = RandomValues(self)
+        self.plugin_class = RandomValues(self)
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -213,29 +206,54 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "rnd_num",
-            "Random Number",
-            {"min": "<integer>", "max": "<integer>", "count": "<integer>"},
-            _random_number,
+            "Random Numbers",
+            {"min": "<int>", "max": "<int>", "cnt": "<int>"},
+            self.plugin_class.random_number,
         )
         prompt.add_command(
-            "make_uuids", "Make UUIDs", {"count": "<integer>"}, _make_uuids
+            "uuids", 
+            "Make UUIDs", 
+            {"cnt": "<int>"}, 
+            self.plugin_class.make_uuids
         )
         prompt.add_command(
-            "generate_string",
-            "Generate String",
-            {"length": "<integer>", "count": "<integer>"},
-            _generate_string,
+            "make_str",
+            "Generate Strings",
+            {"len": "<int>", "cnt": "<int>"},
+            self.plugin_class.generate_string,
         )
         prompt.add_command(
-            "generate_password",
-            "Generate Password",
-            {"length": "<integer>", "count": "<integer>"},
-            _generate_password,
+            "passwords",
+            "Create Passwords",
+            {"len": "<int>", "cnt": "<int>"},
+            self.plugin_class.generate_password,
         )
         prompt.add_command(
-            "generate_placeholder_text",
-            "Generate Placeholder Text",
-            {"sentences": "<integer>"},
-            _generate_placeholder_text,
+            "lorem_ipsum",
+            "Create Lorem Sentences",
+            {"cnt": "<int>"},
+            self.plugin_class.generate_placeholder_text,
         )
         return prompt
+    
+    
+    def can_handle_text_embedding(self, text: str) -> bool:
+        return False
+
+    def can_handle_user_input(self, user_input: str) -> bool:
+            return False
+    
+    def user_input(self, user_input: str) -> str:
+        return user_input
+    
+    def can_handle_report(self) -> bool:
+        return False
+    
+    def report(self, message: str) -> None:
+        pass
+
+    def can_handle_text_embedding(self, text: str) -> bool:
+        return False
+    
+    def handle_text_embedding(self, text: str) -> list:
+        pass
