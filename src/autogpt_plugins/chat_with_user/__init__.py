@@ -1,7 +1,10 @@
 """Chat With User Command Plugin."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .chat_with_user import ChatWithUserPlugin
+try:
+    from .chat_with_user import ChatWithUserPlugin
+except ImportError:
+    from chat_with_user import ChatWithUserPlugin
 
 
 PromptGenerator = TypeVar("PromptGenerator")

@@ -1,7 +1,9 @@
 import threading
 import time
-
-from .plugin_window import ChatWithUserPluginWindow
+try:
+    from .plugin_window import ChatWithUserPluginWindow
+except ImportError:
+    from plugin_window import ChatWithUserPluginWindow
 
 class ChatWithUserPlugin:
     """This class is used to create the chat window."""
