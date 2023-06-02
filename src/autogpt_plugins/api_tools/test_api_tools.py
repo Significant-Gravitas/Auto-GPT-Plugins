@@ -2,11 +2,13 @@ import json
 import random
 import requests_mock
 import unittest
-from .api_tools import ApiCallCommand
+from urllib.parse import urljoin
+from unittest.mock import patch
+from api_tools import ApiCallCommand
 
 class TestAutoGPTAPITools(unittest.TestCase):
 
-    def __init__(self):
+    def setUp(self):
         self.plugin_class = ApiCallCommand()
 
     # Test call methods
@@ -577,8 +579,8 @@ class TestAutoGPTAPITools(unittest.TestCase):
         headers = {'test': 'test'}
         headers[1] = 'test' # type: ignore
         with requests_mock.Mocker() as m:
-            m.get('http://example.com/endpoint', text='success', status_code=200, request_hdrs={'test': 'test', '1': 'test'})
-            result = self.plugin_class.make_api_call('http://example.com', '/endpoint', hdrs=headers)
+            m.get('http://example.com/endpoint', text='success', status_code=200, headers={'test': 'test', '1': 'test'})
+            result = self.plugin_class.make_api_call(host='http://example.com', endpoint='/endpoint', hdrs=headers)
             response = json.loads(result)
 
             self.assertEqual(response['status'], 'success')
@@ -590,8 +592,8 @@ class TestAutoGPTAPITools(unittest.TestCase):
         headers = {'test': 'test'}
         headers['test'] = 1 # type: ignore
         with requests_mock.Mocker() as m:
-            m.get('http://example.com/endpoint', text='success', status_code=200, request_hdrs={'test': '1'})
-            result = self.plugin_class.make_api_call('http://example.com', '/endpoint', hdrs=headers)
+            m.get('http://example.com/endpoint', text='success', status_code=200, headers={'test': '1'})
+            result = self.plugin_class.make_api_call(host='http://example.com', endpoint='/endpoint', hdrs=headers)
             response = json.loads(result)
 
             self.assertEqual(response['status'], 'success')
