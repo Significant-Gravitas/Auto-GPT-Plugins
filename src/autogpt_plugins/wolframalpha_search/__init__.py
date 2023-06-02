@@ -1,9 +1,9 @@
-"""Wikipedia search integrations."""
+"""WolframAlpha search integrations."""
+import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-
-from .wikipedia_search import _wikipedia_search
+from wolframalpha import Client
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -13,16 +13,26 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
+class AutoGPTWolframAlphaSearch(AutoGPTPluginTemplate):
     """
-    Wikipedia search integrations
+    WolframAlpha search integrations
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-wikipedia-search"
+        self._name = "autogpt-wolframalpha-search"
         self._version = "0.1.0"
-        self._description = "Wikipedia search integrations."
+        self._description = ("WolframAlpha is an answer engine, it answers "
+                             "factual queries by computing answers from "
+                             "externally sourced data. It can provide answers "
+                             "to math, data and science queries.")
+        self.wolframalpha_appid = os.getenv("WOLFRAMALPHA_APPID")
+
+        self.api = None
+        if self.wolframalpha_appid is not None:
+            self.api = Client(self.wolframalpha_appid)
+        else:
+            print("WolframAlpha AppID not found in .env file.")
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -50,7 +60,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-        self, prompt: PromptGenerator, messages: List[str]
+            self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
         """This method is called before the planning chat completeion is done.
         Args:
@@ -131,7 +141,7 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-        self, command_name: str, arguments: Dict[str, Any]
+            self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -160,11 +170,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         pass
 
     def can_handle_chat_completion(
-        self,
-        messages: list[Dict[Any, Any]],
-        model: str,
-        temperature: float,
-        max_tokens: int,
+            self,
+            messages: list[Dict[Any, Any]],
+            model: str,
+            temperature: float,
+            max_tokens: int,
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
@@ -178,11 +188,11 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-        self,
-        messages: list[Dict[Any, Any]],
-        model: str,
-        temperature: float,
-        max_tokens: int,
+            self,
+            messages: list[Dict[Any, Any]],
+            model: str,
+            temperature: float,
+            max_tokens: int,
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -203,13 +213,14 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-
-        prompt.add_command(
-            "wikipedia_search",
-            "Wikipedia search",
-            {"query": "<query>"},
-            _wikipedia_search,
-        )
+        if self.api:
+            from .wolframalpha_search import _wolframalpha_search
+            prompt.add_command(
+                "wolframalpha_search",
+                self._description,
+                {"query": "<query>"},
+                _wolframalpha_search,
+            )
         return prompt
 
     def can_handle_text_embedding(

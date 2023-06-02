@@ -1,9 +1,7 @@
-"""Wikipedia search integrations."""
+"""This is a Bluesky plugin for AutoGPT using atprototools."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-
-from .wikipedia_search import _wikipedia_search
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -13,16 +11,44 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
+class AutoGPTBluesky(AutoGPTPluginTemplate):
     """
-    Wikipedia search integrations
+    Bluesky plugin for AutoGPT using atprototools.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-wikipedia-search"
+        self._name = "autogpt-bluesky"
         self._version = "0.1.0"
-        self._description = "Wikipedia search integrations."
+        self._description = "Bluesky integration using atprototools."
+
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
+        from .bluesky_plugin.bluesky_plugin import (
+            get_latest_posts,
+            post_message,
+            username_and_pwd_set,
+        )
+
+        if not username_and_pwd_set():
+            return prompt
+
+        prompt.add_command(
+            "post_to_bluesky", "Post to Bluesky", {
+                "text": "<text>"}, post_message
+        )
+        prompt.add_command(
+            "get_bluesky_posts", "Get Blueskey Posts", {
+                "username": "<username>",
+                "number_of_posts": "<number_of_posts>"}, get_latest_posts)
+
+        return prompt
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -194,23 +220,6 @@ class AutoGPTWikipediaSearch(AutoGPTPluginTemplate):
             str: The resulting response.
         """
         return None
-
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        """This method is called just after the generate_prompt is called,
-            but actually before the prompt is generated.
-        Args:
-            prompt (PromptGenerator): The prompt generator.
-        Returns:
-            PromptGenerator: The prompt generator.
-        """
-
-        prompt.add_command(
-            "wikipedia_search",
-            "Wikipedia search",
-            {"query": "<query>"},
-            _wikipedia_search,
-        )
-        return prompt
 
     def can_handle_text_embedding(
         self, text: str

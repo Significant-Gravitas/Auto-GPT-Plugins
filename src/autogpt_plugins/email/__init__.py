@@ -20,8 +20,8 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "Auto-GPT-Email-Plugin"
-        self._version = "0.1.3"
-        self._description = "Auto-GPT Email Plugin: Supercharge email management."
+        self._version = "0.2.0"
+        self._description = "This plugin reads and send emails."
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         from .email_plugin.email_plugin import (
@@ -38,6 +38,8 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
                 {
                     "imap_folder": "<imap_folder>",
                     "imap_search_command": "<imap_search_criteria_command>",
+                    "limit": "<email_count_return_limit>",
+                    "page": "<number_of_email_results_page>",
                 },
                 read_emails,
             )
@@ -253,4 +255,26 @@ class AutoGPTEmailPlugin(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
+        pass
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
         pass

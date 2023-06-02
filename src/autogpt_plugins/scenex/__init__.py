@@ -1,8 +1,11 @@
 """This is a SceneX plugin for describing images for Auto-GPT."""
+import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
+
+from .scenex_plugin import SceneXplain
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -19,21 +22,25 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Scenex-Plugin"
+        self._name = "ImageExplainer"
         self._version = "0.0.1"
-        self._description = "Auto-GPT Scenex Plugin: Describe any image by URL."
+        self._description = (
+            "An Image Captioning Tool: Use this tool to generate a detailed caption for an image. "
+            "The input can be an image file of any format, and "
+            "the output will be a text description that covers every detail of the image."
+        )
+        self._api_key = os.getenv("SCENEX_API_KEY")
+        self.scenexplain = SceneXplain(self._api_key)
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        from .scenex_plugin.scenex_plugin import describe_image, is_api_key_set
-
-        if is_api_key_set():
+        if self._api_key:
             prompt.add_command(
-                "Describe image by URL",
+                self._description,
                 "describe_image",
                 {
                     "image": "<image>",
                 },
-                describe_image,
+                self.scenexplain.describe_image,
             )
         else:
             print(
@@ -230,4 +237,26 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
+        pass
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
         pass
