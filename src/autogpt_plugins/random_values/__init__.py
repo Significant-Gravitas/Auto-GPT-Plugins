@@ -236,9 +236,11 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         )
         return prompt
     
-    
     def can_handle_text_embedding(self, text: str) -> bool:  # type: ignore
         return False
+    
+    def handle_text_embedding(self, text: str) -> list:  # type: ignore
+        pass
 
     def can_handle_user_input(self, user_input: str) -> bool:
             return False
@@ -250,10 +252,4 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         return False
     
     def report(self, message: str) -> None:
-        pass
-
-    def can_handle_text_embedding(self, text: str) -> bool:
-        return False
-    
-    def handle_text_embedding(self, text: str) -> list:  # type: ignore
         pass
