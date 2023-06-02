@@ -17,8 +17,8 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-api-tools"
-        self._version = "0.1.0"
+        self._name = "AutoGPTApiTools"
+        self._version = "0.1.1AutoGPTApiTools"
         self._description = "Allow AutoGPT to make API calls to outside services."
 
     def can_handle_on_response(self) -> bool:
