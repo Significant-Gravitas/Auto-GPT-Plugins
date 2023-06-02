@@ -145,7 +145,7 @@ def _make_api_call(
     if not sanitized_host.startswith(("http://", "https://")):
         sanitized_host = f"https://{sanitized_host}"
     url = urljoin(sanitized_host, sanitized_endpoint)
-    if not is_valid_url(url):
+    if not is_valid_url(url): # type: ignore
         raise ValueError("Invalid URL: " + url)
     
     # Validate method
