@@ -21,7 +21,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "AutoGPTApiTools"
-        self._version = "0.1.1AutoGPTApiTools"
+        self._version = "0.1.1"
         self._description = "Allow AutoGPT to make API calls to outside services."
 
         self.plugin_class = ApiCallCommand()
