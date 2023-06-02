@@ -4,8 +4,6 @@ import json
 import requests
 import re
 
-from typing import Optional, Dict
-from urllib.parse import urlparse
 from urllib.parse import urljoin
 from validators import url as is_valid_url
 

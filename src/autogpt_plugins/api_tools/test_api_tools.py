@@ -2,8 +2,6 @@ import json
 import random
 import requests_mock
 import unittest
-from urllib.parse import urljoin
-from unittest.mock import patch
 from api_tools import ApiCallCommand
 
 class TestAutoGPTAPITools(unittest.TestCase):
