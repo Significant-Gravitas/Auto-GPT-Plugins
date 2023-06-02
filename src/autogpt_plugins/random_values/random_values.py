@@ -16,7 +16,7 @@ class RandomValues:
         self.plugin = plugin
 
 
-    def random_number(self, min=0, max=65535, cnt=1) -> str:
+    def random_number(self, min:int|str = 0, max:int|str = 65535, cnt:int|str = 1) -> str:
         """
         Return a random integer between min and max
 
@@ -39,7 +39,7 @@ class RandomValues:
             try:
                 cnt = int(cnt)
             except ValueError:
-                raise ValueError("count must be an integer")
+                raise ValueError("cnt must be an integer")
 
         # Ensure min is less than max
         if min > max:
@@ -47,7 +47,7 @@ class RandomValues:
         
         # Test ranges
         if not (1 <= cnt <= 65535):
-            raise ValueError("count must be between 1 and 65535")
+            raise ValueError("cnt must be between 1 and 65535")
         if not (0 <= min <= 65535):
             raise ValueError("min must be between 0 and 65535")
         if not (0 <= max <= 65535):
@@ -67,7 +67,7 @@ class RandomValues:
     # End of random_number()
 
 
-    def make_uuids(self, cnt=1) -> str:
+    def make_uuids(self, cnt:int|str = 1) -> str:
         """
         Return a UUID
 
@@ -84,11 +84,11 @@ class RandomValues:
             try:
                 cnt = int(cnt)
             except ValueError:
-                raise ValueError("count must be an integer")
+                raise ValueError("cnt must be an integer")
 
         # Make values sane
         if not (1 <= cnt <= 65535):
-            raise ValueError("count must be between 1 and 65535")
+            raise ValueError("cnt must be between 1 and 65535")
 
         # Do the thing
         uuids = []
@@ -100,7 +100,7 @@ class RandomValues:
     # End of make_uuids()
 
 
-    def generate_string(self, len=10, cnt=1) -> str:
+    def generate_string(self, len:int|str = 10, cnt:int|str = 1) -> str:
         """
         Return a random string
 
@@ -114,24 +114,22 @@ class RandomValues:
         """
 
         # Type-check the arguments
-        if not isinstance(type, str):
-            raise ValueError("type must be one of txt, pwd, or lipsum")
         if not isinstance(len, int):
             try:
                 len = int(len)
             except ValueError:
-                raise ValueError("length must be an integer")
+                raise ValueError("len must be an integer")
         if not isinstance(cnt, int):
             try:
                 cnt = int(cnt)
             except ValueError:
-                raise ValueError("count must be an integer")
+                raise ValueError("cnt must be an integer")
 
         # Range checks
         if not (1 <= cnt <= 65535):
-            raise ValueError("count must be between 1 and 65535")
+            raise ValueError("cnt must be between 1 and 65535")
         if not (1 <= len <= 65535):
-            raise ValueError("length must be between 1 and 65535")
+            raise ValueError("len must be between 1 and 65535")
 
         # Do the thing
         strings = []
@@ -143,7 +141,7 @@ class RandomValues:
         return json.dumps(strings)
 
 
-    def generate_password(self, len=16, cnt=1) -> str:
+    def generate_password(self, len:int|str = 16, cnt:int|str = 1) -> str:
         """
         Return a random password of letters, numbers, and punctuation
 
@@ -161,18 +159,18 @@ class RandomValues:
             try:
                 len = int(len)
             except ValueError:
-                raise ValueError("length must be an integer")
+                raise ValueError("len must be an integer")
         if not isinstance(cnt, int):
             try:
                 cnt = int(cnt)
             except ValueError:
-                raise ValueError("count must be an integer")
+                raise ValueError("cnt must be an integer")
 
         # Make values sane
         if not (6 <= len <= 65535):
-            raise ValueError("length must be between 6 and 65535")
+            raise ValueError("len must be between 6 and 65535")
         if not (1 <= cnt <= 65535):
-            raise ValueError("count must be between 1 and 65535")
+            raise ValueError("cnt must be between 1 and 65535")
 
         # Do the thing
         passwords = []
@@ -187,13 +185,13 @@ class RandomValues:
         return json.dumps(passwords)
 
 
-    def generate_placeholder_text(self, cnt=1) -> str:
+    def generate_placeholder_text(self, cnt:int|str = 1) -> str:
         """
         Return a random sentence of lorem ipsum text
 
         Args:
             cnt (int): The number of sentences to return
-            
+
         Returns:
             str: a json array with 1 to "sentences" strings of lorem ipsum
             ["<string>"]
@@ -204,11 +202,11 @@ class RandomValues:
             try:
                 cnt = int(cnt)
             except ValueError:
-                raise ValueError("sentences must be an integer")
+                raise ValueError("cnt must be an integer")
 
         # Make values sane
         if not (1 <= cnt <= 65535):
-            raise ValueError("sentences must be between 1 and 65535")
+            raise ValueError("cnt must be between 1 and 65535")
 
         # Do the thing
         strings = []
