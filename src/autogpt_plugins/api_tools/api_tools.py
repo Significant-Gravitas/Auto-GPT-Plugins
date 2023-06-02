@@ -1,13 +1,13 @@
 """API Call command for Autogpt."""
 
 import json
-import requests
 import re
+from typing import Dict, Optional
+from urllib.parse import urljoin, urlparse
 
-from typing import Optional, Dict
-from urllib.parse import urlparse
-from urllib.parse import urljoin
+import requests
 from validators import url as is_valid_url
+
 
 def _make_api_call(
         host = "", 
