@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from .api_tools import _make_api_call
+from .api_tools import ApiCallCommand
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -20,6 +20,8 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         self._name = "AutoGPTApiTools"
         self._version = "0.1.1AutoGPTApiTools"
         self._description = "Allow AutoGPT to make API calls to outside services."
+
+        self.plugin_class = ApiCallCommand()
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -205,6 +207,6 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
             "make_api_call",
             "Make an API call",
             {"host": "<host>", "endpoint": "<endpoint>", "method": "<method>", "query_params": "<query_params>", "body": "<body>", "headers": "<headers>"},
-            _make_api_call
+            self.plugin_class.make_api_call
         )
         return prompt
