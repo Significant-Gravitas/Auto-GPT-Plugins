@@ -1,7 +1,5 @@
 import json
 import random
-
-import pytest
 import requests_mock
 import unittest
 try:

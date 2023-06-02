@@ -2,9 +2,9 @@
 
 import json
 import re
+import requests
 from typing import Dict, Optional
 from urllib.parse import urljoin, urlparse
-
 from urllib.parse import urljoin
 from validators import url as is_valid_url
 
