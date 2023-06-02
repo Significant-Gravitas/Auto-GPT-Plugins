@@ -95,7 +95,7 @@ class ChatWithUserPlugin:
     # End of clean_string method
 
 
-    def chat_with_user(self, agent='AutoGPT', msg='', timeout=120, no_close=False) -> str:
+    def chat_with_user(self, agent_name='AutoGPT', msg='', timeout=120, no_close=False) -> str:
         """
         This method is called to chat with the user.
         Args:
@@ -108,11 +108,11 @@ class ChatWithUserPlugin:
         """
 
         # Type-check and clean agent_name
-        if not agent:
-            agent = self.DEFAULT_AGENT_NAME
-        elif not isinstance(agent, str):
-            agent = str(agent)
-        agent = self.clean_string(agent)
+        if not agent_name:
+            agent_name = self.DEFAULT_AGENT_NAME
+        elif not isinstance(agent_name, str):
+            agent_name = str(agent_name)
+        agent_name = self.clean_string(agent_name)
 
         # Type-check and clean message
         if not msg:
@@ -141,18 +141,19 @@ class ChatWithUserPlugin:
         
         self.allow_close = not no_close
 
-        if self.window and self.window.agent_name != agent:
-            self.window.update_agent_name(agent)
+        if self.window and self.window.agent_name != agent_name:
+            self.window.update_agent_name(agent_name)
 
         if not self.window_open:
             # If the window is not open, create a new one.
-            threading.Thread(target=self.run_chat_window, args=(agent,), daemon=True).start()
+            threading.Thread(target=self.run_chat_window, args=(agent_name,), daemon=True).start()
             self.window_created_event.wait()
 
         # Send the message to the existing window.
         if self.window_open:
             self.start_time = time.time()
-            self.window.receive_message(msg, self.start_time)
+            if self.window:
+                self.window.receive_message(msg, self.start_time)
             self.message = None
             self.message_event.wait(timeout)
             self.message_event.clear()

@@ -143,7 +143,10 @@ class ChatWithUserPluginWindow:
         """This method is called to send the message."""
 
         # Time stuff
-        response_time = time.time() -   self.message_received_time
+        if isinstance(self.message_received_time, float):
+            response_time = time.time() - self.message_received_time
+        else:
+            response_time = 0
         hours, rem = divmod(response_time, 3600)
         minutes, seconds = divmod(rem, 60)
         timestamp = f"Elapsed: {int(hours)}hr {int(minutes)}min {seconds:.2f}sec"
@@ -166,7 +169,7 @@ class ChatWithUserPluginWindow:
     # End of send_message method
 
 
-    def receive_message(self, message:str='', message_received_time:float=None) -> None:
+    def receive_message(self, message:str='', message_received_time:float|None = None) -> None:
         """
         This method is called to receive the message.
         Args:
@@ -174,7 +177,10 @@ class ChatWithUserPluginWindow:
             message_received_time (float)   : The time the message was received.
         """
 
-        self.message_received_time = message_received_time
+        if message_received_time is not None:
+            self.message_received_time = message_received_time
+        else:
+            self.message_received_time = time.time()
         self.message_queue.put(message)
 
         # Handle AFK
