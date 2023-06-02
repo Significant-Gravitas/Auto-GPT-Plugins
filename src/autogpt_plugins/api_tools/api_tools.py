@@ -48,6 +48,26 @@ class ApiCallCommand:
     # End of sanitize_json()
 
 
+    def sanitize(self, input_string: str) -> str:
+        """
+        Remove potentially harmful characters from the input string.
+        
+        Args:
+            input_string (str): The string to sanitize.
+            
+        Returns:
+            str: The sanitized string.
+        """
+
+        try:
+            sanitized_string = self.sanitize_json(input_string)
+        except json.JSONDecodeError:
+            sanitized_string = self.sanitize_string(input_string)
+        return sanitized_string
+
+    # End of sanitize()
+
+
     def make_api_call(self, host = "", endpoint = "", method = "GET", query_params = {}, body = "", 
                       headers = {"Content-Type": "application/json"}, timeout_secs = 60) -> str:
         """
@@ -146,8 +166,8 @@ class ApiCallCommand:
         # Validate URL
         if '?' in host or '&' in host:
             raise ValueError("Invalid URL: Host must not contain query parameters")
-        sanitized_host = sanitize(host)
-        sanitized_endpoint = sanitize(endpoint)
+        sanitized_host = self.sanitize(host)
+        sanitized_endpoint = self.sanitize(endpoint)
         if not sanitized_host.startswith(("http://", "https://")):
             sanitized_host = f"https://{sanitized_host}"
         url = urljoin(sanitized_host, sanitized_endpoint)
@@ -156,7 +176,7 @@ class ApiCallCommand:
         
         # Validate method
         allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-        sanitized_method = sanitize(method).upper()    
+        sanitized_method = self.sanitize(method).upper()    
         if sanitized_method not in allowed_methods:
             raise ValueError("Invalid method: " + sanitized_method)
 
