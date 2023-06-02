@@ -1,33 +1,54 @@
-"""API Tools for Autogpt."""
-
+"""This is a Bluesky plugin for AutoGPT using atprototools."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-try:
-    from .api_tools import ApiCallCommand
-except ImportError:
-    from api_tools import ApiCallCommand
-
 
 PromptGenerator = TypeVar("PromptGenerator")
 
+
 class Message(TypedDict):
-    """Message type."""
     role: str
     content: str
 
-class AutoGPTApiTools(AutoGPTPluginTemplate):
+
+class AutoGPTBluesky(AutoGPTPluginTemplate):
     """
-    API Tools plugin for Autogpt.
+    Bluesky plugin for AutoGPT using atprototools.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "AutoGPTApiTools"
-        self._version = "0.1.1"
-        self._description = "Allow AutoGPT to make API calls to outside services."
+        self._name = "autogpt-bluesky"
+        self._version = "0.1.0"
+        self._description = "Bluesky integration using atprototools."
 
-        self.plugin_class = ApiCallCommand()
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
+        from .bluesky_plugin.bluesky_plugin import (
+            get_latest_posts,
+            post_message,
+            username_and_pwd_set,
+        )
+
+        if not username_and_pwd_set():
+            return prompt
+
+        prompt.add_command(
+            "post_to_bluesky", "Post to Bluesky", {
+                "text": "<text>"}, post_message
+        )
+        prompt.add_command(
+            "get_bluesky_posts", "Get Blueskey Posts", {
+                "username": "<username>",
+                "number_of_posts": "<number_of_posts>"}, get_latest_posts)
+
+        return prompt
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -38,7 +59,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
-        return response
+        pass
 
     def can_handle_post_prompt(self) -> bool:
         """This method is called to check that the plugin can
@@ -55,13 +76,14 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-            self, prompt: PromptGenerator, messages: List[str]
+        self, prompt: PromptGenerator, messages: List[str]
     ) -> Optional[str]:
         """This method is called before the planning chat completeion is done.
         Args:
             prompt (PromptGenerator): The prompt generator.
             messages (List[str]): The list of messages.
         """
+        pass
 
     def can_handle_post_planning(self) -> bool:
         """This method is called to check that the plugin can
@@ -77,7 +99,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return response
+        pass
 
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -93,7 +115,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             List[str]: The resulting list of messages.
         """
-        return messages
+        pass
 
     def can_handle_on_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -109,6 +131,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Optional[str]: The resulting message.
         """
+        pass
 
     def can_handle_post_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -124,7 +147,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return response
+        pass
 
     def can_handle_pre_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -134,7 +157,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-            self, command_name: str, arguments: Dict[str, Any]
+        self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -143,7 +166,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Tuple[str, Dict[str, Any]]: The command name and the arguments.
         """
-        return command_name, arguments
+        pass
 
     def can_handle_post_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -160,14 +183,14 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return ''
+        pass
 
     def can_handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
@@ -181,11 +204,11 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-            self,
-            messages: list[Dict[Any, Any]],
-            model: str,
-            temperature: float,
-            max_tokens: int,
+        self,
+        messages: list[Dict[Any, Any]],
+        model: str,
+        temperature: float,
+        max_tokens: int,
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -196,39 +219,26 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return ''
+        return None
 
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        """This method is called just after the generate_prompt is called,
-            but actually before the prompt is generated.
-        Args:
-            prompt (PromptGenerator): The prompt generator.
-        Returns:
-            PromptGenerator: The prompt generator.
-        """
-
-        prompt.add_command( # type: ignore
-            "api",
-            "API Call",
-            {"host": "<str>", "endpoint": "<str>", "mthd": "<str>", "params": "<dict>", "body": "<str>", "hdrs": "<list>", "timeout": "<int>"},
-            self.plugin_class.make_api_call
-        )
-        return prompt
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
     
     def can_handle_user_input(self, user_input: str) -> bool:
         return False
-    
+
     def user_input(self, user_input: str) -> str:
         return user_input
-    
+
     def can_handle_report(self) -> bool:
         return False
-    
-    def report(self, message: str) -> None:
-        pass
 
-    def can_handle_text_embedding(self, text: str) -> bool:
-        return False
-    
-    def handle_text_embedding(self, text: str) -> list:  # type: ignore
+    def report(self, message: str) -> None:
         pass

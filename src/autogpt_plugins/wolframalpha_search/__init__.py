@@ -1,33 +1,38 @@
-"""API Tools for Autogpt."""
-
+"""WolframAlpha search integrations."""
+import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-try:
-    from .api_tools import ApiCallCommand
-except ImportError:
-    from api_tools import ApiCallCommand
-
+from wolframalpha import Client
 
 PromptGenerator = TypeVar("PromptGenerator")
 
+
 class Message(TypedDict):
-    """Message type."""
     role: str
     content: str
 
-class AutoGPTApiTools(AutoGPTPluginTemplate):
+
+class AutoGPTWolframAlphaSearch(AutoGPTPluginTemplate):
     """
-    API Tools plugin for Autogpt.
+    WolframAlpha search integrations
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "AutoGPTApiTools"
-        self._version = "0.1.1"
-        self._description = "Allow AutoGPT to make API calls to outside services."
+        self._name = "autogpt-wolframalpha-search"
+        self._version = "0.1.0"
+        self._description = ("WolframAlpha is an answer engine, it answers "
+                             "factual queries by computing answers from "
+                             "externally sourced data. It can provide answers "
+                             "to math, data and science queries.")
+        self.wolframalpha_appid = os.getenv("WOLFRAMALPHA_APPID")
 
-        self.plugin_class = ApiCallCommand()
+        self.api = None
+        if self.wolframalpha_appid is not None:
+            self.api = Client(self.wolframalpha_appid)
+        else:
+            print("WolframAlpha AppID not found in .env file.")
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -38,7 +43,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
-        return response
+        pass
 
     def can_handle_post_prompt(self) -> bool:
         """This method is called to check that the plugin can
@@ -62,6 +67,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
             prompt (PromptGenerator): The prompt generator.
             messages (List[str]): The list of messages.
         """
+        pass
 
     def can_handle_post_planning(self) -> bool:
         """This method is called to check that the plugin can
@@ -77,7 +83,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return response
+        pass
 
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -93,7 +99,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             List[str]: The resulting list of messages.
         """
-        return messages
+        pass
 
     def can_handle_on_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -109,6 +115,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Optional[str]: The resulting message.
         """
+        pass
 
     def can_handle_post_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -124,7 +131,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return response
+        pass
 
     def can_handle_pre_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -143,7 +150,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             Tuple[str, Dict[str, Any]]: The command name and the arguments.
         """
-        return command_name, arguments
+        pass
 
     def can_handle_post_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -160,7 +167,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return ''
+        pass
 
     def can_handle_chat_completion(
             self,
@@ -196,7 +203,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return ''
+        return None
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         """This method is called just after the generate_prompt is called,
@@ -206,29 +213,34 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-
-        prompt.add_command( # type: ignore
-            "api",
-            "API Call",
-            {"host": "<str>", "endpoint": "<str>", "mthd": "<str>", "params": "<dict>", "body": "<str>", "hdrs": "<list>", "timeout": "<int>"},
-            self.plugin_class.make_api_call
-        )
+        if self.api:
+            from .wolframalpha_search import _wolframalpha_search
+            prompt.add_command(
+                "wolframalpha_search",
+                self._description,
+                {"query": "<query>"},
+                _wolframalpha_search,
+            )
         return prompt
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
     
     def can_handle_user_input(self, user_input: str) -> bool:
         return False
-    
+
     def user_input(self, user_input: str) -> str:
         return user_input
-    
+
     def can_handle_report(self) -> bool:
         return False
-    
-    def report(self, message: str) -> None:
-        pass
 
-    def can_handle_text_embedding(self, text: str) -> bool:
-        return False
-    
-    def handle_text_embedding(self, text: str) -> list:  # type: ignore
+    def report(self, message: str) -> None:
         pass

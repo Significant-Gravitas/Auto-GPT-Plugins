@@ -1,8 +1,9 @@
 """API Call command for Autogpt."""
 
 import json
-import requests
 import re
+from typing import Dict, Optional
+from urllib.parse import urljoin, urlparse
 
 from urllib.parse import urljoin
 from validators import url as is_valid_url

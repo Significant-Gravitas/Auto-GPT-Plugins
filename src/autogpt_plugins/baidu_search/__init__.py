@@ -1,10 +1,10 @@
-"""This is the Bing search engines plugin for Auto-GPT."""
+"""This is the Baidu search engines plugin for Auto-GPT."""
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-from .bing_search import _bing_search
+from .baidu_search import _baidu_search
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -14,18 +14,18 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTBingSearch(AutoGPTPluginTemplate):
+class AutoGPTBaiduSearch(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
-        self._name = "Bing-Search-Plugin"
+        self._name = "Baidu-Search-Plugin"
         self._version = "0.1.0"
         self._description = (
-            "This plugin performs Bing searches using the provided query."
+            "This plugin performs Baidu searches using the provided query."
         )
         self.load_commands = (
             os.getenv("SEARCH_ENGINE")
-            and os.getenv("SEARCH_ENGINE").lower() == "bing"
-            and os.getenv("BING_API_KEY")
+            and os.getenv("SEARCH_ENGINE").lower() == "baidu"
+            and os.getenv("BAIDU_COOKIE")
         )
 
     def can_handle_post_prompt(self) -> bool:
@@ -33,17 +33,17 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         if self.load_commands:
-            # Add Bing Search command
+            # Add Baidu Search command
             prompt.add_command(
-                "Bing Search",
-                "bing_search",
+                "Baidu Search",
+                "baidu_search",
                 {"query": "<query>"},
-                _bing_search,
+                _baidu_search,
             )
         else:
             print(
-                "Warning: Bing-Search-Plugin is not fully functional. "
-                "Please set the SEARCH_ENGINE and BING_API_KEY environment variables."
+                "Warning: Baidu-Search-Plugin is not fully functional. "
+                "Please set the SEARCH_ENGINE and BAIDU_COOKIE environment variables."
             )
         return prompt
 
@@ -54,8 +54,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         if command_name == "google" and self.load_commands:
-            # this command does nothing but it is required to continue performing the post_command function
-            return "bing_search", {"query": arguments["query"]}
+            return "baidu_search", {"query": arguments["query"]}
         else:
             return command_name, arguments
 
@@ -102,10 +101,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
 
     def post_instruction(self, response: str) -> str:
         pass
-
-    def can_handle_pre_command(self) -> bool:
-        return True
-
+    
     def can_handle_chat_completion(
         self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
     ) -> bool:
@@ -115,7 +111,7 @@ class AutoGPTBingSearch(AutoGPTPluginTemplate):
         self, messages: List[Message], model: str, temperature: float, max_tokens: int
     ) -> str:
         pass
-
+    
     def can_handle_text_embedding(
         self, text: str
     ) -> bool:

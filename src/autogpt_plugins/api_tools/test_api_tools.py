@@ -1,5 +1,7 @@
 import json
 import random
+
+import pytest
 import requests_mock
 import unittest
 try:
@@ -12,6 +14,7 @@ class TestAutoGPTAPITools(unittest.TestCase):
     def setUp(self):
         self.plugin_class = ApiCallCommand()
 
+class TestAutoGPTAPITools():
     # Test call methods
 
     def test_api_call_get(self):

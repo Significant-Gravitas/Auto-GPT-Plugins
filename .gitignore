@@ -135,3 +135,4 @@ dmypy.json
 
 # Mac OS Files
 **/.DS_Store
+/.vs
