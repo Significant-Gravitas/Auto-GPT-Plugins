@@ -14,9 +14,6 @@ class TestAutoGPTAPITools(unittest.TestCase):
     def setUp(self):
         self.plugin_class = ApiCallCommand()
 
-class TestAutoGPTAPITools():
-    # Test call methods
-
     def test_api_call_get(self):
         """Test the self.plugin_class.make_api_call() function with a GET request."""
         with requests_mock.Mocker() as m:
