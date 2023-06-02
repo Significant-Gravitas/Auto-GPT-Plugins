@@ -31,15 +31,18 @@ class RandomValues:
         """
 
         # Type-check the arguments
-        if not isinstance(min, (int, float)):
-            raise ValueError("min must be an integer or float")
-        if not isinstance(max, (int, float)):
-            raise ValueError("max must be an integer or float")
-        if not isinstance(cnt, int):
-            try:
-                cnt = int(cnt)
-            except ValueError:
-                raise ValueError("cnt must be an integer")
+        try:
+            min = int(min)
+        except ValueError:
+            raise ValueError("min must be an integer")
+        try:
+            max = int(max)
+        except ValueError:
+            raise ValueError("max must be an integer")
+        try:
+            cnt = int(cnt)
+        except ValueError:
+            raise ValueError("cnt must be an integer")
 
         # Ensure min is less than max
         if min > max:

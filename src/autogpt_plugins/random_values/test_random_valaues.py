@@ -1,50 +1,46 @@
 import json
-from unittest.mock import Mock
 import string
-
 import pytest
+from unittest.mock import Mock
+from unittest import TestCase
+from random_values import RandomValues
 
-from .random_values import RandomValues
-
-class TestRandomValueCommands:
+class TestRandomValueCommands(TestCase):
     # _random_number Tests
 
-    def __init__(self):
+    def setUp(self):
         self.random_values = RandomValues(Mock())
 
 
     def test_random_number(self):
         result = json.loads(self.random_values.random_number(min=10, max=20, cnt=5))
-        assert len(result) == 5
+        self.assertEqual(len(result), 5)
         for num in result:
-            assert 10 <= num <= 20
+            self.assertTrue(10 <= num <= 20)
 
     def test_random_number_using_strings(self):
         result = json.loads(self.random_values.random_number(min="10", max="20", cnt="5"))
-        assert len(result) == 5
+        self.assertEqual(len(result), 5)
         for num in result:
-            assert 10 <= num <= 20
+            self.assertTrue(10 <= num <= 20)
 
     def test_random_number_using_missing_min(self):
-        # If missing, min defaults to zero
         result = json.loads(self.random_values.random_number(max=20, cnt=5))
-        assert len(result) == 5
+        self.assertEqual(len(result), 5)
         for num in result:
-            assert 0 <= num <= 20
+            self.assertTrue(0 <= num <= 20)
 
     def test_random_number_using_missing_max(self):
-        # If missing, max defaults to 65535
         result = json.loads(self.random_values.random_number(min=10, cnt=5))
-        assert len(result) == 5
+        self.assertEqual(len(result), 5)
         for num in result:
-            assert 10 <= num <= 65535
+            self.assertTrue(10 <= num <= 65535)
 
     def test_random_number_using_missing_count(self):
-        # If missing, count defaults to 1
         result = json.loads(self.random_values.random_number(min=10, max=20))
-        assert len(result) == 1
+        self.assertEqual(len(result), 1)
         for num in result:
-            assert 10 <= num <= 20
+            self.assertTrue(10 <= num <= 20)
 
     def test_random_number_min_using_garbage(self):
         with pytest.raises(ValueError) as e:
