@@ -10,17 +10,36 @@ from urllib.parse import urljoin
 from validators import url as is_valid_url
 
 class ApiCallCommand:
+    """
+    A class used to make API calls.
+    """
 
     def sanitize_string(self, input_string: str) -> str:
-            """Remove potentially harmful characters from the string."""
+        """
+        Remove potentially harmful characters from the string.
 
-            return re.sub(r'[^a-zA-Z0-9_: -{}[\],"]', '', input_string)
-        
-        # End of sanitize_string()
+        Args:
+            input_string (str): The string to sanitize.
+
+        Returns:
+            str: The sanitized string.
+        """
+
+        return re.sub(r'[^a-zA-Z0-9_: -{}[\],"]', '', input_string)
+    
+    # End of sanitize_string()
 
 
     def sanitize_json(self, input_string: str) -> str:
-        """Sanitize all the values in a JSON string."""
+        """
+        Sanitize all the values in a JSON string.
+        
+        Args:
+            input_string (str): The JSON string to sanitize.
+            
+        Returns:
+            str: The sanitized JSON string.
+        """
 
         data = json.loads(input_string)
         sanitized_data = {self.sanitize_string(k): self.sanitize_string(str(v)) for k, v in data.items()}
@@ -29,41 +48,25 @@ class ApiCallCommand:
     # End of sanitize_json()
 
 
-    def make_api_call(
-            self,
-            host = "", 
-            endpoint = "", 
-            method = "GET", 
-            query_params = {},
-            body = "", 
-            headers = {"Content-Type": "application/json"},
-            timeout_secs = 60) -> str:
-        """Return the results of an API call
+    def make_api_call(self, host = "", endpoint = "", method = "GET", query_params = {}, body = "", 
+                      headers = {"Content-Type": "application/json"}, timeout_secs = 60) -> str:
+        """
+        Return the results of an API call
+        
         Args:
-            host (str): The host of the API.
-            endpoint (str): The endpoint of the API.
-            method (str): The method of the API.
-            query_params (dict): The query parameters of the API.
-            body (str): The body of the API.
-            headers (dict): The headers of the API.
+            host (str): The host to call.
+            endpoint (str): The endpoint to call.
+            method (str): The HTTP method to use.
+            query_params (dict): The query parameters to use.
+            body (str): The body to use.
+            headers (dict): The headers to use.
             timeout_secs (int): The timeout in seconds.
+
         Returns:
             str: A JSON string containing the results of the API 
                 call in the format
                 {"status": "success|error", "status_code": int, "response": str, "response": str}
         """
-        
-        def sanitize(input_string: str) -> str:
-            """Remove potentially harmful characters from the input string."""
-
-            try:
-                sanitized_string = self.sanitize_json(input_string)
-            except json.JSONDecodeError:
-                sanitized_string = self.sanitize_string(input_string)
-            return sanitized_string
-
-        # End of sanitize()
-
 
         # Initialize variables  
         response = {}
