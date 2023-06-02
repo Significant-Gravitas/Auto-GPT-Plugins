@@ -223,7 +223,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
             self.plugin_class.generate_string,
         )
         prompt.add_command( # type: ignore
-            "passwords",
+            "pwds",
             "Create Passwords",
             {"len": "<int>", "cnt": "<int>"},
             self.plugin_class.generate_password,
