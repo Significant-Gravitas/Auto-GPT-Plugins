@@ -3,7 +3,10 @@ import pytest
 import string
 from unittest.mock import Mock
 from unittest import TestCase
-from .random_values import RandomValues
+try:
+    from .random_values import RandomValues
+except ImportError:
+    from random_values import RandomValues
 
 class TestRandomValueCommands(TestCase):
     # _random_number Tests

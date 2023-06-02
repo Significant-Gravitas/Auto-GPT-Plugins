@@ -1,9 +1,10 @@
 """Random Values commands."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-
-from .random_values import RandomValues
+try:
+    from .random_values import RandomValues
+except ImportError:
+    from random_values import RandomValues
 
 PromptGenerator = TypeVar("PromptGenerator")
 
