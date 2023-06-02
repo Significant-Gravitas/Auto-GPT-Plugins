@@ -1,6 +1,5 @@
 import json
 import string
-import pytest
 from unittest.mock import Mock
 from unittest import TestCase
 from .random_values import RandomValues

@@ -1,6 +1,6 @@
-import requests
 from typing import List, Union
 
+import requests
 
 Algorithm = Union["Aqua", "Bolt", "Comet", "Dune", "Ember", "Flash"]
 

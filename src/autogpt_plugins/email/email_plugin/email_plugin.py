@@ -8,8 +8,8 @@ import smtplib
 import time
 from email.header import decode_header
 from email.message import EmailMessage
-from bs4 import BeautifulSoup
 
+from bs4 import BeautifulSoup
 
 
 def bothEmailAndPwdSet() -> bool:

@@ -235,7 +235,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
             self.plugin_class.generate_placeholder_text,
         )
         return prompt
-    
+     
     def can_handle_text_embedding(self, text: str) -> bool:  # type: ignore
         return False
     
