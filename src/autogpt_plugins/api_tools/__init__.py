@@ -2,7 +2,10 @@
 
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-from api_tools import ApiCallCommand
+try:
+    from .api_tools import ApiCallCommand
+except ImportError:
+    from api_tools import ApiCallCommand
 
 PromptGenerator = TypeVar("PromptGenerator")
 

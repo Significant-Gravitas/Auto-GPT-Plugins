@@ -2,7 +2,10 @@ import json
 import random
 import requests_mock
 import unittest
-from api_tools import ApiCallCommand
+try:
+    from .api_tools import ApiCallCommand
+except ImportError:
+    from api_tools import ApiCallCommand
 
 class TestAutoGPTAPITools(unittest.TestCase):
 
