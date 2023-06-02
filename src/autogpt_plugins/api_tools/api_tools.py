@@ -68,19 +68,19 @@ class ApiCallCommand:
     # End of sanitize()
 
 
-    def make_api_call(self, host = "", endpoint = "", method = "GET", query_params = {}, body = "", 
-                      headers = {"Content-Type": "application/json"}, timeout_secs = 60) -> str:
+    def make_api_call(self, host = "", endpoint = "", mthd = "GET", params = {}, body = "", 
+                      hdrs = {"Content-Type": "application/json"}, timeout = 60) -> str:
         """
         Return the results of an API call
         
         Args:
             host (str): The host to call.
             endpoint (str): The endpoint to call.
-            method (str): The HTTP method to use.
-            query_params (dict): The query parameters to use.
+            mthd (str): The HTTP method to use.
+            params (dict): The query parameters to use.
             body (str): The body to use.
-            headers (dict): The headers to use.
-            timeout_secs (int): The timeout in seconds.
+            hdrs (list): The headers to use.
+            timeout (int): The timeout to use.
 
         Returns:
             str: A JSON string containing the results of the API 
@@ -100,20 +100,20 @@ class ApiCallCommand:
             raise ValueError("endpoint must be a string")
         
         # Type-check inputs - method
-        if not isinstance(method, str):
+        if not isinstance(mthd, str):
             raise ValueError("method must be a string")
         
         # Type-check inputs - query_params
-        if not query_params:
-            query_params = {}
-        elif isinstance(query_params, str):
+        if not params:
+            params = {}
+        elif isinstance(params, str):
             try:
-                query_params = json.loads(query_params)
+                params = json.loads(params)
             except json.JSONDecodeError:
                 raise ValueError("query_params must be a dictionary")
-        elif isinstance(query_params, dict):
+        elif isinstance(params, dict):
             new_query_params = {}
-            for k, v in query_params.items():
+            for k, v in params.items():
                 if k is None:
                     raise ValueError("query_params cannot contain None keys")
                 if not isinstance(k, str):
@@ -121,7 +121,7 @@ class ApiCallCommand:
                 if v is not None and not isinstance(v, str):
                     v = str(v)
                 new_query_params[k] = v
-            query_params = new_query_params
+            params = new_query_params
         else:
             raise ValueError("query_params must be a dictionary or a JSON string")
 
@@ -133,16 +133,16 @@ class ApiCallCommand:
                 raise ValueError("body must be a string")
             
         # Type-check inputs - headers
-        if not headers:
-            headers = {}
-        elif isinstance(headers, str):
+        if not hdrs:
+            hdrs = {}
+        elif isinstance(hdrs, str):
             try:
-                headers = json.loads(headers)
+                hdrs = json.loads(hdrs)
             except json.JSONDecodeError:
                 raise ValueError("headers must be a dictionary")
-        elif isinstance(headers, dict):
+        elif isinstance(hdrs, dict):
             new_headers = {}
-            for k, v in headers.items():
+            for k, v in hdrs.items():
                 if k is None:
                     raise ValueError("headers cannot contain None keys")
                 if not isinstance(k, str):
@@ -150,16 +150,16 @@ class ApiCallCommand:
                 if v is not None and not isinstance(v, str):
                     v = str(v)
                 new_headers[k] = v
-            headers = new_headers
+            hdrs = new_headers
         else:
             raise ValueError("headers must be a dictionary or a JSON string")
             
         # Type-check inputs - timeout_secs
-        if timeout_secs is None:
+        if timeout is None:
             raise ValueError("timeout_secs must be an integer")
-        elif not isinstance(timeout_secs, int):
+        elif not isinstance(timeout, int):
             try:
-                timeout_secs = int(timeout_secs)
+                timeout = int(timeout)
             except ValueError:
                 raise ValueError("timeout_secs must be an integer")
 
@@ -176,32 +176,32 @@ class ApiCallCommand:
         
         # Validate method
         allowed_methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-        sanitized_method = self.sanitize(method).upper()    
+        sanitized_method = self.sanitize(mthd).upper()    
         if sanitized_method not in allowed_methods:
             raise ValueError("Invalid method: " + sanitized_method)
 
         # Validate timeout_secs
-        if not timeout_secs > 0:
+        if not timeout > 0:
             raise ValueError("timeout_secs must be a positive integer")
         
         # Make the request
         try:
             if sanitized_method == "GET":
-                response = requests.get(url, params=query_params, headers=headers, timeout=timeout_secs)
+                response = requests.get(url, params=params, headers=hdrs, timeout=timeout)
             elif sanitized_method == "HEAD":
-                response = requests.head(url, params=query_params, headers=headers, timeout=timeout_secs)
+                response = requests.head(url, params=params, headers=hdrs, timeout=timeout)
             elif sanitized_method == "OPTIONS":
-                response = requests.options(url, params=query_params, headers=headers, timeout=timeout_secs)
+                response = requests.options(url, params=params, headers=hdrs, timeout=timeout)
             elif sanitized_method == "POST":
-                response = requests.post(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+                response = requests.post(url, params=params, json=body, headers=hdrs, timeout=timeout)
             elif sanitized_method == "PUT":
-                response = requests.put(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+                response = requests.put(url, params=params, json=body, headers=hdrs, timeout=timeout)
             elif sanitized_method == "DELETE":
-                response = requests.delete(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+                response = requests.delete(url, params=params, json=body, headers=hdrs, timeout=timeout)
             elif sanitized_method == "PATCH":
-                response = requests.patch(url, params=query_params, json=body, headers=headers, timeout=timeout_secs)
+                response = requests.patch(url, params=params, json=body, headers=hdrs, timeout=timeout)
             else:
-                raise ValueError("Invalid method: " + method)
+                raise ValueError("Invalid method: " + mthd)
             
             response_text = response.text
             response = {

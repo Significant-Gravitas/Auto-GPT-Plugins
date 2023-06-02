@@ -204,9 +204,9 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         """
 
         prompt.add_command( # type: ignore
-            "make_api_call",
-            "Make an API call",
-            {"host": "<host>", "endpoint": "<endpoint>", "method": "<method>", "query_params": "<query_params>", "body": "<body>", "headers": "<headers>"},
+            "api",
+            "API Call",
+            {"host": "<str>", "endpoint": "<str>", "mthd": "<str>", "params": "<dict>", "body": "<str>", "hdrs": "<list>", "timeout": "<int>"},
             self.plugin_class.make_api_call
         )
         return prompt
