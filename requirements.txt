@@ -1,6 +1,6 @@
 abstract-singleton
 atproto
-auto_gpt_plugin_template
+auto-gpt-plugin-template @ git+https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template@0.1.0
 black
 bs4
 build
