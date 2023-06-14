@@ -24,7 +24,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
     def __init__(self):
         super().__init__()
         self._name = "AutoGPTApiTools"
-        self._version = "0.1.1"
+        self._version = "0.1.2"
         self._description = "Allow AutoGPT to make API calls to outside services."
 
         self.plugin_class = ApiCallCommand()
@@ -210,7 +210,7 @@ class AutoGPTApiTools(AutoGPTPluginTemplate):
         prompt.add_command( # type: ignore
             "api",
             "API Call",
-            {"host": "<str>", "endpoint": "<str>", "mthd": "<str>", "params": "<dict>", "body": "<str>", "hdrs": "<list>", "timeout": "<int>"},
+            {"host": "<str>", "endpoint": "<str>", "mthd": "<str>", "params": "<dict>", "body": "<str>", "hdrs": "<dict>", "timeout": "<int>"},
             self.plugin_class.make_api_call
         )
         return prompt

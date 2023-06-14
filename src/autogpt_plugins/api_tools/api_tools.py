@@ -78,7 +78,7 @@ class ApiCallCommand:
             mthd (str): The HTTP method to use.
             params (dict): The query parameters to use.
             body (str): The body to use.
-            hdrs (list): The headers to use.
+            hdrs (dict): The headers to use.
             timeout (int): The timeout to use.
 
         Returns:
