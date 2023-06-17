@@ -6,9 +6,7 @@ try:
 except ImportError:
     from chat_with_user import ChatWithUserPlugin
 
-
 PromptGenerator = TypeVar("PromptGenerator")
-
 
 class Message(TypedDict):
     role: str
@@ -219,10 +217,10 @@ class AutoGPTChatWithUser(AutoGPTPluginTemplate):
         return False
     
     def handle_text_embedding(self, text: str) -> list:  # type: ignore
-        pass
+        return []
 
     def can_handle_user_input(self, user_input: str) -> bool:
-            return False
+        return False
     
     def user_input(self, user_input: str) -> str:
         return user_input
