@@ -1,6 +1,7 @@
 """This is a SceneX plugin for describing images for Auto-GPT."""
 import os
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 from colorama import Fore
 
@@ -236,4 +237,26 @@ class AutoGPTSceneXPlugin(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
+        pass
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
         pass

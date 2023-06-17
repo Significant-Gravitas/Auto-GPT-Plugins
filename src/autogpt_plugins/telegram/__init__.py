@@ -240,14 +240,7 @@ class AutoGPTTelegram(AutoGPTPluginTemplate):
         pass
 
     def can_handle_user_input(self, user_input: str) -> bool:
-        """This method is called to check that the plugin can
-        handle the user_input method.
-
-        Args:
-            user_input (str): The user input.
-
-        Returns:
-            bool: True if the plugin can handle the user_input method."""
+        
         return True
 
     def user_input(self, user_input: str) -> str:

@@ -1,5 +1,6 @@
 """This is a Bluesky plugin for AutoGPT using atprototools."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
+
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
 PromptGenerator = TypeVar("PromptGenerator")
@@ -30,9 +31,9 @@ class AutoGPTBluesky(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
         from .bluesky_plugin.bluesky_plugin import (
-            username_and_pwd_set,
+            get_latest_posts,
             post_message,
-            get_latest_posts
+            username_and_pwd_set,
         )
 
         if not username_and_pwd_set():
@@ -219,3 +220,25 @@ class AutoGPTBluesky(AutoGPTPluginTemplate):
             str: The resulting response.
         """
         return None
+
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
+    def can_handle_user_input(self, user_input: str) -> bool:
+        return False
+
+    def user_input(self, user_input: str) -> str:
+        return user_input
+
+    def can_handle_report(self) -> bool:
+        return False
+
+    def report(self, message: str) -> None:
+        pass
