@@ -6,11 +6,22 @@
 > ⚙️ **WORK IN PROGRESS** ⚙️:
 > The plugin API is still being refined. If you are developing a plugin, expect changes in the upcoming versions.
 
+## New in Auto-GPT 0.4.1
+- Unzipped plugins are now supported! You can now clone or download plugins directly from GitHub and place them in the `plugins` directory without zipping, as long as they are in the correct (NEW) format.
+- Plugins settings have been moved out of the `.env` file to a new `plugins_config.yaml` file in the root directory of Auto-GPT.
+- `ALLOWLISTED_PLUGINS` and `DENYLISTED_PLUGINS` `.env` settings are deprecated and will be removed in a future release.
+- Plugins must now be explicitly enabled in plugins. See the [installation](#installation) section for more details.
+- The plugin format has changed. For now the old zip format is still supported, but will be removed in a future release. See the [plugin format](#plugin-format) section for more details.
+
+### Note: The Auto-GPT-Plugins repo must still be Zipped
+
+> The core Auto-GPT Plugins are still in the old format, and will need to be zipped as shown in the instructions below. **THEY WILL NOT WORK UNZIPPED**. This will be fixed in a future release.
+
 ## Installation
 
 **_⚠️This is a work in progress⚠️_**
 
-Here are the steps to configure Auto-GPT Plugins:
+Here are the steps to configure Auto-GPT Plugins. 
 
 1. **Install Auto-GPT**
 
@@ -52,15 +63,32 @@ Here are the steps to configure Auto-GPT Plugins:
     python -m autogpt --install-plugin-deps
     ````
 
+1. **Enable the plugins** 
+
+    To activate a plugin, the user should create or edit the `plugins_config.yaml` file located in the root directory of Auto-GPT. All plugin options can be configured in this file. 
+    
+    For example, if the `astro` plugin needs to be enabled, the following line should be added to the `plugins_config.yaml` file:
+    ```yaml
+    AutoGPTSpacePlugin:
+        config: {}
+        enabled: true
+    ```
+
 ## Plugins
 
-> For interactionless use, set `ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,example-plugin3` in your `.env`
+There are two categories of plugins: **first party** and **third party**.
 
-There are two categories of plugins: **first party** and **third party**. First-party plugins are included in this repo and are installed by default when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for widely-used plugins, and third-party for your specific needs. **You can view all the plugins and their contributors on this [directory](https://autoplugins.vercel.app/).**
+ **First-party plugins** are a curated list of widely-used plugins, and are included in this repo. They and are installed by default when the plugin platform is installed. See the [First Party Plugins](#first-party-plugins) section below for a comprehensive list.
 
-If you've built a plugin and it's not listed in the directory, you can make a PR to this [repo](https://github.com/dylanintech/autoplugins) by adding your plugin to the `data` array in `plugins.tsx`.
+ **Third-party plugins** need to be added individually. They may be useful for your specific needs. See the [Third Party Plugins](#third-party-plugins) section below for a short list of third-party plugins, and for information on how to add your plugin. Note: The Auto-GPT community has developed numerous third-party plugins and this list doesn't include them all. See the [Community-contributed plugins directory](#community-contributed-plugins-directory) section below for a more comprehensive list.
 
-You can also see the plugins here:
+### Community contributed plugins directory
+
+Community member and contributor, **[@dylanintech](https://github.com/dylanintech/)**, maintains a [**growing directory**](https://autoplugins.vercel.app/) of **Auto-GPT plugins and their contributors.**. rtfgsdzxhTo get your plugin listed in that directory, add your info to the `data` array in `plugins.tsx` of [his repo](https://github.com/dylanintech/autoplugins) and submit a PR. 
+
+### First Party Plugins
+
+You can see the first-party plugins below. These are included in this Auto-GPT-Plugins repo and are installed by default when the plugin platform is installed.
 
 | Plugin       | Description     | Location |
 |--------------|-----------|--------|
@@ -79,7 +107,12 @@ You can also see the plugins here:
 | Wikipedia Search | This allows Auto-GPT to use Wikipedia directly.                                                                    | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search) |
 | WolframAlpha Search | This allows AutoGPT to use WolframAlpha directly.                                                                                         | [autogpt_plugins/wolframalpha_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wolframalpha_search)|
 
-Some third-party plugins have been created by contributors that are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
+
+### Third Party Plugins
+
+Third-party plugins are created by contributors and are not included in this repository. For more information about these plugins, please visit their respective GitHub pages.
+
+Here is a non-comprehensive list of third-party plugins. If you have a plugin you'd like to add to this list, please submit a PR.
 
 | Plugin       | Description     | Repository |
 |--------------|-----------------|-------------|
@@ -110,18 +143,56 @@ Some third-party plugins have been created by contributors that are not included
 
 ## Configuration
 
-For interactionless use, set:
+Plugins must be enabled in `plugins_config.yaml`. 
 
-`ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to allow plugins to load without prompting.
-`DENYLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to block plugins from loading without prompting.
+If you still have `ALLOWLISTED_PLUGINS` and `DENYLISTED_PLUGINS` in your `.env` file, Auto-GPT will use them to create the `plugins_config.yaml` file the first time. 
+
+This file contains a list of plugins to load. The format is as follows:
+
+```yaml
+plugin_a:
+  config:
+    api_key: my-api-key
+  enabled: false
+PluginB:
+  config: {}
+  enabled: true
+
+```
+
+The various sections are as follows:
+
+- key: The name of the plugin. E.g. `plugin_a` or `PluginB`.
+
+    This is used to load the plugin. It's format depends on whether the plugin is zipped or unzipped.
+    
+    **For zipped plugins**, the key must be the name of the plugin **class**. For example, the `weather` plugin in this repository would `WeatherPlugin`, and in the example above, `PluginB` is most likely a zipped plugin.
+
+    **For unzipped plugins**, the key must be the name of the plugin **directory**. For example, in the example above, the `plugin_a` directory would be loaded as a plugin.
+
+- config: The configuration for the plugin. 
+
+    This is passed to the plugin when it is loaded. The format of this field depends on the plugin. This field is optional. Use `{}` if you do not need to pass any configuration to the plugin.
+
+    Note that `plugins_config.yaml` file is only used by Auto-GPT to decide whether to load a plugin. For specific plugin settings, please refer to the documentation provided for each plugin. Plugin developers may still rely on`.env` for other plugin specific settings. We encourage developers to migrate their settings to the `config` field in the new `plugins_config.yaml` file.
+
+- enabled: Determines whether the plugin is loaded. 
 
 ## Creating a Plugin
 
 Creating a plugin is a rewarding experience! You can choose between first-party or third-party plugins. First-party plugins are included in this repo and are installed by default along with other plugins when the plugin platform is installed. Third-party plugins need to be added individually. Use first-party plugins for plugins you expect others to use and want, and third-party for things specific to you.
 
+## Plugin Format
+
+Plugins must follow a specific structure in order to be found and loaded successfully. The structure depends on whether a plugin is zipped or unzipped.
+
+Zipped plugins must subclasses `AutoGPTPluginTemplate`(https://github.com/Significant-Gravitas/Auto-GPT-Plugin-Template), and implement all the methods defined in AutoGPTPluginTemplate.
+
+Unzipped plugins can also subclass `AutoGPTPluginTemplate`, but it is not required. They can implement only the methods they need. However, the name of the plugin's directory is used to load the plugin, so it must be unique within AutoGPT's `plugins` directory.
+
 ### First Party Plugins How-To
 
-1. Clone the plugins repo
+1. Clone this plugins repo
 1. Follow the structure of the other plugins, implementing the plugin interface as required
 1. Write your tests
 1. Add your name to the [codeowners](.github/CODEOWNERS) file
