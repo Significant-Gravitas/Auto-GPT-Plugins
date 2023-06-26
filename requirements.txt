@@ -22,3 +22,7 @@ twine
 validators
 wheel
 wolframalpha==5.0.0
+traceback
+pathlib
+torch
+torchaudio

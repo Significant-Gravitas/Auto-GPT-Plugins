@@ -1,14 +1,13 @@
 import asyncio
 import os
 import random
+import time
 import traceback
+from glob import glob
 
 from telegram import Bot, Update
 from telegram.error import TimedOut
 from telegram.ext import CallbackContext
-import os
-import time
-import traceback
 
 # if os is windows, install soundfile, if not, install sox
 if os.name == "nt":
@@ -17,9 +16,11 @@ else:
     import sox
 
 from pathlib import Path
+
 import torch
-from autogpt.logs import logger
 import torchaudio
+
+from autogpt.logs import logger
 
 response_queue = ""
 
@@ -87,9 +88,10 @@ class TelegramUtils:
 
             (read_batch, split_into_batches,
             read_audio, prepare_model_input) = utils
-            batch = read_batch([voice_file])
-            input = prepare_model_input(batch, device=device)
-
+            test_files = glob(voice_file)
+            batches = split_into_batches(test_files, batch_size=10)
+            input = prepare_model_input(read_batch(batches[0]),
+                            device=device)
             output = model(input)
 
             text_result = ""
@@ -252,13 +254,14 @@ class TelegramUtils:
         )
 
     def idle_until_interaction(self):
+        self.send_message("* Sleeping... *")
         try:
             loop = asyncio.get_running_loop()
         except RuntimeError as e:
             loop = None
         if loop and loop.is_running():
             print("Running idle_until_interaction async")
-            loop.create_task(self._poll_updates())
+            return loop.create_task(self._poll_updates())
         else:
             print("Running idle_until_interaction sync")
             try:
@@ -268,11 +271,11 @@ class TelegramUtils:
             try:
                 if eventloop and hasattr(eventloop, "is_running"):
                     if eventloop.is_running():
-                        eventloop.create_task(self._poll_updates())
+                        return eventloop.create_task(self._poll_updates())
                     else:
-                        eventloop.run_until_complete(self._poll_updates())
+                        return eventloop.run_until_complete(self._poll_updates())
                 else:
-                    asyncio.run(self._poll_updates())
+                    return asyncio.run(self._poll_updates())
             except Exception as e:
                 print(f"Error while polling updates: {e}")
 
@@ -310,9 +313,6 @@ class TelegramUtils:
                         self._send_message_async(message=message)
                     )
                 else:
-                    print(
-                        "Error while sending message with run_until_complete, using run"
-                    )
                     asyncio.run(self._send_message_async(message=message))
             except Exception as e:
                 print(f"Error while sending message: {e}")
@@ -346,9 +346,6 @@ class TelegramUtils:
                     print("Event loop is running")
                     eventloop.run_until_complete(self._send_voice_async(voice_file))
                 else:
-                    print(
-                        "Error while sending message with run_until_complete, using run"
-                    )
                     asyncio.run(self._send_voice_async(voice_file))
 
         except RuntimeError as e:
@@ -407,20 +404,7 @@ class TelegramUtils:
         elif response_queue == "/no":
             response_text = "no"
             response_queue = "no"
-        if response_queue.capitalize() in [
-            "Yes",
-            "Okay",
-            "Ok",
-            "Sure",
-            "Yeah",
-            "Yup",
-            "Yep",
-        ]:
-            response_text = "y"
-        elif response_queue.capitalize() in ["No", "Nope", "Nah", "N"]:
-            response_text = "n"
-        else:
-            response_text = response_queue
+        response_text = response_queue
 
         print("Response received from Telegram: " + response_text)
         return response_text
@@ -457,14 +441,14 @@ class TelegramUtils:
                     if self.is_authorized_user(update):
                         if update.message and update.message.text:
                             response_queue = update.message.text
-                            return
+                            return response_queue
                         elif update.message and await self.check_voice(update):
                             print(
                                 "Voice message received, it should be saved as speech.ogg"
                             )
                             response_queue = "Received voice message: " 
                             response_queue += self._decode_voice("./speech.ogg")
-                            return
+                            return response_queue
 
                     last_update_id = max(last_update_id, update.update_id)
             except Exception as e:

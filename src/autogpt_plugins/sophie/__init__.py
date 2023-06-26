@@ -4,15 +4,15 @@ It is based on the telegram plugin I made earlier but instead of forwarding the 
 
 built by @wladastic on github"""
 
-from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 import os
 import re
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-PromptGenerator = TypeVar("PromptGenerator")
 from .sophie_chat import TelegramUtils
 
+PromptGenerator = TypeVar("PromptGenerator")
 
 class Message(TypedDict):
     role: str
@@ -123,7 +123,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         return False
 
     def on_planning(
-        self, prompt: PromptGenerator, messages: List[Message]
+            self, prompt: PromptGenerator, messages: List[Message]
     ) -> Optional[str]:
         """This method is called before the planning chat completion is done.
         Args:
@@ -137,7 +137,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         handle the post_planning method.
         Returns:
             bool: True if the plugin can handle the post_planning method."""
-        return True
+        return False
 
     def post_planning(self, response: str) -> str:
         """This method is called after the planning chat completion is done.
@@ -146,14 +146,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        try:
-            assistant_thoughts = response.get("thoughts", {})
-            assistant_thoughts_speak = assistant_thoughts.get("speak")
-            # self.telegram_utils.send_message_and_speak(assistant_thoughts_speak)
-        except Exception as e:
-            print(e)
-            print("Could not send assistant thoughts to telegram.")
-        return response
+        pass
 
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -211,7 +204,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         return False
 
     def pre_command(
-        self, command_name: str, arguments: Dict[str, Any]
+            self, command_name: str, arguments: Dict[str, Any]
     ) -> Tuple[str, Dict[str, Any]]:
         """This method is called before the command is executed.
         Args:
@@ -240,7 +233,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         pass
 
     def can_handle_chat_completion(
-        self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
+            self, messages: Dict[Any, Any], model: str, temperature: float, max_tokens: int
     ) -> bool:
         """This method is called to check that the plugin can
           handle the chat_completion method.
@@ -254,7 +247,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
         return False
 
     def handle_chat_completion(
-        self, messages: List[Message], model: str, temperature: float, max_tokens: int
+            self, messages: List[Message], model: str, temperature: float, max_tokens: int
     ) -> str:
         """This method is called when the chat completion is done.
         Args:
@@ -267,48 +260,24 @@ class SophieTelegram(AutoGPTPluginTemplate):
         """
         pass
 
+    def can_handle_text_embedding(
+        self, text: str
+    ) -> bool:
+        return False
+    
+    def handle_text_embedding(
+        self, text: str
+    ) -> list:
+        pass
+    
     def can_handle_user_input(self, user_input: str) -> bool:
-        """This method is called to check that the plugin can
-        handle the user_input method.
-
-        Args:
-            user_input (str): The user input.
-
-        Returns:
-            bool: True if the plugin can handle the user_input method."""
         return False
 
     def user_input(self, user_input: str) -> str:
-        user_input = remove_color_codes(user_input)
-        # if the user_input is too long, shorten it
-
-        return self.telegram_utils.ask_user(prompt=user_input)
+        return user_input
 
     def can_handle_report(self) -> bool:
-        """This method is called to check that the plugin can
-        handle the report method.
-
-        Returns:
-            bool: True if the plugin can handle the report method."""
         return False
 
     def report(self, message: str) -> None:
-        pass
-
-    def can_handle_text_embedding(self, text: str) -> bool:
-        """This method is called to check that the plugin can
-          handle the text_embedding method.
-        Args:
-            text (str): The text to be convert to embedding.
-          Returns:
-              bool: True if the plugin can handle the text_embedding method."""
-        return False
-
-    def handle_text_embedding(self, text: str) -> list:
-        """This method is called when the chat completion is done.
-        Args:
-            text (str): The text to be convert to embedding.
-        Returns:
-            list: The text embedding.
-        """
         pass

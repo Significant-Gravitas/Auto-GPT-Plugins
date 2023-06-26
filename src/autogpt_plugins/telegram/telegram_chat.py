@@ -139,12 +139,27 @@ class TelegramUtils:
     def send_message(self, message):
         try:
             loop = asyncio.get_running_loop()
-        except RuntimeError:  # 'RuntimeError: There is no current event loop...'
+        except RuntimeError as e:  # 'RuntimeError: There is no current event loop...'
             loop = None
-        if loop and loop.is_running():
-            loop.create_task(self._send_message(message=message))
-        else:
-            asyncio.run(self._send_message(message=message))
+
+        try:
+            if loop and loop.is_running():
+                print(
+                    "Sending message async, if this fials its due to rununtil complete task"
+                )
+                loop.create_task(self._send_message(message=message))
+            else:
+                eventloop = asyncio.get_event_loop
+                if hasattr(eventloop, "run_until_complete") and eventloop.is_running():
+                    print("Event loop is running")
+                    eventloop.run_until_complete(self._send_message(message=message))
+                else:
+                    asyncio.run(self._send_message(message=message))
+        except RuntimeError as e:
+            print(traceback.format_exc())
+            print("Error while sending message")
+            print(e)
+            exit(1)
 
     def send_voice(self, voice_file):
         try:
@@ -161,7 +176,9 @@ class TelegramUtils:
 
         # properly handle messages with more than 2000 characters by chunking them
         if len(message) > 2000:
-            message_chunks = [message[i:i + 2000] for i in range(0, len(message), 2000)]
+            message_chunks = [
+                message[i : i + 2000] for i in range(0, len(message), 2000)
+            ]
             for message_chunk in message_chunks:
                 await bot.send_message(chat_id=recipient_chat_id, text=message_chunk)
         else:
@@ -172,17 +189,22 @@ class TelegramUtils:
 
         # only display confirm if the prompt doesnt have the string ""Continue (y/n):"" inside
         if "Continue (y/n):" in prompt or "Waiting for your response..." in prompt:
-            question = prompt + " \n Confirm: /yes     Decline: /no \n Or type your answer. \n or press /auto to let an Agent decide."
+            question = (
+                prompt
+                + " \n Confirm: /yes     Decline: /no \n Or type your answer. \n or press /auto to let an Agent decide."
+            )
         elif "I want Auto-GPT to:" in prompt:
             question = prompt
         else:
-            question = prompt + " \n Type your answer or press /auto to let an Agent decide."
+            question = (
+                prompt + " \n Type your answer or press /auto to let an Agent decide."
+            )
 
         response_queue = ""
         # await delete_old_messages()
 
         print("Asking user: " + question)
-        self.send_message(message=question)
+        await self._send_message(message=question)
 
         print("Waiting for response on Telegram chat...")
         await self._poll_updates()
@@ -200,7 +222,7 @@ class TelegramUtils:
         if response_queue == "/auto":
             return "s"
         if response_queue == "/stop":
-            self.send_message("Stopping Auto-GPT now!")
+            await self._send_message("Stopping Auto-GPT now!")
             exit(0)
         elif response_queue == "/yes":
             response_text = "yes"
@@ -230,28 +252,33 @@ class TelegramUtils:
         global response_queue
         bot = await self.get_bot()
         print("getting updates...")
+        try:
+            last_update = await bot.get_updates(timeout=1)
+            if len(last_update) > 0:
+                last_update_id = last_update[-1].update_id
+            else:
+                last_update_id = -1
 
-        last_update = await bot.get_updates(timeout=1)
-        if len(last_update) > 0:
-            last_update_id = last_update[-1].update_id
-        else:
-            last_update_id = -1
+            print("last update id: " + str(last_update_id))
+            while True:
+                try:
+                    print("Polling updates...")
+                    updates = await bot.get_updates(
+                        offset=last_update_id + 1, timeout=30
+                    )
+                    for update in updates:
+                        if update.message and update.message.text:
+                            if self.is_authorized_user(update):
+                                response_queue = update.message.text
+                                return
+                        last_update_id = max(last_update_id, update.update_id)
+                except Exception as e:
+                    print(f"Error while polling updates: {e}")
 
-        print("last update id: " + str(last_update_id))
-        while True:
-            try:
-                print("Polling updates...")
-                updates = await bot.get_updates(offset=last_update_id + 1, timeout=30)
-                for update in updates:
-                    if update.message and update.message.text:
-                        if self.is_authorized_user(update):
-                            response_queue = update.message.text
-                            return
-                    last_update_id = max(last_update_id, update.update_id)
-            except Exception as e:
-                print(f"Error while polling updates: {e}")
-
-            await asyncio.sleep(1)
+                await asyncio.sleep(1)
+        except RuntimeError:
+            print("Error while polling updates")
+            exit(1)
 
     def ask_user(self, prompt):
         print("Asking user: " + prompt)
