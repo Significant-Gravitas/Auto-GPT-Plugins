@@ -110,10 +110,17 @@ Some third-party plugins have been created by contributors that are not included
 
 ## Configuration
 
-For interactionless use, set:
+To configure plugins, you can create or edit the `plugins_config.yaml` file in the root directory of Auto-GPT. This file allows you to enable or disable plugins as desired. For specific configuration instructions, please refer to the documentation provided for each plugin. The file should be formatted in YAML. Here is an example for your reference:
 
-`ALLOWLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to allow plugins to load without prompting.
-`DENYLISTED_PLUGINS=example-plugin1,example-plugin2,etc` in your `.env` file to block plugins from loading without prompting.
+```yaml
+plugin_a:
+  config:
+    api_key: my-api-key
+  enabled: false
+plugin_b:
+  config: {}
+  enabled: true
+```
 
 ## Creating a Plugin
 
