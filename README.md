@@ -140,6 +140,7 @@ Here is a non-comprehensive list of third-party plugins. If you have a plugin yo
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)|
 | Project Management | Streamline your Project Management with ease: Jira, Trello, and Google Calendar Made Effortless| [minfenglu/AutoGPT-PM-Plugin](https://github.com/minfenglu/AutoGPT-PM-Plugin)|
+| RabbitMQ | This plugin allows you to communicate with your Auto-GPT instance via microservice.| [tomtom94/AutoGPT-RabbitMQ](https://github.com/tomtom94/AutoGPT-RabbitMQ)|
 
 ## Configuration
 
