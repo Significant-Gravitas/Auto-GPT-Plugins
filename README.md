@@ -84,7 +84,7 @@ There are two categories of plugins: **first party** and **third party**.
 
 ### Community contributed plugins directory
 
-Community member and contributor, **[@dylanintech](https://github.com/dylanintech/)**, maintains a [**growing directory**](https://autoplugins.vercel.app/) of **Auto-GPT plugins and their contributors.**. rtfgsdzxhTo get your plugin listed in that directory, add your info to the `data` array in `plugins.tsx` of [his repo](https://github.com/dylanintech/autoplugins) and submit a PR. 
+Community member and contributor, **[@dylanintech](https://github.com/dylanintech/)**, maintains a [**growing directory**](https://autoplugins.vercel.app/) of **Auto-GPT plugins and their contributors. To get your plugin listed in that directory, add your info to the `data` array in `plugins.tsx` of [his repo](https://github.com/dylanintech/autoplugins) and submit a PR. 
 
 ### First Party Plugins
 
