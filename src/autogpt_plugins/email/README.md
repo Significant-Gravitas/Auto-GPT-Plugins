@@ -55,6 +55,9 @@ EMAIL_IMAP_SERVER=imap.gmail.com
 EMAIL_MARK_AS_SEEN=False
 EMAIL_SIGNATURE="This was sent by Auto-GPT"
 EMAIL_DRAFT_MODE_WITH_FOLDER=[Gmail]/Drafts
+MAX_CHARACTERS=8000
+MAX_NUM_EMAILS=10
+MAX_EMAIL_CHARACTERS=800
 ```
 
 1. **Email address and password:**
@@ -68,7 +71,9 @@ EMAIL_DRAFT_MODE_WITH_FOLDER=[Gmail]/Drafts
     - `EMAIL_MARK_AS_SEEN`: By default, processed emails are not marked as `SEEN`. Set to `True` to change this.
     - `EMAIL_SIGNATURE`: By default, no email signature is included. Configure this parameter to add a custom signature to each message sent by Auto-GPT.
     - `EMAIL_DRAFT_MODE_WITH_FOLDER`: Prevents emails from being sent and instead stores them as drafts in the specified IMAP folder. `[Gmail]/Drafts` is the default drafts folder for Gmail.
-
+    - `MAX_CHARACTERS`: Character limit for each response for reading emails
+    - `MAX_NUM_EMAILS`: Email count limit for each response for reading emails; only used if MAX_CHARACTERS is breached
+    - `MAX_EMAIL_CHARACTERS`: Character limit for each email's message returned; only used if MAX_CHARACTERS is breached, and MAX_NUM_EMAILS is not
 
 ### 6. Allowlist Plugin
 In your `.env` search for `ALLOWLISTED_PLUGINS` and add this Plugin:
