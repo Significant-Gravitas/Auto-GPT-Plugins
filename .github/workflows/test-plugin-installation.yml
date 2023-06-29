@@ -17,8 +17,8 @@ jobs:
       - name: Install and run different plugins
         run: |
           set -euo pipefail
-          plugins_to_test=("AutoGPTTwitter AutoGPTEmailPlugin AutoGPTSceneXPlugin AutoGPTBingSearch AutoGPTNewsSearch AutoGPTWikipediaSearch AutoGPTApiTools AutoGPTRandomValues AutoGPTSpacePlugin")
+          plugins_to_test=("AutoGPTTwitter AutoGPTEmailPlugin AutoGPTSceneXPlugin AutoGPTBingSearch AutoGPTNewsSearch AutoGPTWikipediaSearch AutoGPTApiTools AutoGPTRandomValues AutoGPTSpacePlugin AutoGPTBaiduSearch AutoGPTBluesky PlannerPlugin")
           for plugin in $plugins_to_test; do
-            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "__plugin_branch_to_use": '\"${{ github.head_ref}}\"', "__plugin_repo_to_use":'\"${{ github.event.pull_request.head.repo.full_name }}\"'}'
+            kurtosis run github.com/kurtosis-tech/autogpt-package '{"OPENAI_API_KEY": "test", "ALLOWLISTED_PLUGINS": '\"$plugin\"', "__skip_env_vars_validation": "True", "__skip_env_vars_default_values_set": "True", "__plugin_branch_to_use": '\"${{ github.head_ref}}\"', "__plugin_repo_to_use":'\"${{ github.event.pull_request.head.repo.full_name }}\"'}'
           done          
 

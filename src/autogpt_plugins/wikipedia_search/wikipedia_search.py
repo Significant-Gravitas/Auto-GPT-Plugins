@@ -54,6 +54,6 @@ def _wikipedia_search(query: str, num_results: int = 5) -> str | list[str]:
                 if len(items) == num_results:
                     break
         except Exception as e:
-            return f"'wikipedia_search' on query: {query} raised exception: {e}"
+            return f"'wikipedia_search' on query: '{query}' raised exception: '{e}'"
 
     return json.dumps(items, ensure_ascii=False, indent=4)

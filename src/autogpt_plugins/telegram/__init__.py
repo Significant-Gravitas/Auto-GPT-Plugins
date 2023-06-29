@@ -1,8 +1,11 @@
-"""This is the email plugin for Auto-GPT."""
+"""Telegram controller bot integration using python-telegram-bot."""
 import os
+import re
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
+
+from .telegram_chat import TelegramUtils
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -12,38 +15,28 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
+def remove_color_codes(s: str) -> str:
+    ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+    return ansi_escape.sub("", s)
+
+
+class AutoGPTTelegram(AutoGPTPluginTemplate):
     """
-    This is the Auto-GPT space plugin.
+    Telegram controller bot integration using python-telegram-bot.
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Space-Plugin"
-        self._version = "0.1.3"
-        self._description = "Auto-GPT Space Plugin: Get the number of astronauts in space in real-time.."
-        self.load_commands = True
-
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        if self.load_commands:
-            from .astronauts import get_num_astronauts
-
-            prompt.add_command(
-                "Get number of astronauts",
-                "get_num_astronauts",
-                {},
-                get_num_astronauts,
-            )
-
-        return prompt
-
-    def can_handle_post_prompt(self) -> bool:
-        """This method is called to check that the plugin can
-        handle the post_prompt method.
-
-        Returns:
-            bool: True if the plugin can handle the post_prompt method."""
-        return True
+        self._name = "Auto-GPT-Telegram"
+        self._version = "0.2.0"
+        self._description = (
+            "This integrates a Telegram chat bot with your autogpt instance."
+        )
+        self.telegram_api_key = os.getenv("TELEGRAM_API_KEY", None)
+        self.telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", None)
+        self.telegram_utils = TelegramUtils(
+            chat_id=self.telegram_chat_id, api_key=self.telegram_api_key
+        )
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -55,6 +48,26 @@ class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
+        pass
+
+    def can_handle_post_prompt(self) -> bool:
+        """This method is called to check that the plugin can
+        handle the post_prompt method.
+
+        Returns:
+            bool: True if the plugin can handle the post_prompt method."""
+        return False
+
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
         pass
 
     def can_handle_on_planning(self) -> bool:
@@ -226,24 +239,45 @@ class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
         """
         pass
 
-    def can_handle_text_embedding(
-        self, text: str
-    ) -> bool:
+    def can_handle_text_embedding(self, text: str) -> bool:
         return False
     
-    def handle_text_embedding(
-        self, text: str
-    ) -> list:
+    def handle_text_embedding(self, text: str) -> list:
         pass
-
+    
     def can_handle_user_input(self, user_input: str) -> bool:
-        return False
+        return True
 
     def user_input(self, user_input: str) -> str:
-        return user_input
-
+        user_input = remove_color_codes(user_input)
+        # if the user_input is too long, shorten it
+        try:
+            return self.telegram_utils.ask_user(prompt=user_input)
+        except Exception as e:
+            print(e)
+            print("Error sending message to telegram")
+            return "s"
+        
     def can_handle_report(self) -> bool:
-        return False
+        """This method is called to check that the plugin can
+        handle the report method.
+
+        Returns:
+            bool: True if the plugin can handle the report method."""
+        return True
 
     def report(self, message: str) -> None:
+        message = remove_color_codes(message)
+        # if the message is too long, shorten it
+        try :
+            self.telegram_utils.send_message(message=message)
+        except Exception as e:
+            print(e)
+            print("Error sending message to telegram")
+            
+
+    def can_handle_text_embedding(self, text: str) -> bool:
+        return False
+
+    def handle_text_embedding(self, text: str) -> list:
         pass
