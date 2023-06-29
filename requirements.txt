@@ -20,5 +20,6 @@ setuptools
 tweepy==4.13.0
 twine
 validators
+praw
 wheel
 wolframalpha==5.0.0

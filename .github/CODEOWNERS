@@ -7,6 +7,7 @@
 /src/autogpt_plugins/email @riensen
 /src/autogpt_plugins/news_search @PalAditya
 /src/autogpt_plugins/random_values @sidewaysthought
+/src/autogpt_plugins/reddit @ckroeper
 /src/autogpt_plugins/scenex @delgermurun
 /src/autogpt_plugins/telegram @wladastic
 /src/autogpt_plugins/twitter @desojo
