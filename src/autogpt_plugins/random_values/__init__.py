@@ -1,18 +1,12 @@
 """Random Values commands."""
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
-
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
-
-from .random_values import (
-    _generate_password,
-    _generate_placeholder_text,
-    _generate_string,
-    _make_uuids,
-    _random_number,
-)
+try:
+    from .random_values import RandomValues
+except ImportError:
+    from random_values import RandomValues
 
 PromptGenerator = TypeVar("PromptGenerator")
-
 
 class Message(TypedDict):
     role: str
@@ -26,9 +20,10 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "autogpt-random-values"
-        self._version = "0.1.0"
+        self._name = "AutoGPTRandomValues"
+        self._version = "0.1.2"
         self._description = "Enable Auto-GPT with the power of random values."
+        self.plugin_class = RandomValues(self)
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -39,7 +34,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
 
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
-        pass
+        return response
 
     def can_handle_post_prompt(self) -> bool:
         """This method is called to check that the plugin can
@@ -79,7 +74,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
+        return response
 
     def can_handle_pre_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -95,7 +90,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             List[str]: The resulting list of messages.
         """
-        pass
+        return messages
 
     def can_handle_on_instruction(self) -> bool:
         """This method is called to check that the plugin can
@@ -127,7 +122,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
+        return response
 
     def can_handle_pre_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -146,7 +141,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             Tuple[str, Dict[str, Any]]: The command name and the arguments.
         """
-        pass
+        return command_name, arguments
 
     def can_handle_post_command(self) -> bool:
         """This method is called to check that the plugin can
@@ -163,7 +158,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        pass
+        return response
 
     def can_handle_chat_completion(
         self,
@@ -199,7 +194,7 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
         Returns:
             str: The resulting response.
         """
-        return None
+        return ''
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
         """This method is called just after the generate_prompt is called,
@@ -210,53 +205,52 @@ class AutoGPTRandomValues(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
 
-        prompt.add_command(
-            "random_number",
-            "Random Number",
-            {"min": "<integer>", "max": "<integer>", "count": "<integer>"},
-            _random_number,
+        prompt.add_command(  # type: ignore
+            "rnd_num",
+            "Random Numbers",
+            {"min": "<int>", "max": "<int>", "cnt": "<int>"},
+            self.plugin_class.random_number,
         )
-        prompt.add_command(
-            "make_uuids", "Make UUIDs", {"count": "<integer>"}, _make_uuids
+        prompt.add_command(  # type: ignore
+            "uuids", 
+            "Make UUIDs", 
+            {"cnt": "<int>"}, 
+            self.plugin_class.make_uuids
         )
-        prompt.add_command(
-            "generate_string",
-            "Generate String",
-            {"length": "<integer>", "count": "<integer>"},
-            _generate_string,
+        prompt.add_command(  # type: ignore
+            "make_str",
+            "Generate Strings",
+            {"len": "<int>", "cnt": "<int>"},
+            self.plugin_class.generate_string,
         )
-        prompt.add_command(
-            "generate_password",
-            "Generate Password",
-            {"length": "<integer>", "count": "<integer>"},
-            _generate_password,
+        prompt.add_command( # type: ignore
+            "pwds",
+            "Create Passwords",
+            {"len": "<int>", "cnt": "<int>"},
+            self.plugin_class.generate_password,
         )
-        prompt.add_command(
-            "generate_placeholder_text",
-            "Generate Placeholder Text",
-            {"sentences": "<integer>"},
-            _generate_placeholder_text,
+        prompt.add_command( # type: ignore
+            "lorem_ipsum",
+            "Create Lorem Sentences",
+            {"cnt": "<int>"},
+            self.plugin_class.generate_placeholder_text,
         )
         return prompt
-
-    def can_handle_text_embedding(
-        self, text: str
-    ) -> bool:
+     
+    def can_handle_text_embedding(self, text: str) -> bool:  # type: ignore
         return False
     
-    def handle_text_embedding(
-        self, text: str
-    ) -> list:
+    def handle_text_embedding(self, text: str) -> list:  # type: ignore
         pass
-    
-    def can_handle_user_input(self, user_input: str) -> bool:
-        return False
 
+    def can_handle_user_input(self, user_input: str) -> bool:
+            return False
+    
     def user_input(self, user_input: str) -> str:
         return user_input
-
+    
     def can_handle_report(self) -> bool:
         return False
-
+    
     def report(self, message: str) -> None:
         pass
