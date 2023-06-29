@@ -28,7 +28,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get install -y libportaudio2
           python -m pip install --upgrade pip
+          pip install --upgrade wheel
           pip install -r requirements.txt
 
       - name: Run unittest tests with coverage
