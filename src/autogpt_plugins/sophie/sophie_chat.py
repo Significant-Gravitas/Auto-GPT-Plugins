@@ -176,6 +176,7 @@ class TelegramUtils:
             # else:
 
     def poll_anyMessage(self):
+        logger.info("Waiting for first message...")
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         return loop.run_until_complete(self.poll_anyMessage_async())
@@ -425,10 +426,13 @@ class TelegramUtils:
         bot = await self.get_bot()
         print("getting updates...")
 
-        last_update = await bot.get_updates(timeout=1)
+        last_update = await bot.get_updates(timeout=10)
         if len(last_update) > 0:
             print("last updates: " + str(last_update))
             last_update_id = last_update[-1].update_id
+            # print all messages in last updates
+            for update in last_update:
+                print(update.message.text)    
         else:
             last_update_id = -1
 
