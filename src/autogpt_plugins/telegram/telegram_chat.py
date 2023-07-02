@@ -139,7 +139,7 @@ class TelegramUtils:
     def send_message(self, message):
         try:
             loop = asyncio.get_running_loop()
-        except RuntimeError as e as e:  # 'RuntimeError: There is no current event loop...'
+        except RuntimeError as e:  # 'RuntimeError: There is no current event loop...'
             loop = None
 
         try:
@@ -261,7 +261,7 @@ class TelegramUtils:
         global response_queue
         bot = await self.get_bot()
         print("getting updates...")
-        try:        try:
+        try:
                 last_update = await bot.get_updates(timeout=1)
                 if len(last_update) > 0:
                     last_update_id = last_update[-1].update_id
@@ -285,8 +285,7 @@ class TelegramUtils:
                             last_update_id = max(last_update_id, update.update_id)
                     except Exception as e:
                         print(f"Error while polling updates: {e}")
-
-                await asyncio.sleep(1)
+                    await asyncio.sleep(1)
         except RuntimeError:
             print("Error while polling updates")
 
