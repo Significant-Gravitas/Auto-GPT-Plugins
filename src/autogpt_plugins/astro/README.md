@@ -1,5 +1,5 @@
 # Auto-GPT Space Plugin
-This plugin enables AutoGPT to see how many people are in space. This can help enable AutoGPT to better achieve its goals
+This plugin enables AutoGPT to see how many people are in space and see the position of the ISS. This can help enable AutoGPT to better achieve its goals.
 
 ## Use cases
  - Researching how many people are in space

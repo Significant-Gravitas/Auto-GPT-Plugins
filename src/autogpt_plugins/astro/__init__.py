@@ -1,4 +1,4 @@
-"""This is the email plugin for Auto-GPT."""
+"""This is the space plugin for Auto-GPT."""
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
@@ -33,6 +33,12 @@ class AutoGPTSpacePlugin(AutoGPTPluginTemplate):
                 "get_num_astronauts",
                 {},
                 get_num_astronauts,
+            )
+            prompt.add_command(
+                "Get the coordinates of the ISS",
+                "get_coords_iss",
+                {},
+                get_coords_iss,
             )
 
         return prompt
