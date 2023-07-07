@@ -282,9 +282,11 @@ class TelegramUtils:
 
     def send_message(self, message):
         self._send_message(message + "...")
+        return "Sent message successfully."
 
     def send_message_and_speak(self, message):
         self._send_message(message + "...", speak=True)
+        return "Sent message successfully."
 
     def _send_message(self, message, speak=False):
         try:
