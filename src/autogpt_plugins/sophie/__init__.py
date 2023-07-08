@@ -31,9 +31,8 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
     def __init__(self):
         super().__init__()
-        self._name = "AutoGPT-Sophie-Plugin"
         self._name = "Auto-GPT-Sophie"
-        self._version = "0.2.0"
+        self._version = "0.3.0"
         self._description = (
             "This integrates a Telegram chat bot with your autogpt instance."
         )
@@ -53,6 +52,13 @@ class SophieTelegram(AutoGPTPluginTemplate):
         """
 
         prompt.add_command(
+            "get_previous_message_history",
+            "Get the previous messages from the chat when you start.",
+            {},
+            self.telegram_utils.get_previous_message_history,
+        )
+
+        prompt.add_command(
             "ask_user",
             "Ask the user for input or tell them something and wait for their response.",
             {
@@ -63,7 +69,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "ask_user_voice",
-            "Ask the user for input or tell them something and wait for their response.",
+            "Same as ask_user but also sends a friendly voice message.",
             {
                 "prompt": "<message that awaits user input>",
             },
@@ -81,7 +87,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "send_voice_message",
-            "Send a message to the user without awaiting response.",
+            "Same as send_message but also sends a friendly voice message.",
             {
                 "message": "<message to send>",
             },
@@ -90,7 +96,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "sleep_until_interaction",
-            "Wait until the user sends a message, for example after saying good night.",
+            "To be used when no question is asked and wait for next user interaction.",
             {},
             self.telegram_utils.idle_until_interaction,
         )
