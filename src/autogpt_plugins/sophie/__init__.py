@@ -60,7 +60,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "ask_user",
-            "Ask the user for input or tell them something and wait for their response.",
+            "Ask the user for input or tell them something and wait for their response if.",
             {
                 "prompt": "<message that awaits user input>",
             },
@@ -96,7 +96,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
 
         prompt.add_command(
             "sleep_until_interaction",
-            "To be used when no question is asked and wait for next user interaction.",
+            "To be used to pause the conversation for next user interaction. Similar to ask but without a prompt, user is only notified that you sleep.",
             {},
             self.telegram_utils.idle_until_interaction,
         )

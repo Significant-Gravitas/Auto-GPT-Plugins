@@ -45,7 +45,7 @@ def log(message):
     print("\033[95m" + str(message) + "\033[0m")
 
 
-def summarize_text(self, text):
+def summarize_text(text):
     """
     Summarize the given text using the GPT-3 model.
     """
@@ -75,7 +75,10 @@ def chunk_text(text, max_tokens=3000):
     chunks = []
     chunk = ""
     for message in text.split(" "):
-        if count_string_tokens(str(chunk) + str(message), model_name="gpt-4") <= max_tokens:
+        if (
+            count_string_tokens(str(chunk) + str(message), model_name="gpt-4")
+            <= max_tokens
+        ):
             chunk += " " + message
         else:
             chunks.append(chunk)
@@ -149,10 +152,12 @@ class TelegramUtils:
             if len(self.conversation_history) == 0:
                 return "There is no previous message history."
 
-            tokens = count_string_tokens(str(self.conversation_history), model_name="gpt-4")
+            tokens = count_string_tokens(
+                str(self.conversation_history), model_name="gpt-4"
+            )
             if tokens > 3000:
                 log("Message history is over 3000 tokens. Summarizing...")
-                chunks = chunk_text(self.conversation_history)
+                chunks = chunk_text(str(self.conversation_history))
                 summaries = summarize_chunks(chunks)
                 summarized_history = " ".join(summaries)
                 summarized_history += " " + " ".join(self.conversation_history[-6:])
@@ -456,6 +461,14 @@ class TelegramUtils:
         last_update = await bot.get_updates(timeout=10)
         if len(last_update) > 0:
             last_messages = [u.message.text for u in last_update]
+            # last_messages failes when text or message is not given, rewrite with a checker and also log the object
+            last_messages = []
+            for u in last_update:
+                if u.message:
+                    if u.message.text:
+                        last_messages.append(u.message.text)
+                    else:
+                        log("no text in message in update: " + str(u))
             # itarate and check if last messages are already known, if not add to history
             for message in last_messages:
                 if message not in self.conversation_history:
@@ -484,7 +497,9 @@ class TelegramUtils:
                             )
                             response_queue = "Received voice message: "
                             response_queue += self._decode_voice("./speech.ogg")
-                            self.add_to_conversation_history("User voice message: " + response_queue)
+                            self.add_to_conversation_history(
+                                "User voice message: " + response_queue
+                            )
                             return response_queue
 
                     last_update_id = max(last_update_id, update.update_id)
@@ -501,8 +516,9 @@ class TelegramUtils:
         try:
             answer = run_async(self._poll_updates())
         except Exception as e:
+            log(traceback.format_exc())
             log(f"Error while polling updates: {e}")
-            return answer + "Error while waiting for interaction."
+            return answer + "Error while waiting for interaction. Use ask_user instead."
         self.add_to_conversation_history("Received while sleeping: " + answer)
         return answer
 
