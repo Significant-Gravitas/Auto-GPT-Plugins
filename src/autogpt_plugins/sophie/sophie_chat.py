@@ -308,7 +308,10 @@ class TelegramUtils:
             await asyncio.sleep(1)
 
     def is_authorized_user(self, update: Update):
-        return update.effective_user.id == int(self.chat_id)
+        authorized = update.effective_user.id == int(self.chat_id)
+        if not authorized:
+            log("Unauthorized user: " + str(update))
+        return authorized
 
     def handle_response(self, update: Update, context: CallbackContext):
         try:
@@ -460,10 +463,22 @@ class TelegramUtils:
 
         last_update = await bot.get_updates(timeout=10)
         if len(last_update) > 0:
-            last_messages = [u.message.text for u in last_update]
-            # last_messages failes when text or message is not given, rewrite with a checker and also log the object
             last_messages = []
             for u in last_update:
+                if not self.is_authorized_user(u):
+                    continue
+                if u.message and u.message.text:
+                    last_messages.append(u.message.text)
+                else:
+                    log("no text in message in update: " + str(u))
+                if u.message and u.message.text:
+                    last_messages.append(u.message.text)
+                else:
+                    log("no text in message in update: " + str(u))
+            last_messages = []
+            for u in last_update:
+                if not self.is_authorized_user(u):
+                    continue
                 if u.message:
                     if u.message.text:
                         last_messages.append(u.message.text)

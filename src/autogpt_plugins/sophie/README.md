@@ -1,5 +1,6 @@
 # AutoGPT Sophie Plugin
-Simple planning commands for planning leveraged with chatgpt3.5 and json objects to keep track of its progress on a list of tasks.
+Telegram Chat companion plugin for AutoGPT
+
 ![image](https://github.com/Wladastic/Auto-GPT-Plugins/assets/11997278/16c7cb86-0a1f-4aae-a485-f40a1aa6506c)
 ![image](https://github.com/Wladastic/Auto-GPT-Plugins/assets/11997278/249ae4de-e3c6-4c8a-95b3-93348472978d)
 
