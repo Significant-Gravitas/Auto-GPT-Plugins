@@ -493,12 +493,12 @@ class TelegramUtils:
             last_update_id = last_update[-1].update_id
 
         else:
-            last_update_id = -1
+            last_update_id = -11
 
         log("last update id: " + str(last_update_id))
+        log("Waiting for new messages...")
         while True:
             try:
-                log("Polling updates...")
                 updates = await bot.get_updates(offset=last_update_id + 1, timeout=30)
                 for update in updates:
                     if self.is_authorized_user(update):
