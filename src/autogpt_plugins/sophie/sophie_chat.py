@@ -311,6 +311,9 @@ class TelegramUtils:
         authorized = update.effective_user.id == int(self.chat_id)
         if not authorized:
             log("Unauthorized user: " + str(update))
+            chat_id = update.message.chat.id
+            temp_bot= Bot(self.api_key)
+            temp_bot.send_message(chat_id=chat_id, text="You are not authorized to use this bot. Checkout Auto-GPT-Plugins on GitHub: https://github.com/Significant-Gravitas/Auto-GPT-Plugins")
         return authorized
 
     def handle_response(self, update: Update, context: CallbackContext):
