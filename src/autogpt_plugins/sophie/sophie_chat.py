@@ -20,9 +20,7 @@ else:
 from pathlib import Path
 
 import torch
-import torchaudio
 
-from autogpt.logs import logger
 from autogpt.llm.utils import count_string_tokens
 
 response_queue = ""
@@ -219,7 +217,6 @@ class TelegramUtils:
         except Exception as e:
             log(e)
             log(traceback.format_exc())
-            log(f"if it's no audio backend: {str(torchaudio.get_audio_backend())}")
             exit(1)
 
     def _setup_speech(self):
@@ -284,7 +281,7 @@ class TelegramUtils:
             self.send_voice(local_string + str(output_file))
 
     def poll_anyMessage(self):
-        logger.info("Waiting for first message...")
+        print("Waiting for first message...")
         return run_async(self.poll_anyMessage_async())
 
     async def poll_anyMessage_async(self):
@@ -521,6 +518,8 @@ class TelegramUtils:
                             return response_queue
 
                     last_update_id = max(last_update_id, update.update_id)
+            except TimedOut:
+                continue
             except Exception as e:
                 log(f"Error while polling updates: {e}")
 
