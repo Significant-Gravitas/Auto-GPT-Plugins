@@ -36,10 +36,10 @@ class SophieTelegram(AutoGPTPluginTemplate):
         self._description = (
             "This integrates a Telegram chat bot with your autogpt instance."
         )
-        self.telegram_api_key = os.getenv("TELEGRAM_SOPHIE_API_KEY", None)
-        self.telegram_chat_id = os.getenv("TELEGRAM_SOPHIE_CHAT_ID", None)
-        self.telegram_utils = TelegramUtils(
-            chat_id=self.telegram_chat_id, api_key=self.telegram_api_key
+        self.telegram_sophie_api_key = os.getenv("TELEGRAM_SOPHIE_API_KEY", None)
+        self.telegram_sophie_chat_id = os.getenv("TELEGRAM_SOPHIE_CHAT_ID", None)
+        self.telegram_sophie_utils = TelegramUtils(
+            chat_id=self.telegram_sophie_chat_id, api_key=self.telegram_sophie_api_key
         )
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
@@ -55,7 +55,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             "get_previous_message_history",
             "Get the previous messages from the chat when you start.",
             {},
-            self.telegram_utils.get_previous_message_history,
+            self.telegram_sophie_utils.get_previous_message_history,
         )
 
         prompt.add_command(
@@ -64,7 +64,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             {
                 "prompt": "<message that awaits user input>",
             },
-            self.telegram_utils.ask_user,
+            self.telegram_sophie_utils.ask_user,
         )
 
         prompt.add_command(
@@ -73,7 +73,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             {
                 "prompt": "<message that awaits user input>",
             },
-            self.telegram_utils.ask_user_voice,
+            self.telegram_sophie_utils.ask_user_voice,
         )
 
         prompt.add_command(
@@ -82,7 +82,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             {
                 "message": "<message to send>",
             },
-            self.telegram_utils.send_message,
+            self.telegram_sophie_utils.send_message,
         )
 
         prompt.add_command(
@@ -91,14 +91,14 @@ class SophieTelegram(AutoGPTPluginTemplate):
             {
                 "message": "<message to send>",
             },
-            self.telegram_utils.send_message_and_speak,
+            self.telegram_sophie_utils.send_message_and_speak,
         )
 
         prompt.add_command(
             "sleep_until_interaction",
             "To be used to pause the conversation for next user interaction. Similar to ask but without a prompt, user is only notified that you sleep.",
             {},
-            self.telegram_utils.idle_until_interaction,
+            self.telegram_sophie_utils.idle_until_interaction,
         )
 
         return prompt
