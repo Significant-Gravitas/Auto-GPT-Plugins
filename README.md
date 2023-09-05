@@ -136,6 +136,7 @@ Here is a non-comprehensive list of third-party plugins. If you have a plugin yo
 | Todoist-Plugin | Allow Auto-GPT to programatically interact with yor Todoist to create, update, and manage your Todoist | [danikhan632/Auto-GPT-Todoist-Plugin](https://github.com/danikhan632/Auto-GPT-Todoist-Plugin) |
 | Weather | A simple weather plugin wrapping around python-weather | [ppetermann/Auto-GPT-WeatherPlugin](https://github.com/ppetermann/Auto-GPT-WeatherPlugin) |
 | Web-Interaction | Enable Auto-GPT to fully interact with websites! Allows Auto-GPT to click elements, input text, and scroll | [gravelBridge/AutoGPT-Web-Interaction](https://github.com/gravelBridge/AutoGPT-Web-Interaction)|
+| Website-Carbon-Footprint | Take advantage of the Website Carbon Footprint API with Auto-GPT | [arananet/Auto-GPT-Website-Carbon-Footprint](https://github.com/arananet/Auto-GPT-Website-Carbon-Footprint)|
 | WolframAlpha | Access to WolframAlpha to do math and get accurate information | [gravelBridge/AutoGPT-WolframAlpha](https://github.com/gravelBridge/AutoGPT-WolframAlpha)|
 | YouTube   | Various YouTube features including downloading and understanding | [jpetzke/AutoGPT-YouTube](https://github.com/jpetzke/AutoGPT-YouTube) |
 | Zapier webhooks | This plugin allows you to easily integrate Zapier connectivity | [AntonioCiolino/AutoGPT-Zapier](https://github.com/AntonioCiolino/AutoGPT-Zapier)|
