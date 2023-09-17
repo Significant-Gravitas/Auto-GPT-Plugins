@@ -117,6 +117,7 @@ Here is a non-comprehensive list of third-party plugins. If you have a plugin yo
 | Plugin       | Description     | Repository |
 |--------------|-----------------|-------------|
 | Alpaca-Trading | Trade stocks and crypto, paper or live with Auto-GPT | [danikhan632/Auto-GPT-AlpacaTrader-Plugin](https://github.com/danikhan632/Auto-GPT-AlpacaTrader-Plugin)|
+| AutoGPTReddit | Reddit Access | [NeonN3mesis/AutoGPTReddit](https://github.com/NeonN3mesis/AutoGPTReddit)|
 | AutoGPT User Input Request | Allow Auto-GPT to specifically request user input in continous mode | [HFrovinJensen/Auto-GPT-User-Input-Plugin](https://github.com/HFrovinJensen/Auto-GPT-User-Input-Plugin)|
 | BingAI | Enable Auto-GPT to fetch information via BingAI, saving time, API requests while maintaining accuracy. This does not remove the need for OpenAI API keys | [gravelBridge/AutoGPT-BingAI](https://github.com/gravelBridge/AutoGPT-BingAI)|
 | Crypto | Trade crypto with Auto-GPT | [isaiahbjork/Auto-GPT-Crypto-Plugin](https://github.com/isaiahbjork/Auto-GPT-Crypto-Plugin)|
