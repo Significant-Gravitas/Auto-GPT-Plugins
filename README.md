@@ -74,6 +74,20 @@ Here are the steps to configure Auto-GPT Plugins.
         enabled: true
     ```
 
+1. **Alernate option to enable the plugins** (May cease to function at any point as the .env support for plugins may change)
+   
+   In your .env file add the lines below. If your plugins_config.yaml does not exist it should generate correctly when you run Auto-GPT based on what you populate below.
+   ```
+   ################################################################################
+   ### ALLOWLISTED PLUGINS
+   ################################################################################
+
+   #ALLOWLISTED_PLUGINS - Sets the listed plugins that are allowed (Example: plugin1,plugin2,plugin3)
+   ALLOWLISTED_PLUGINS=AutoGPTReddit
+
+   DENYLISTED_PLUGINS=AutoGPTBluesky,AutoGPTTelegram,AutoGPTEmailPlugin,AutoGPTNewsSearch,PlannerPlugin,AutoGPTSceneXPlugin,AutoGPTTwitter,AutoGPTWikipediaSearch,AutoGPTWolframAlphaSearch,AutoGPTSpacePlugin,AutoGPTBaiduSearch,AutoGPTBingSearch
+   ```
+   
 ## Plugins
 
 There are two categories of plugins: **first party** and **third party**.
