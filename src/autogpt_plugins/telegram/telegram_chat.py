@@ -169,7 +169,7 @@ class TelegramUtils:
             print("Error while sending voice message")
 
     async def _send_message(self, message):
-        print("Sending message to Telegram.. ")
+        print("Sending message to Telegram.. " + message)
         recipient_chat_id = self.chat_id
         bot = await self.get_bot()
 

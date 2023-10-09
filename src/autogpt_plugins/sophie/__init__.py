@@ -39,7 +39,8 @@ class SophieTelegram(AutoGPTPluginTemplate):
         self.telegram_sophie_api_key = os.getenv("TELEGRAM_SOPHIE_API_KEY", None)
         self.telegram_sophie_chat_id = os.getenv("TELEGRAM_SOPHIE_CHAT_ID", None)
         self.telegram_sophie_utils = TelegramUtils(
-            chat_id=self.telegram_sophie_chat_id, api_key=self.telegram_sophie_api_key
+            chat_id=self.telegram_sophie_chat_id,
+            api_key=self.telegram_sophie_api_key
         )
 
     def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
@@ -62,7 +63,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             "ask_user",
             "Ask the user for input or tell them something and wait for their response if.",
             {
-                "prompt": "<message that awaits user input>",
+                "prompt": "string",
             },
             self.telegram_sophie_utils.ask_user,
         )
@@ -71,7 +72,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             "ask_user_voice",
             "Same as ask_user but also sends a friendly voice message.",
             {
-                "prompt": "<message that awaits user input>",
+                "prompt": "string",
             },
             self.telegram_sophie_utils.ask_user_voice,
         )
@@ -80,7 +81,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             "send_message",
             "Send a message to the user without awaiting response.",
             {
-                "message": "<message to send>",
+                "message": "string",
             },
             self.telegram_sophie_utils.send_message,
         )
@@ -89,7 +90,7 @@ class SophieTelegram(AutoGPTPluginTemplate):
             "send_voice_message",
             "Same as send_message but also sends a friendly voice message.",
             {
-                "message": "<message to send>",
+                "message": "string",
             },
             self.telegram_sophie_utils.send_message_and_speak,
         )

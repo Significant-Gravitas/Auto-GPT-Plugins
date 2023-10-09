@@ -6,24 +6,34 @@ import time
 import traceback
 from glob import glob
 import openai
-
 from telegram import Bot, Update
 from telegram.error import TimedOut
 from telegram.ext import CallbackContext
-
+import tiktoken
 
 if os.name == "nt":
     import soundfile as sf
 else:
     import sox
-
 from pathlib import Path
-
 import torch
 
-from autogpt.llm.utils import count_string_tokens
 
 response_queue = ""
+
+
+def count_string_tokens(text, model_name="gpt-3.5-turbo"):
+    """Returns the number of tokens used by a list of messages."""
+    model = model_name
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+        return len(encoding.encode(text))
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base")
+    # note: future models may deviate from this
+    except Exception as e:
+        log(f"Sophie: Error while counting tokens: {e}")
+        log(traceback.format_exc())
 
 
 def run_async(coro):
@@ -309,8 +319,11 @@ class TelegramUtils:
         if not authorized:
             log("Unauthorized user: " + str(update))
             chat_id = update.message.chat.id
-            temp_bot= Bot(self.api_key)
-            temp_bot.send_message(chat_id=chat_id, text="You are not authorized to use this bot. Checkout Auto-GPT-Plugins on GitHub: https://github.com/Significant-Gravitas/Auto-GPT-Plugins")
+            temp_bot = Bot(self.api_key)
+            temp_bot.send_message(
+                chat_id=chat_id,
+                text="You are not authorized to use this bot. Checkout Auto-GPT-Plugins on GitHub: https://github.com/Significant-Gravitas/Auto-GPT-Plugins",
+            )
         return authorized
 
     def handle_response(self, update: Update, context: CallbackContext):
@@ -389,7 +402,7 @@ class TelegramUtils:
             return "Error while sending voice message."
 
     async def _send_message_async(self, message, speak=False):
-        log("Sending message to Telegram.. ")
+        log("Sophie: Sending message to Telegram.. ")
         recipient_chat_id = self.chat_id
         bot = await self.get_bot()
 
