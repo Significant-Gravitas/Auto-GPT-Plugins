@@ -169,12 +169,15 @@ class TelegramUtils:
             print("Error while sending voice message")
 
     async def _send_message(self, message):
-        print("Sending message to Telegram.. ")
+        print("Sending message to Telegram.. " + message)
         recipient_chat_id = self.chat_id
         bot = await self.get_bot()
 
         # properly handle messages with more than 2000 characters by chunking them
         if len(message) > 2000:
+            message_chunks = [
+                message[i : i + 2000] for i in range(0, len(message), 2000)
+            ]
             message_chunks = [
                 message[i : i + 2000] for i in range(0, len(message), 2000)
             ]
@@ -189,20 +192,26 @@ class TelegramUtils:
         # only display confirm if the prompt doesnt have the string ""Continue (y/n):"" inside
         if "Continue (y/n):" in prompt or "Waiting for your response..." in prompt:
             question = (
+                (
                 prompt
+               
                 + " \n Confirm: /yes     Decline: /no \n Or type your answer. \n or press /auto to let an Agent decide."
+            )
             )
         elif "I want Auto-GPT to:" in prompt:
             question = prompt
         else:
             question = (
+                (
                 prompt + " \n Type your answer or press /auto to let an Agent decide."
+            )
             )
 
         response_queue = ""
         # await delete_old_messages()
 
         print("Asking user: " + question)
+        await self._send_message(message=question)
         await self._send_message(message=question)
 
         print("Waiting for response on Telegram chat...")
@@ -221,6 +230,7 @@ class TelegramUtils:
         if response_queue == "/auto":
             return "s"
         if response_queue == "/stop":
+            await self._send_message("Stopping Auto-GPT now!")
             await self._send_message("Stopping Auto-GPT now!")
             exit(0)
         elif response_queue == "/yes":
@@ -252,29 +262,30 @@ class TelegramUtils:
         bot = await self.get_bot()
         print("getting updates...")
         try:
-            last_update = await bot.get_updates(timeout=1)
-            if len(last_update) > 0:
-                last_update_id = last_update[-1].update_id
-            else:
-                last_update_id = -1
+                last_update = await bot.get_updates(timeout=1)
+                if len(last_update) > 0:
+                    last_update_id = last_update[-1].update_id
+                else:
+                    last_update_id = -1
 
-            print("last update id: " + str(last_update_id))
-            while True:
-                try:
-                    print("Polling updates...")
-                    updates = await bot.get_updates(
+                print("last update id: " + str(last_update_id))
+                while True:
+                    try:
+                        print("Polling updates...")
+                        updates = await bot.get_updates(
+                        
                         offset=last_update_id + 1, timeout=30
+                    
                     )
-                    for update in updates:
-                        if update.message and update.message.text:
-                            if self.is_authorized_user(update):
-                                response_queue = update.message.text
-                                return
-                        last_update_id = max(last_update_id, update.update_id)
-                except Exception as e:
-                    print(f"Error while polling updates: {e}")
-
-                await asyncio.sleep(1)
+                        for update in updates:
+                            if update.message and update.message.text:
+                                if self.is_authorized_user(update):
+                                    response_queue = update.message.text
+                                    return
+                            last_update_id = max(last_update_id, update.update_id)
+                    except Exception as e:
+                        print(f"Error while polling updates: {e}")
+                    await asyncio.sleep(1)
         except RuntimeError:
             print("Error while polling updates")
 
