@@ -34,6 +34,16 @@ MOCK_CONTENT_DIRTY = """
                         </html>
                          (https://e.com) 
                     """
+MOCK_CONTENT_LONG = """
+                        Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed sed elit lacinia, 
+                        aliquet tellus vitae, semper sem. Nulla 
+                        faucibus leo elit, in pharetra est semper 
+                        non. Sed bibendum ligula ac sapien auctor, 
+                        eget ultrices risus pulvinar. Fusce interdum 
+                        dignissim dolor, eu egestas ex faucibus et. 
+                        Proin tincidunt turpis et fermentum bibendum.
+                    """
 MOCK_SUBJECT = "Test Subject"
 MOCK_IMAP_SERVER = "imap.example.com"
 MOCK_SMTP_SERVER = "smtp.example.com"
@@ -551,6 +561,53 @@ class TestEmailPlugin(unittest.TestCase):
                 "CC": "",
                 "Subject": MOCK_SUBJECT,
                 "Message Body": "Email Title This is an email template with a return character and a link at the end (",
+            }
+        ]
+        assert result == expected_result
+
+        # Check if the IMAP object was created and used correctly
+        mock_imap.return_value.login.assert_called_once_with(MOCK_FROM, MOCK_PWD)
+        mock_imap.return_value.select.assert_called_once_with("inbox")
+        mock_imap.return_value.search.assert_called_once_with(None, "UNSEEN")
+        mock_imap.return_value.fetch.assert_called_once_with(b"1", "(BODY.PEEK[])")
+
+    # Test for truncating emails
+    @patch("imaplib.IMAP4_SSL")
+    @patch.dict(
+        os.environ,
+        {
+            "EMAIL_ADDRESS": MOCK_FROM,
+            "EMAIL_PASSWORD": MOCK_PWD,
+            "EMAIL_IMAP_SERVER": MOCK_IMAP_SERVER,
+            "MAX_CHARACTERS": "300",
+            "MAX_EMAIL_CHARACTERS": "200",
+        },
+    )
+    def test_truncate_emails(self, mock_imap):
+        assert os.getenv("EMAIL_ADDRESS") == MOCK_FROM
+
+        # Create a mock email message
+        message = EmailMessage()
+        message["From"] = MOCK_FROM
+        message["To"] = MOCK_TO
+        message["Date"] = MOCK_DATE
+        message["Subject"] = MOCK_SUBJECT
+        message.set_content(MOCK_CONTENT_LONG)
+
+        # Set up mock IMAP server behavior
+        mock_imap.return_value.search.return_value = (None, [b"1"])
+        mock_imap.return_value.fetch.return_value = (None, [(b"1", message.as_bytes())])
+
+        # Test read_emails with paginationfunction
+        result = read_emails("inbox", "UNSEEN", 1, 1)
+        expected_result = [
+            {
+                "From": MOCK_FROM,
+                "To": MOCK_TO,
+                "Date": MOCK_DATE,
+                "CC": "",
+                "Subject": MOCK_SUBJECT,
+                "Message Body": "Lorem ipsum dolor sit am [Warning: This email\'s body was truncated by the Auto-GPT email plugin to avoid \"command returned too much output errors\". Retrieve fewer emails to get the full message body]",
             }
         ]
         assert result == expected_result
