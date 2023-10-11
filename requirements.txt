@@ -9,6 +9,7 @@ flake8
 isort
 newsapi-python
 pandas
+playsound
 pylint
 pytest
 pytest-cov
@@ -17,8 +18,10 @@ python-telegram-bot
 requests
 requests-mock
 setuptools
+sounddevice
 tweepy==4.13.0
 twine
 validators
+vosk
 wheel
 wolframalpha==5.0.0
