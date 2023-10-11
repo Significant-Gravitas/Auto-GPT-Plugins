@@ -22,3 +22,5 @@ twine
 validators
 wheel
 wolframalpha==5.0.0
+yfinance
+yahooquery

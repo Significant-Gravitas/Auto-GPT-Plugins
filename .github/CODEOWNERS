@@ -1,8 +1,9 @@
 * @Significant-Gravitas/auto-gpt-source @Significant-Gravitas/plugins
 /src/autogpt_plugins/api_tools @sidewaysthought
 /src/autogpt_plugins/astro @sr5434
-/src/autogpt_plugins/baidu_search @ForestLinSen
 /src/autogpt_plugins/bing_search @ForestLinSen
+/src/autogpt_plugins/baidu_search @ForestLinSen
+/src/autogpt_plugins/financial_data @ForestLinSen
 /src/autogpt_plugins/bluesky @hermanschutte
 /src/autogpt_plugins/email @riensen
 /src/autogpt_plugins/news_search @PalAditya
