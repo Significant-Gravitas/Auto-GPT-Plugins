@@ -8,6 +8,7 @@
 /src/autogpt_plugins/news_search @PalAditya
 /src/autogpt_plugins/random_values @sidewaysthought
 /src/autogpt_plugins/scenex @delgermurun
+/src/autogpt_plugins/speech_to_text @swooshcode
 /src/autogpt_plugins/telegram @wladastic
 /src/autogpt_plugins/twitter @desojo
 /src/autogpt_plugins/wikipedia_search @pierluigi-failla
