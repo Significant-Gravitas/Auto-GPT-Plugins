@@ -19,6 +19,11 @@ requests-mock
 setuptools
 tweepy==4.13.0
 twine
+tweepy
+pandas
+auto_gpt_plugin_template
+python-dotenv
+gradio_tools>=0.0.5
 validators
 wheel
 wolframalpha==5.0.0
