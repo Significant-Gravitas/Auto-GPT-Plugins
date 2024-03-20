@@ -120,7 +120,8 @@ You can see the first-party plugins below. These are included in this Auto-GPT-P
 | Telegram |  A smoothly working Telegram bot that gives you all the messages you would normally get through the Terminal. | [autogpt_plugins/telegram](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/telegram) |
 | Twitter          | Auto-GPT is capable of retrieving Twitter posts and other related content by accessing the Twitter platform via the v1.1 API using Tweepy.               | [autogpt_plugins/twitter](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/twitter)           |
 | Wikipedia Search | This allows Auto-GPT to use Wikipedia directly.                                                                    | [autogpt_plugins/wikipedia_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wikipedia_search) |
-| WolframAlpha Search | This allows AutoGPT to use WolframAlpha directly.                                                                                         | [autogpt_plugins/wolframalpha_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/wolframalpha_search)|
+| WolframAlpha Search | This allows AutoGPT to use WolframAlpha directly.                                                                                         | [autogpt_plugins/wolframalpha_search](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/skeleton)|
+| Skeleton Plugin | This allows AutoGPT to use WolframAlpha directly.                                                                                         | [autogpt_plugins/skeleton](https://github.com/Significant-Gravitas/Auto-GPT-Plugins/tree/master/src/autogpt_plugins/skeleton)|
 
 
 ### Third Party Plugins
